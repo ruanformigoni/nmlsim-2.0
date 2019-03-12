@@ -1,0 +1,85 @@
+<!-- This is the main circuit properties, such as technology, engine and others -->
+<!-- Each engine had different properties to be setted in this field -->
+<circuit>
+	<property technology="iNML" engine="LLG"/>
+	<property simulationMode="verbose"/>
+	<property reportStep="0.001"/>
+	<property alpha="0.05"/>
+	<property Ms="800000"/>
+	<property temperature="300.0"/>
+	<property timeStep="0.0001"/>
+	<property simTime="20.0"/>
+	<property neighborhoodRatio="500.0"/>
+</circuit>
+
+<!-- This is the clock phases properties -->
+<clockPhase>
+	<item name="switch">
+		<property initialSignal="150.0,0.0,0.0"/>
+		<property endSignal="0.0,0.0,0.0"/>
+		<property duration="5.0"/>
+	</item>
+	<item name="hold">
+		<property initialSignal="0.0,0.0,0.0"/>
+		<property endSignal="0.0,0.0,0.0"/>
+		<property duration="5.0"/>
+	</item>
+	<item name="reset">
+		<property initialSignal="0.0,0.0,0.0"/>
+		<property endSignal="150.0,0.0,0.0"/>
+		<property duration="5.0"/>
+	</item>
+	<item name="relax">
+		<property initialSignal="150.0,0.0,0.0"/>
+		<property endSignal="150.0,0.0,0.0"/>
+		<property duration="5.0"/>
+	</item>
+</clockPhase>
+
+<!-- This is the clock zone properties -->
+<clockZone>
+	<item name="0">
+		<property phase="reset"/>
+		<property phase="relax"/>
+		<property phase="switch"/>
+		<property phase="hold"/>
+	</item>
+</clockZone>
+
+<!-- This is the components properties -->
+<components>
+	<item name="magIn">
+		<property fixedMagnetization="true"/>
+		<property P0="0.0,100.0"/>
+		<property P1="50.0,100.0"/>
+		<property P2="50.0,0.0"/>
+		<property P3="0.0,0.0"/>
+		<property thickness="15.0"/>
+	</item>
+	<item name="magnet">
+		<property fixedMagnetization="false"/>
+		<property P0="0.0,100.0"/>
+		<property P1="50.0,100.0"/>
+		<property P2="50.0,0.0"/>
+		<property P3="0.0,0.0"/>
+		<property thickness="15.0"/>
+	</item>
+</components>
+
+<!-- This is the design properties -->
+<design>
+	<item name="i0">
+		<property component="magIn"/>
+		<property myType="input"/>
+		<property position="0.0,0.0"/>
+		<property clockZone="0"/>
+		<property magnetization="0.1411,0.99,0.0"/>
+	</item>
+	<item name="o0">
+		<property component="magnet"/>
+		<property myType="output"/>
+		<property position="60.0,0.0"/>
+		<property clockZone="0"/>
+		<property magnetization="0.1411,-0.99,0.0"/>
+	</item>
+</design>

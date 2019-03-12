@@ -1,0 +1,76 @@
+<!-- This is the main circuit properties, such as technology, engine and others -->
+<!-- Each engine had different properties to be setted in this field -->
+<circuit>
+	<property technology="iNML" engine="LLG"/>
+	<property simulationMode="direct"/>
+	<property reportStep="1.0"/>
+	<property alpha="0.05"/>
+	<property Ms="800000"/>
+	<property temperature="0.0"/>
+	<property timeStep="0.5"/>
+	<property simTime="40.0"/>
+	<property neighborhoodRatio="500.0"/>
+</circuit>
+
+<!-- This is the clock phases properties -->
+<clockPhase>
+	<item name="switch">
+		<property initialSignal="1.0,0.0,0.0"/>
+		<property endSignal="0.0,0.0,0.0"/>
+		<property duration="10.0"/>
+	</item>
+	<item name="hold">
+		<property initialSignal="0.0,0.0,0.0"/>
+		<property endSignal="0.0,0.0,0.0"/>
+		<property duration="10.0"/>
+	</item>
+	<item name="reset">
+		<property initialSignal="0.0,0.0,0.0"/>
+		<property endSignal="1.0,0.0,0.0"/>
+		<property duration="10.0"/>
+	</item>
+	<item name="relax">
+		<property initialSignal="1.0,0.0,0.0"/>
+		<property endSignal="1.0,0.0,0.0"/>
+		<property duration="10.0"/>
+	</item>
+</clockPhase>
+
+<!-- This is the clock zone properties -->
+<clockZone>
+	<item name="0">
+		<property phase="release"/>
+		<property phase="relax"/>
+		<property phase="switch"/>
+		<property phase="hold"/>
+	</item>
+	<item name="1">
+		<property phase="relax"/>
+		<property phase="switch"/>
+		<property phase="hold"/>
+		<property phase="release"/>
+	</item>
+</clockZone>
+
+<!-- This is the components properties -->
+<components>
+	<item name="magnet">
+		<property fixedMagnetization="false"/>
+		<property P0="0.0,100.0"/>
+		<property P1="50.0,100.0"/>
+		<property P2="50.0,0.0"/>
+		<property P3="0.0,0.0"/>
+		<property thickness="15.0"/>
+	</item>
+</components>
+
+<!-- This is the design properties -->
+<design>
+	<item name="m0">
+		<property component="magnet"/>
+		<property myType="regular"/>
+		<property position="0.0,100.0"/>
+		<property clockZone="0"/>
+		<property magnetization="0.01,-0.99,0.0"/>
+	</item>
+</design>

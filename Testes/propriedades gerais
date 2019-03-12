@@ -1,0 +1,15 @@
+Tempo de simulação: 20 ns
+Time step: 0.001 ns
+Report time step: 0.01 ns (diferença de tempo entre um ponto do gráfico e outro)
+Alpha: 0.05
+Ms: 800000
+Temperatura: 0K
+
+Campo externo
+-reset: de 0 a 150
+-relax: de 150 a 150
+-switch: de 150 a 0
+-hold: de 0 a 0
+Todas as fases duram 5 ns e ocorrem nessa ordem específica
+
+Todos os testes utilizam duas partículas. O M0 não sofre influência do campo e o M1 sofre.
