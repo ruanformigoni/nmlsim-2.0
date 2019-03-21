@@ -14,14 +14,14 @@ Simulation::Simulation(string filePath, string outFilePath){
 
 void Simulation::verboseSimulation(double reportDeltaTime){
 	double auxTimer = 0.0;
+	outFile << currentTime << ",";
+	this->circuit->dumpMagnetsValues(&outFile);
 	while(this->currentTime < this->simulationDuration){
 		auxTimer += this->deltaTime;
 		this->currentTime += this->deltaTime;
 		this->circuit->nextTimeStep();
 		if(auxTimer >= reportDeltaTime){
-//			cout << "---------------------------------------------\n" << "Time " << currentTime << endl;
 			outFile << currentTime << ",";
-//			this->circuit->dumpZonesValues();
 			this->circuit->dumpMagnetsValues(&outFile);
 			outFile << endl;
 			auxTimer = 0.0;
