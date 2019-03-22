@@ -16,6 +16,7 @@ void Simulation::verboseSimulation(double reportDeltaTime){
 	double auxTimer = 0.0;
 	outFile << currentTime << ",";
 	this->circuit->dumpMagnetsValues(&outFile);
+	outFile << endl;
 	while(this->currentTime < this->simulationDuration){
 		auxTimer += this->deltaTime;
 		this->currentTime += this->deltaTime;
