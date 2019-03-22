@@ -7,6 +7,8 @@ vector<string> ThiagoMagnet::splitString(string str, char separator){
 	int startIndex = 0;
 	for(int i=0; i<str.size(); i++){
 		if(str[i] == separator || i == str.size()-1){
+			if(i == str.size()-1)
+				i++;
 			parts.push_back(str.substr(startIndex, i-startIndex));
 			startIndex = i+1;
 		}
