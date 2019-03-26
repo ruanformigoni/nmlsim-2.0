@@ -6,20 +6,20 @@
 !	IN_dipolar3D.dat, que tem 12 linhas com os parametros:
 !
 !	O arquivo de entrada contem:
-!	px_i(1),py_i(1): coordenadas do canto superior esquerdo (nm) da particula i
-!	px_i(2),py_i(2): coordenadas do canto superior direito  (nm) da particula i
-!	px_i(3),py_i(3): coordenadas do canto inferior esquerdo (nm) da particula i
-!	px_i(4),py_i(4): coordenadas do canto inferior direito  (nm) da particula i
+!	px_i(1),py_i(1): coordenadas do canto superior esquerdo (nm) da particula i em relacao ao seu centro
+!	px_i(2),py_i(2): coordenadas do canto superior direito  (nm) da particula i em relacao ao seu centro
+!	px_i(3),py_i(3): coordenadas do canto inferior esquerdo (nm) da particula i em relacao ao seu centro
+!	px_i(4),py_i(4): coordenadas do canto inferior direito  (nm) da particula i em relacao ao seu centro
 !	t_i	   : espessura (nm) da particula i
 !	xyz0_i(1),xyz0_i(2),xyz0_i(3): 	distancia x, y, e z 
-!	   da particula i em relacao a origem (0,0,0)
-!	px_j(1),py_j(1): coordenadas do canto superior esquerdo (nm) da particula j
-!	px_j(2),py_j(2): coordenadas do canto superior direito  (nm) da particula j
-!	px_j(3),py_j(3): coordenadas do canto inferior esquerdo (nm) da particula j
-!	px_j(4),py_j(4): coordenadas do canto inferior direito  (nm) da particula j
+!	   do centro da particula i em relacao a origem (0,0,0)
+!	px_j(1),py_j(1): coordenadas do canto superior esquerdo (nm) da particula j em relacao ao seu centro
+!	px_j(2),py_j(2): coordenadas do canto superior direito  (nm) da particula j em relacao ao seu centro
+!	px_j(3),py_j(3): coordenadas do canto inferior esquerdo (nm) da particula j em relacao ao seu centro
+!	px_j(4),py_j(4): coordenadas do canto inferior direito  (nm) da particula j em relacao ao seu centro
 !	t_j	   : espessura (nm) da particula j
 !	xyz0_j(1),xyz0_j(2),xyz0_j(3): 	distancia x, y, e z 
-!	   da particula j em relacao a origem (0,0,0)
+!	   do centro da particula j em relacao a origem (0,0,0)
 !	 	        
 !
 !	O arquivo de saida OUT_dipolar3D.dat contem:

@@ -1,3 +1,46 @@
+/*
+	PROGRAMA DE CALCULO DO TENSOR DESMAGNETIZACAO DE
+	POLIGONOS IRREGULARES (SLANTED)
+
+	px(1),py(1): coordenadas do canto superior esquerdo (nm) em relação ao centro da partícula
+	px(2),py(2): coordenadas do canto superior direito  (nm) em relação ao centro da partícula
+	px(3),py(3): coordenadas do canto inferior direito  (nm) em relação ao centro da partícula
+	px(4),py(4): coordenadas do canto inferior esquerdo (nm) em relação ao centro da partícula
+	t	   : espessura (nm)
+
+	*************** RESTRICAO ****************
+	-------> px(1) e px(4) DEVEM ser iguais
+	-------> px(2) e px(3) DEVEM ser iguais
+	******************************************
+
+	Matriz de saida (line 228-238):
+	d1, d2, d3
+	d4, d5, d6
+	d7, d8, d9
+
+	OBS.: OS FATORES DE DESMAGNETIZACAO (variable tensor line 309) SAO OBTIDOS FAZENDO
+
+	      D11=d1/(4*Pi*V), D12=d2/(4*Pi*V), D13=d3/(4*Pi*V)
+	      D21=d4/(4*Pi*V), D22=d5/(4*Pi*V), D23=d6/(4*Pi*V)
+	      D31=d7/(4*Pi*V), D32=d8/(4*Pi*V), D33=d9/(4*Pi*V)
+
+	      ONDE V e DADO EM nm^3
+
+	A energia de desmagnetizacao (eV) e calculada como
+
+	Ud = K/2*(
+	          (d1*COS(phi)^2 + d5*SIN(phi)^2 + (d2+d4)*SIN(phi)*COS(phi))*SIN(theta)^2 +
+		  ((d3+d7)*COS(phi) + (d6+d8)*SIN(phi))*SIN(theta)*COS(theta) +
+	  d9*COS(theta)^2
+		 )
+	ONDE
+
+	K = mu0*Ms*Ms*JtoeV*ten**(-27)/(four*Pi)
+	Ms = 800 kA/m
+	mu0 = 4*Pi*10^-7 H/m
+	JtoeV = 6.242_lg*ten**(18)
+*/
+
 #include "LLGMagnetMagnetization.h"
 
 map<string, double *> LLGMagnetMagnetization::dipBib;
