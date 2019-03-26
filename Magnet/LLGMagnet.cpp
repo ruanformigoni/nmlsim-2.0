@@ -110,6 +110,7 @@ void LLGMagnet::calculateMagnetization(ClockPhase * phase){
 		for(int i=0; i<3; i++){
 			auxSig[i] = phase->getSignal()[i];
 			auxVar[i] = phase->getVariation()[i];
+			//auxVar[i] = phase->getSignal()[i];
 		}
 
 		f_term(this->magnetization, auxSig, hd, hc, k1);
