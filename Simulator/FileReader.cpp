@@ -61,7 +61,7 @@ simulationType FileReader::getEngine (){
 
 	if(aux == "LLG")
 		return LLG;
-	if(aux == "Thiago")
+	if(aux == "Behaviour")
 		return THIAGO;
 }
 
