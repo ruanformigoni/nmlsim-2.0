@@ -61,18 +61,35 @@ void Circuit::dumpInOutValues(ofstream * outFile){
 		this->outputMagnets[i]->dumpValues(outFile);
 }
 
-void Circuit::setInputs(int mask){
+void Circuit::setInputs(int mask, simulationType type){
 	for(int i=0; i<inputMagnets.size(); i++){
 		int bitMask = 1 << i;
 		int maskedBit = mask & bitMask;
 		int bit = maskedBit >> i;
-		double aux;
-		if(bit == 0){
-			aux = -1.0;
-			inputMagnets[i]->setMagnetization(&aux);
-		} else if (bit == 1){
-			aux = 1.0;
-			inputMagnets[i]->setMagnetization(&aux);
+		switch(type){
+			case THIAGO:{
+				double aux;
+				if(bit == 0){
+					aux = -1.0;
+				} else {
+					aux = 1.0;
+				}
+				inputMagnets[i]->setMagnetization(&aux);
+			}
+			break;
+			case LLG:{
+				double aux[3];
+				if(bit == 0){
+					aux[0] = 0.1411;
+					aux[1] = -0.99;
+					aux[2] = 0.0;
+				} else{
+					aux[0] = 0.1411;
+					aux[1] = 0.99;
+					aux[2] = 0.0;
+				}
+				inputMagnets[i]->setMagnetization(aux);
+			}
 		}
 	}
 }
@@ -96,4 +113,8 @@ vector <Magnet *> Circuit::getAllMagnets(){
 		}
 	}
 	return magnets;
+}
+
+void Circuit::restartAllPhases(){
+	clockCtrl->restartAllPhases();
 }

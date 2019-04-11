@@ -42,7 +42,6 @@ void ClockController::addMagnetToZone(Magnet * magnet, int zoneIndex){
 
 void ClockController::dumpZonesValues(ofstream * outFile){
 	for(int i=0; i<zones.size(); i++){
-//		cout << "Zone " << i << endl;
 		zones[i]->dumpPhaseValues(outFile);
 	}
 }
@@ -53,7 +52,6 @@ ClockZone * ClockController::getClockZone(int zoneId){
 
 void ClockController::dumpMagnetsValues(ofstream * outFile){
 	for(int i=0; i<zones.size(); i++){
-		// cout << "Zone " << i << endl;
 		zones[i]->dumpMagnetsValues(outFile);
 	}
 }
@@ -65,4 +63,9 @@ vector <Magnet *> ClockController::getMagnetsFromAllZones(){
 		magnets.insert(magnets.end(),  aux.begin(), aux.end());
 	}
 	return magnets;
+}
+
+void ClockController::restartAllPhases(){
+	for(int i=0; i<phases.size(); i++)
+		phases[i]->restartPhase();
 }

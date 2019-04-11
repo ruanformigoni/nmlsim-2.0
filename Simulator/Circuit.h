@@ -24,10 +24,11 @@ public:
 	Magnet* getMagnet(int zoneId, string id);
 	void dumpZonesValues(ofstream * outFile);
 	void dumpMagnetsValues(ofstream * outFile);
-	void setInputs(int mask);
+	void setInputs(int mask, simulationType type);
 	int getInputsSize();
 	void dumpInOutValues(ofstream * outFile);
 	vector <Magnet *> getAllMagnets();
+	void restartAllPhases();
 };
 
 #endif

@@ -31,18 +31,23 @@ void Simulation::verboseSimulation(double reportDeltaTime){
 }
 
 void Simulation::exaustiveSimulation(){
-/*	int inputSize = circuit->getInputsSize();
+	int inputSize = circuit->getInputsSize();
 	int limit = (int) pow(2.0, (double) inputSize);
 	for(int i=0; i<limit; i++){
-		circuit->setInputs(i);
+		outFile << "COMBINATION " << i << endl << "Initial Value\n";
+		circuit->setInputs(i, this->mySimType);
+		this->circuit->dumpInOutValues(&outFile);
+		outFile << endl;
 		this->currentTime = 0.0;
+		circuit->restartAllPhases();
 		while(this->currentTime < this->simulationDuration){
 			this->circuit->nextTimeStep();
 			this->currentTime += this->deltaTime;
 		}
-		cout << "---------------------------------------------\n";
-		this->circuit->dumpInOutValues();
-	}*/
+		outFile << "End Value\n";
+		this->circuit->dumpInOutValues(&outFile);
+		outFile << endl << endl;
+	}
 }
 
 void Simulation::directSimulation(){

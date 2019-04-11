@@ -19,6 +19,7 @@ public:
 	void dumpMagnetsValues(ofstream * outFile);
 	ClockZone* getClockZone(int zoneId);
 	vector <Magnet *> getMagnetsFromAllZones();
+	void restartAllPhases();
 };
 
 #endif
