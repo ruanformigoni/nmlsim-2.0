@@ -7,7 +7,10 @@ double LLGMagnet::temperature;
 double LLGMagnet::timeStep;
 double LLGMagnet::v [3];
 double LLGMagnet::dt;
-double LLGMagnet::dW [3];
+double LLGMagnet::bulk_sha;
+double LLGMagnet::l_shm;
+double LLGMagnet::th_shm;
+bool LLGMagnet::initialized = false;
 
 vector<string> LLGMagnet::splitString(string str, char separator){
 	vector<string> parts;
@@ -25,12 +28,18 @@ vector<string> LLGMagnet::splitString(string str, char separator){
 
 LLGMagnet::LLGMagnet(string id, FileReader * fReader){
 	//Basic constants
-	this->id = id;
-	this->alpha = stod(fReader->getProperty(CIRCUIT, "alpha"));
-	this->Ms = stod(fReader->getProperty(CIRCUIT, "Ms"));
-	this->temperature = stod(fReader->getProperty(CIRCUIT, "temperature"));
-	this->timeStep = stod(fReader->getProperty(CIRCUIT, "timeStep"))*pow(10.0, -9.0);
+	if(!LLGMagnet::initialized){
+		this->alpha = stod(fReader->getProperty(CIRCUIT, "alpha"));
+		this->Ms = stod(fReader->getProperty(CIRCUIT, "Ms"));
+		this->temperature = stod(fReader->getProperty(CIRCUIT, "temperature"));
+		this->timeStep = stod(fReader->getProperty(CIRCUIT, "timeStep"))*pow(10.0, -9.0);
+		this->bulk_sha = stod(fReader->getProperty(CIRCUIT, "spinAngle"));
+		this->l_shm = stod(fReader->getProperty(CIRCUIT, "spinDifusionLenght"));
+		this->th_shm = stod(fReader->getProperty(CIRCUIT, "heavyMaterialThickness"));
+		LLGMagnet::initialized = true;
+	}
 
+	this->id = id;
 	string compName = fReader->getItemProperty(DESIGN, id, "component");
 
 	//Initial magnetization
@@ -67,6 +76,9 @@ LLGMagnet::LLGMagnet(string id, FileReader * fReader){
 
 	this->volume = this->magnetizationCalculator->getVolume();
 	initializeConstants();
+
+	//Compute theta_she
+	this->theta_she = bulk_sha*(1-(1/cosh(th_shm/l_shm)));
 }
 
 void LLGMagnet::initializeConstants(){
@@ -88,9 +100,9 @@ void LLGMagnet::calculateMagnetization(ClockPhase * phase){
 	double hd[3], hc[3] = {0.0,0.0,0.0}, heff[3];
 	double m_heff[3], mm_heff[3], a[3];
 	double m_v[3], mm_v[3], b[3];
+	double i_s[3];
+	double u[3], u_plus[3], u_minus[3], a_u[3], b_uplus[3], b_uminus[3];
 
-	//##################################### DANGER!!! #################################
-	//Could be wrong while usign a cutted particle (maybe transpose the nd)
 	for(int i=0; i<3; i++)
 		hd[i] = 
 			(this->magnetization[0]*nd[0][i] + 
@@ -150,39 +162,39 @@ void LLGMagnet::calculateMagnetization(ClockPhase * phase){
 			}
 		}
 
-		crossProduct(this->magnetization, heff, m_heff);
-		crossProduct(this->magnetization, m_heff, mm_heff);
+		default_random_engine generator(chrono::system_clock::now().time_since_epoch().count());
+		normal_distribution<double> distribution (0.0,1.0);
+		this->dW[0] = distribution(generator);
+		this->dW[1] = distribution(generator);
+		this->dW[2] = distribution(generator);
 
 		for(int i=0; i<3; i++){
-			a[i] = -1.0*this->alpha_l*(
-				m_heff[i] + this->alpha*mm_heff[i]
-				) + (
-				alpha_l * pow(v[i], 2.0) * this->magnetization[i]
-				);
+			if(this->fixedMagnetization)
+				i_s[i] = 0;
+			else
+				i_s[i] = ((-1)*hbar*this->theta_she*(phase->getSignal()[i+3]*pow(10,12)))/(2*q*this->getThickness()*pow(10,(-9))*Ms);
 		}
 
-		crossProduct(this->magnetization, this->v, m_v);
-		crossProduct(this->magnetization, m_v, mm_v);
+		a_term(a, heff, i_s, this->magnetization);
+		b_term(b, this->magnetization);
+
+		for(int i=0; i<3; i++)
+			u[i] = this->magnetization[i] + a[i]*dt + b[i]*this->dW[i];
+
+		for(int i=0; i<3; i++)
+			u_plus[i] = this->magnetization[i] + a[i]*dt + b[i]*sqrt(dt);
+
+		for(int i=0; i<3; i++)
+			u_minus[i] = this->magnetization[i] + a[i]*dt - b[i]*sqrt(dt);
+
+		a_term(a_u, heff, i_s, u);
+		b_term(b_uplus, u_plus);
+		b_term(b_uminus, u_minus);
 
 		for(int i=0; i<3; i++){
-			b[i] = -1.0*this->alpha_l*(
-				m_v[i]+this->alpha*mm_v[i]
-				);
-		}
-
-		if(this->firstIteration)
-			this->firstIteration = false;
-		else{
-			default_random_engine generator(chrono::system_clock::now().time_since_epoch().count());
-			normal_distribution<double> distribution (0.0,1.0);
-			this->dW[0] = distribution(generator);
-			this->dW[1] = distribution(generator);
-			this->dW[2] = distribution(generator);
-
-		}
-
-		for(int i=0; i<3; i++){
-			this->newMagnetization[i] = this->magnetization[i] + a[i]*this->dt + b[i]*this->dW[i];
+			this->newMagnetization[i] = this->magnetization[i] + 0.5*(a_u[i] + a[i])*dt + 
+										0.25*(b_uplus[i] + b_uminus[i] + 2*b[i])*this->dW[i] +
+										0.25*(b_uplus[i] - b_uminus[i]) * (this->dW[i]*this->dW[i] - dt)/sqrt(dt);
 		}
 	}
 }
@@ -205,6 +217,37 @@ void LLGMagnet::f_term(double * currMag, double * currSignal, double* hd, double
 	for(int i=0; i<3; i++){
 		result[i] = -1.0*this->alpha_l*(
 			m_heff[i] + this->alpha*mm_heff[i]
+			);
+	}
+}
+
+void LLGMagnet::a_term(double* a, double* h_eff, double* i_s, double* m){
+	double m_is[3], mm_is[3], m_heff[3], mm_heff[3];
+
+	crossProduct(m, i_s, m_is);
+	crossProduct(m, m_is, mm_is);
+
+	crossProduct(m, h_eff, m_heff);
+	crossProduct(m, m_heff, mm_heff);
+
+	for(int i=0; i<3; i++){
+		a[i] = -1.0*this->alpha_l*(
+			m_heff[i] + this->alpha*mm_heff[i] - mm_is[i]
+			) + (
+			alpha_l * pow(v[i], 2.0) * m[i]
+			);
+	}
+}
+
+void LLGMagnet::b_term(double* b, double* m){
+	double m_v[3], mm_v[3];
+
+	crossProduct(m, v, m_v);
+	crossProduct(m, m_v, mm_v);
+
+	for(int i=0; i<3; i++){
+		b[i] = -1.0*this->alpha_l*(
+			m_v[i]+this->alpha*mm_v[i]
 			);
 	}
 }

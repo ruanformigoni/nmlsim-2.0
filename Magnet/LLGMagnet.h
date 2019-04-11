@@ -12,6 +12,8 @@
 #define mu0 4*PI*pow(10.0, -7.0) //N/A2 ->   m.kg.s-2
 #define kb 1.38064852*pow(10.0, -23.0) //J/K  ->   m2.kg.s-2.K-1
 #define gammamu0 mu0*1.760859644*pow(10.0, 11.0) //%m/(sA)
+#define hbar 2.05457*pow(10,(-34)) //J.s/rad  -> h/2pi
+#define q 1.60217662*pow(10,(-19)) // carga do eletron C
 
 class LLGMagnet : protected Magnet{
 private:
@@ -23,22 +25,28 @@ private:
 	LLGMagnetMagnetization * magnetizationCalculator;
 	double volume;
 	double nd[3][3];
+	double dW [3];
 	double xPosition, yPosition;
-	bool firstIteration = true;
+	double theta_she;
 
 	static double alpha;
 	static double alpha_l;
 	static double Ms;
 	static double temperature;
 	static double timeStep;
+	static double bulk_sha;
 	static double v [3];
 	static double dt;
-	static double dW [3];
+	static double l_shm;
+	static double th_shm;
+	static bool initialized;
 
 	void initializeConstants();
 	void crossProduct(double *vect_A, double *vect_B, double *cross_P);
 	void f_term(double * currMag, double * currSignal, double* hd, double* hc, double * result);
 	vector<string> splitString(string str, char separator);
+	void a_term(double* a, double* h_eff, double* i_s, double* m);
+	void b_term(double* b, double* m);
 
 public:
 	LLGMagnet(string id, FileReader * fReader);//double alpha, double Ms, double temperature, double timeStep);

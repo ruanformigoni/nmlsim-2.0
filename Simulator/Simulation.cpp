@@ -86,19 +86,15 @@ void Simulation::buildClkCtrl(){
 			//Creating the phases
 			aux = fReader->getItems(PHASE);
 			for(int i=0; i<aux.size(); i++){
-				double initial[3], end[3], variation[3], duration;
-				value = stod(fReader->getItemProperty(PHASE, aux[i], "initialSignal"));
-				initial[0] = initial[2] = 0;
-				initial[1] = stod(value);
-				value = stod(fReader->getItemProperty(PHASE, aux[i], "endSignal"));
-				end[0] = end[2] = 0;
-				end[1] = stod(value);
+				double * initial, * end, * variation, duration;
+				initial = (double*)malloc(1*sizeof(double));
+				end = (double*)malloc(1*sizeof(double));
+				variation = (double*)malloc(1*sizeof(double));
+				initial[0] = stod(fReader->getItemProperty(PHASE, aux[i], "initialSignal"));
+				end[0] = stod(fReader->getItemProperty(PHASE, aux[i], "endSignal"));
 				duration = stod(fReader->getItemProperty(PHASE, aux[i], "duration"));
-				for(int j=0; j<3; j++){
-					variation[j] = (end[j] - initial[j])/(duration/deltaTime);
-				}
-				ClockPhase * phaseAux = new ClockPhase(aux[i], duration, end, variation);
-				phaseAux->setInitialSignal(initial);
+				variation[0] = (end[0] - initial[0])/(duration/deltaTime);
+				ClockPhase * phaseAux = new ClockPhase(aux[i], duration, initial, end, variation, 1);
 				phases.push_back(phaseAux);
 			}
 
@@ -130,22 +126,23 @@ void Simulation::buildClkCtrl(){
 			//Creating the phases
 			aux = fReader->getItems(PHASE);
 			for(int i=0; i<aux.size(); i++){
-				double initial[3], end[3], variation[3], duration;
+				double * initial, * end, * variation, duration;
+				initial = (double*)malloc(6*sizeof(double));
+				end = (double*)malloc(6*sizeof(double));
+				variation = (double*)malloc(6*sizeof(double));
 				parts = splitString(fReader->getItemProperty(PHASE, aux[i], "initialSignal"), ',');
-				for(int j=0; j<3; j++){
+				for(int j=0; j<6; j++){
 					initial[j] = stod(parts[j]);
 				}
 				parts = splitString(fReader->getItemProperty(PHASE, aux[i], "endSignal"), ',');
-				for(int j=0; j<3; j++){
+				for(int j=0; j<6; j++){
 					end[j] = stod(parts[j]);
 				}
 				duration = stod(fReader->getItemProperty(PHASE, aux[i], "duration"));
-				for(int j=0; j<3; j++){
+				for(int j=0; j<6; j++){
 					variation[j] = (end[j] - initial[j])/(duration/deltaTime);
-//cout << end[j] << " - " << initial[j] << " / " << (duration/deltaTime) << " = " << variation[j] << endl;
 				}
-				ClockPhase * phaseAux = new ClockPhase(aux[i], duration, end, variation);
-				phaseAux->setInitialSignal(initial);
+				ClockPhase * phaseAux = new ClockPhase(aux[i], duration, initial, end, variation, 6);
 				phases.push_back(phaseAux);
 			}
 

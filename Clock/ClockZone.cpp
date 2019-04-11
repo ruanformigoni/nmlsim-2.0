@@ -57,8 +57,9 @@ void ClockZone::dumpMagnetsValues(ofstream * outFile){
 		magnets[i]->dumpValues(outFile);
 	}
 	if(magnets.size() > 0){
-		double * aux = this->myPhase->getSignal();
-		*(outFile) << aux[0] << "," << aux[1] << "," << aux[2] << ",";
+		this->myPhase->dumpValues(outFile);
+//		double * aux = this->myPhase->getSignal();
+//		*(outFile) << aux[0] << "," << aux[1] << "," << aux[2] << ",";
 	}
 }
 

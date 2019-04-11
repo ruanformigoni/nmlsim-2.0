@@ -8,20 +8,20 @@ private:
 	string name;
 	double myTimer;
 	double duration;
-	double currentSignal[3];
-	double initialSignal[3];
-	double endPhaseSignal[3];
-	double variation[3];
+	int vLenght;
+	double * currentSignal;
+	double * initialSignal;
+	double * endPhaseSignal;
+	double * variation;
 
 public:
-	ClockPhase(string phaseName, double phaseDuration, double * endPhaseSignal, double * variation);
+	ClockPhase(string phaseName, double phaseDuration, double * initialPhaseSignal, double * endPhaseSignal, double * variation, int vLenght);
 	double * getSignal();
-	void setInitialSignal(double * signal);
 	double * getVariation();
 	void nextTimeStep(double deltaTime);
 	string getPhaseName();
 	double getPhaseDuration();
-	void dumpValues(ofstream * outFile);
+	void dumpValues(ofstream * out);
 	void restartPhase();
 };
 

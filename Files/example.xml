@@ -3,35 +3,38 @@
 <circuit>
 	<property technology="iNML" engine="LLG"/>
 	<property simulationMode="verbose"/>
-	<property reportStep="0.001"/>
+	<property reportStep="0.01"/>
 	<property alpha="0.05"/>
 	<property Ms="800000"/>
 	<property temperature="300.0"/>
-	<property timeStep="0.0001"/>
+	<property timeStep="0.001"/>
 	<property simTime="20.0"/>
+	<property spinAngle="0.4"/>
+	<property spinDifusionLenght="3.5"/>
+	<property heavyMaterialThickness="5"/>
 	<property neighborhoodRatio="500.0"/>
 </circuit>
 
 <!-- This is the clock phases properties -->
 <clockPhase>
 	<item name="switch">
-		<property initialSignal="150.0,0.0,0.0"/>
-		<property endSignal="0.0,0.0,0.0"/>
+		<property initialSignal="0.0,0.0,0.0,25.0,0.0,0.0"/>
+		<property endSignal="0.0,0.0,0.0,0.0,0.0,0.0"/>
 		<property duration="5.0"/>
 	</item>
 	<item name="hold">
-		<property initialSignal="0.0,0.0,0.0"/>
-		<property endSignal="0.0,0.0,0.0"/>
+		<property initialSignal="0.0,0.0,0.0,0.0,0.0,0.0"/>
+		<property endSignal="0.0,0.0,0.0,0.0,0.0,0.0"/>
 		<property duration="5.0"/>
 	</item>
 	<item name="reset">
-		<property initialSignal="0.0,0.0,0.0"/>
-		<property endSignal="150.0,0.0,0.0"/>
+		<property initialSignal="0.0,0.0,0.0,0.0,0.0,0.0"/>
+		<property endSignal="0.0,0.0,0.0,25.0,0.0,0.0"/>
 		<property duration="5.0"/>
 	</item>
 	<item name="relax">
-		<property initialSignal="150.0,0.0,0.0"/>
-		<property endSignal="150.0,0.0,0.0"/>
+		<property initialSignal="0.0,0.0,0.0,25.0,0.0,0.0"/>
+		<property endSignal="0.0,0.0,0.0,25.0,0.0,0.0"/>
 		<property duration="5.0"/>
 	</item>
 </clockPhase>
@@ -50,18 +53,18 @@
 <components>
 	<item name="magIn">
 		<property fixedMagnetization="true"/>
-		<property P0="0.0,100.0"/>
-		<property P1="50.0,100.0"/>
-		<property P2="50.0,0.0"/>
-		<property P3="0.0,0.0"/>
+		<property P0="-25.0,50.0"/>
+		<property P1="25.0,50.0"/>
+		<property P2="25.0,-50.0"/>
+		<property P3="-25.0,-50.0"/>
 		<property thickness="15.0"/>
 	</item>
 	<item name="magnet">
 		<property fixedMagnetization="false"/>
-		<property P0="0.0,100.0"/>
-		<property P1="50.0,100.0"/>
-		<property P2="50.0,0.0"/>
-		<property P3="0.0,0.0"/>
+		<property P0="-25.0,50.0"/>
+		<property P1="25.0,50.0"/>
+		<property P2="25.0,-50.0"/>
+		<property P3="-25.0,-50.0"/>
 		<property thickness="15.0"/>
 	</item>
 </components>
@@ -73,13 +76,13 @@
 		<property myType="input"/>
 		<property position="0.0,0.0"/>
 		<property clockZone="0"/>
-		<property magnetization="0.1411,0.99,0.0"/>
+		<property magnetization="0.1411,0.99,0.10"/>
 	</item>
 	<item name="o0">
 		<property component="magnet"/>
 		<property myType="output"/>
 		<property position="60.0,0.0"/>
 		<property clockZone="0"/>
-		<property magnetization="0.1411,-0.99,0.0"/>
+		<property magnetization="0.1411,-0.99,0.1"/>
 	</item>
 </design>
