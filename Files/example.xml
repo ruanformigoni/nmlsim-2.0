@@ -6,23 +6,24 @@
 	<property technology="iNML" engine="LLG"/>
 	<!-- There are 3 simulationMode: exaustive, direct and verbose -->
 	<property simulationMode="exaustive"/>
-	<!-- The report time step. Starting at time 0, the program reports each reportStep. Only used in verbose mode -->
+	<!-- The report time step. Starting at time 0, the program reports at each reportStep. Only used in verbose mode -->
 	<property reportStep="0.01"/>
-	<!-- Dependes on the magnet material. We use 0.05 for the permalloy magnet -->
+	<!-- Gilbert damping factor -->
 	<property alpha="0.05"/>
-	<!-- Magnetization of Saturation -->
+	<!-- Saturation Magnetization in A/m -->
 	<property Ms="800000"/>
-	<!-- Temperature in K. Be mindfull that the LLG is used for T > 0 and the Runge-Kutta for T == 0 -->
+	<!-- Temperature in K. Be mindfull that the RK-Weak order 2.0 (RKW2) is used for T > 0 and the RK of fourth order (RK4) for T == 0 -->
 	<property temperature="300.0"/>
-	<!-- Discretization of time. It's highly recommended using very low timeStep -->
+	<!-- Discretization of time in nanoseconds. It's highly recommended using very low timeStep -->
 	<property timeStep="0.0001"/>
-	<!-- Simulation Duration -->
+	<!-- Simulation Duration in nanoseconds -->
 	<property simTime="20.0"/>
 	<!-- Properties for the heavy material for spin hall effect -->
 	<property spinAngle="0.4"/>
 	<property spinDifusionLenght="3.5"/>
+	<!-- Thickness in nanometers -->
 	<property heavyMaterialThickness="5"/>
-	<!-- Radius of the considered neighborhood. We recomend using values below 300 for more efficciency. -->
+	<!-- Radius of the considered neighborhood. We recomend using values of 300 for more efficciency. -->
 	<property neighborhoodRatio="300.0"/>
 </circuit>
 
@@ -30,10 +31,10 @@
 <clockPhase>
 	<!-- Each clock phase must be an item -->
 	<!-- Each clock phase must have a different name, which can be whatever name -->
-	<!-- The format for LLG uses a clock signal with 6 values. The 3 first are external field (x,y,z) and the 3 last are current field (x,y,z) -->
+	<!-- The format for RKW2 uses a clock signal with 6 values. The 3 first are external field (x,y,z) and the 3 last are current field (x,y,z) -->
 	<!-- Users can use both an external field and a current field with LLG. In order to not use one of them, just leave its fields as 0 -->
-	<!-- The format for the Behaviour engine uses only one value for clock signal. The value corresponds to a field applied on x -->
-	<!-- The value for signal in the Behaviour engne needs to be in the [0,1] interval, where 0 represents no clock and 1 represents 100% force -->
+	<!-- The format for the Behaviour engine uses only one value for clock signal. The value corresponds to a field applied on x direction -->
+	<!-- The value for signal in the Behaviour engine needs to be in the [0,1] interval, where 0 represents no clock and 1 represents 100% force -->
 	<!-- Phases can have different durations, but be mindfull of their sincronization -->
 	<item name="switch">
 		<property initialSignal="0.0,0.0,0.0,25.0,0.0,0.0"/>
@@ -63,7 +64,7 @@
 	<!-- Each clock zone must have an integer numerical name, starting in 0 and following growing sequence (0,1,2,3,etc) -->
 	<!-- All phases that a zone percieve must be listed -->
 	<!-- The order of the phases matter a lot, since the zone will start with the first phase and follow the order from top to bottom -->
-	<!-- The order of the phases are ciclycal, which means the first phase start again after the end of the last -->
+	<!-- The order of the phases are ciclycal, which means the first phase start again after the end of the last one -->
 	<item name="0">
 		<property phase="reset"/>
 		<property phase="relax"/>
@@ -112,7 +113,7 @@
 		<property component="magIn"/>
 		<!-- The myType field have 3 possible values: input, output or regular -->
 		<!-- Input magnets have their magnetization changed in the exaustive mode -->
-		<!-- Output magnets have their magnetization reported in the end of direct and exaustive modes -->
+		<!-- Output magnets have their magnetization reported in the end of the direct and exaustive modes -->
 		<!-- Regular magnets have no special interaction -->
 		<property myType="input"/>
 		<!-- Position of the center of the magnet -->
@@ -120,7 +121,7 @@
 		<!-- ALL magnets must be in a clockZone, even if they are fixedMagnetization = true!!!! -->
 		<property clockZone="0"/>
 		<!-- Initial value for the magnetization -->
-		<!-- LLG engine uses 3 values (x,y,z). Behaviour uses only one (y) -->
+		<!-- RKW2 and RK4 engines use 3 values (x,y,z). Behaviour uses only one (y) -->
 		<property magnetization="0.1411,0.99,0.0"/>
 	</item>
 	<item name="i1">
