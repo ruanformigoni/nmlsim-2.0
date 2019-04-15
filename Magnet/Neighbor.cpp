@@ -12,3 +12,7 @@ double * Neighbor::getWeight(){
 Magnet * Neighbor::getMagnet(){
 	return this->magnet;
 }
+
+void Neighbor::updateWeight(double * weight){
+	this->weight = weight;
+}

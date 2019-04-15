@@ -14,6 +14,7 @@ public:
 	Neighbor(Magnet * neighbor, double * weight);
 	double * getWeight();
 	Magnet * getMagnet();
+	void updateWeight(double * weight);
 };
 
 #endif

@@ -48,6 +48,7 @@ vector<string> ClockZone::getPhases(){
 }
 
 void ClockZone::updatePhase(ClockPhase * newPhase){
+//cout << "From " << myPhase->getPhaseName() << " to " << newPhase->getPhaseName() << endl;
 	this->myPhase = newPhase;
 	resetTimeInPhase();
 }

@@ -8,6 +8,7 @@ ClockPhase::ClockPhase(string phaseName, double phaseDuration, double * initialP
 	this->variation = variation;
 	this->initialSignal = initialPhaseSignal;
 	this->currentSignal = (double*)malloc(vLenght*sizeof(double));
+	this->myTimer = 0.0;
 	for(int i=0; i<vLenght; i++){
 		this->currentSignal[i] = initialSignal[i];
 	}
@@ -26,7 +27,7 @@ void ClockPhase::restartPhase(){
 
 void ClockPhase::nextTimeStep(double deltaTime){
 	this->myTimer += deltaTime;
-	if(myTimer >= duration){
+	if(myTimer > duration){
 		restartPhase();
 	}
 	else{

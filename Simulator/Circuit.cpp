@@ -53,6 +53,7 @@ void Circuit::dumpMagnetsValues(ofstream * outFile){
 }
 
 void Circuit::dumpInOutValues(ofstream * outFile){
+//	this->clockCtrl->dumpMagnetsValues(outFile);
 	*(outFile) << "input" << endl;
 	for(int i=0; i<this->inputMagnets.size(); i++)
 		this->inputMagnets[i]->dumpValues(outFile);

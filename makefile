@@ -44,7 +44,7 @@ clean:
 	@rm -f nmlsim
 	@rm -f ModFiles/*.mod
 
-input:="Files/test.xml"
+input:="Files/example.xml"
 output:="Files/out.csv"
 
 run:

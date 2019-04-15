@@ -5,7 +5,7 @@
 	<!-- There are 2 engines: LLG and Behaviour. There is only iNML technology for now -->
 	<property technology="iNML" engine="LLG"/>
 	<!-- There are 3 simulationMode: exaustive, direct and verbose -->
-	<property simulationMode="exaustive"/>
+	<property simulationMode="verbose"/>
 	<!-- The report time step. Starting at time 0, the program reports at each reportStep. Only used in verbose mode -->
 	<property reportStep="0.01"/>
 	<!-- Gilbert damping factor -->
@@ -80,8 +80,6 @@
 	<!-- Each different geometry must be an item -->
 	<!-- Each geometry must have a unique name, which can be whatever -->
 	<item name="magIn">
-		<!-- fixedMagnetization can be either true or false. true means the magnet is influenced by clock -->
-		<property fixedMagnetization="true"/>
 		<!-- point on the top left conner of the magnet, using the origin as the center of the magnet -->
 		<property P0="-25.0,50.0"/>
 		<!-- point on the top right conner of the magnet, using the origin as the center of the magnet -->
@@ -94,7 +92,6 @@
 		<property thickness="15.0"/>
 	</item>
 	<item name="magnet">
-		<property fixedMagnetization="false"/>
 		<property P0="-25.0,35.0"/>
 		<property P1="25.0,50.0"/>
 		<property P2="25.0,-50.0"/>
@@ -116,6 +113,8 @@
 		<!-- Output magnets have their magnetization reported in the end of the direct and exaustive modes -->
 		<!-- Regular magnets have no special interaction -->
 		<property myType="input"/>
+		<!-- fixedMagnetization can be either true or false. true means the magnet is influenced by clock -->
+		<property fixedMagnetization="true"/>
 		<!-- Position of the center of the magnet -->
 		<property position="-60.0,0.0"/>
 		<!-- ALL magnets must be in a clockZone, even if they are fixedMagnetization = true!!!! -->
@@ -127,6 +126,7 @@
 	<item name="i1">
 		<property component="magIn"/>
 		<property myType="input"/>
+		<property fixedMagnetization="true"/>
 		<property position="60.0,0.0"/>
 		<property clockZone="0"/>
 		<property magnetization="0.1411,0.99,0.0"/>
@@ -134,6 +134,7 @@
 	<item name="o0">
 		<property component="magnet"/>
 		<property myType="output"/>
+		<property fixedMagnetization="false"/>
 		<property position="0.0,0.0"/>
 		<property clockZone="0"/>
 		<property magnetization="0.1411,-0.99,0.0"/>

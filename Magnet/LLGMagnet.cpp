@@ -49,7 +49,7 @@ LLGMagnet::LLGMagnet(string id, FileReader * fReader){
 		this->magnetization[i] = stod(parts[i]);
 
 	//Fixed magnetization
-	this->fixedMagnetization = (fReader->getItemProperty(COMPONENTS, compName, "fixedMagnetization") == "true");
+	this->fixedMagnetization = (fReader->getItemProperty(DESIGN, id, "fixedMagnetization") == "true");
 
 	//Geometry
 	double px[4], py[4], thickness;

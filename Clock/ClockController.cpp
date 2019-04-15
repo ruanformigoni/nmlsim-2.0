@@ -9,8 +9,10 @@ ClockController::ClockController(vector <ClockZone *> zones, vector <ClockPhase 
 
 void ClockController::nextTimeStep(){
 	for(int i=0; i<this->zones.size(); i++){
+		this->zones[i]->updateMagnets();
 		this->zones[i]->updateTimeInPhase(this->deltaTime);
 		if(this->zones[i]->isPhaseEnded()){
+			// cout << "Ended " << zones[i]->getZonePhase() << endl;
 			string nextPhase;
 			vector <string> phasesOrder = this->zones[i]->getPhases();
 			for(int j=0; j<phasesOrder.size(); j++){
@@ -28,7 +30,6 @@ void ClockController::nextTimeStep(){
 					nextPhaseAux = phases[j];
 			this->zones[i]->updatePhase(nextPhaseAux);
 		}
-		this->zones[i]->updateMagnets();
 	}
 	for(int i=0; i<this->phases.size(); i++){
 		phases[i]->nextTimeStep(this->deltaTime);

@@ -19,8 +19,8 @@ void Simulation::verboseSimulation(double reportDeltaTime){
 	outFile << endl;
 	while(this->currentTime < this->simulationDuration){
 		auxTimer += this->deltaTime;
-		this->currentTime += this->deltaTime;
 		this->circuit->nextTimeStep();
+		this->currentTime += this->deltaTime;
 		if(auxTimer >= reportDeltaTime){
 			outFile << currentTime << ",";
 			this->circuit->dumpMagnetsValues(&outFile);
@@ -55,7 +55,7 @@ void Simulation::directSimulation(){
 		this->circuit->nextTimeStep();
 		this->currentTime += this->deltaTime;
 	}
-	this->circuit->dumpInOutValues(&outFile);
+	this->circuit->dumpMagnetsValues(&outFile);
 	outFile << endl;
 }
 
@@ -231,7 +231,19 @@ void Simulation::buildMagnets(){
 
 void Simulation::buildNeighbors(){
 	switch(this->mySimType){
-		case THIAGO:
+		case THIAGO:{
+			vector <Magnet *> magnets = this->circuit->getAllMagnets();
+			double neighborhoodRatio = stod(fReader->getProperty(CIRCUIT, "neighborhoodRatio"));
+			for(int i=0; i<magnets.size(); i++){
+				for(int j=i+1; j<magnets.size(); j++){
+					magnets[i]->addNeighbor(magnets[j], &neighborhoodRatio);
+					magnets[j]->addNeighbor(magnets[i], &neighborhoodRatio);
+				}
+			}
+			for(int i=0; i<magnets.size(); i++)
+				(static_cast<ThiagoMagnet *> (magnets[i]))->normalizeWeights();
+		}
+		break;
 		case LLG:{
 			vector <Magnet *> magnets = this->circuit->getAllMagnets();
 			double neighborhoodRatio = stod(fReader->getProperty(CIRCUIT, "neighborhoodRatio"));

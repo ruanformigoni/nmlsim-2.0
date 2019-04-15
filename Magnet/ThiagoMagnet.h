@@ -10,7 +10,7 @@
 
 #define THERMAL_ENERGY 0.00477678
 
-class ThiagoMagnet : protected Magnet{
+class ThiagoMagnet : public Magnet{
 private:
 	string id;
 	magnetType myType;
@@ -42,6 +42,7 @@ public:
 	double getThickness();
 	double getXPosition();
 	double getYPosition();
+	void normalizeWeights();
 };
 
 #endif
