@@ -70,3 +70,14 @@ void ClockController::restartAllPhases(){
 	for(int i=0; i<phases.size(); i++)
 		phases[i]->restartPhase();
 }
+
+void ClockController::resetZonesPhases(){
+	for(int i=0; i<zones.size(); i++){
+		string aux = zones[i]->getPhases()[0];
+		ClockPhase * nextPhaseAux;
+		for(int j=0; j<this->phases.size(); j++)
+			if(this->phases[j]->getPhaseName() == aux)
+				nextPhaseAux = phases[j];
+		this->zones[i]->updatePhase(nextPhaseAux);
+	}
+}

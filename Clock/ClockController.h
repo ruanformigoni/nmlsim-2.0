@@ -20,6 +20,7 @@ public:
 	ClockZone* getClockZone(int zoneId);
 	vector <Magnet *> getMagnetsFromAllZones();
 	void restartAllPhases();
+	void resetZonesPhases();
 };
 
 #endif

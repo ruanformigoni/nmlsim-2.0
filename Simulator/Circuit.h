@@ -29,6 +29,7 @@ public:
 	void dumpInOutValues(ofstream * outFile);
 	vector <Magnet *> getAllMagnets();
 	void restartAllPhases();
+	void resetZonesPhases();
 };
 
 #endif

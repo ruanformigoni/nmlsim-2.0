@@ -119,3 +119,7 @@ vector <Magnet *> Circuit::getAllMagnets(){
 void Circuit::restartAllPhases(){
 	clockCtrl->restartAllPhases();
 }
+
+void Circuit::resetZonesPhases(){
+	clockCtrl->resetZonesPhases();
+}

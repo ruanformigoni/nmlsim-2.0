@@ -47,6 +47,7 @@ void Simulation::exaustiveSimulation(){
 		outFile << "End Value\n";
 		this->circuit->dumpInOutValues(&outFile);
 		outFile << endl << endl;
+		circuit->resetZonesPhases();
 	}
 }
 
