@@ -85,8 +85,7 @@ void LLGMagnet::initializeConstants(){
 	this->alpha_l = 1.0/(1+pow(this->alpha, 2.0));
 	this->dt = this->timeStep*gammamu0*this->Ms;
 	for(int i=0; i<3; i++){
-		this->v[i] = sqrt((2.0*this->alpha*kb*this->temperature) / (gammamu0*mu0*this->Ms*(this->volume * pow(10.0, -27.0))*this->timeStep))
-					*(sqrt(this->dt)/this->Ms);
+		this->v[i] = sqrt((2.0*this->alpha*kb*this->temperature) / (mu0*this->Ms*this->Ms*(this->volume * pow(10.0, -27.0))));
 	}
 }
 
@@ -164,9 +163,9 @@ void LLGMagnet::calculateMagnetization(ClockPhase * phase){
 
 		default_random_engine generator(chrono::system_clock::now().time_since_epoch().count());
 		normal_distribution<double> distribution (0.0,1.0);
-		this->dW[0] = distribution(generator);
-		this->dW[1] = distribution(generator);
-		this->dW[2] = distribution(generator);
+		this->dW[0] = distribution(generator)*sqrt(this->dt);
+		this->dW[1] = distribution(generator)*sqrt(this->dt);
+		this->dW[2] = distribution(generator)*sqrt(this->dt);
 
 		for(int i=0; i<3; i++){
 			if(this->fixedMagnetization)
