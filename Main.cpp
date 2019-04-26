@@ -49,7 +49,10 @@ int getPhysicalValue(){ //Note: this value is in KB!
 
 int main(int argc, char const *argv[]) {
 	Simulation * simulation;
-	simulation = new Simulation(argv[1], argv[2]);
+    if(string(argv[2]) == "SingleFileMode")
+        simulation = new Simulation(argv[1]);
+    else
+    	simulation = new Simulation(argv[1], argv[2]);
 	simulation->simulate();
 	cout << "Memory Used: " << getPhysicalValue() + getVirtualValue() << " KB" << endl;
 	return 0;

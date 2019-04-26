@@ -12,6 +12,29 @@ Simulation::Simulation(string filePath, string outFilePath){
 	buildCircuit();
 }
 
+Simulation::Simulation(string singlePath){
+	this->fReader = new FileReader(singlePath + ".xml");
+	this->currentTime = 0.0;
+	this->deltaTime = stod(fReader->getProperty(CIRCUIT, "timeStep"));
+	this->simulationDuration = stod(fReader->getProperty(CIRCUIT, "simTime"));
+	this->mySimType = fReader->getEngine();
+	this->mySimMode = fReader->getSimMode();
+	this->outFile.open(getFileName(singlePath));
+	buildClkCtrl();
+	buildCircuit();
+}
+
+string Simulation::getFileName(string initial){
+	ifstream aux(initial + ".csv");
+	if(aux.fail())
+		return initial + ".csv";
+	for(int i=2; true; i++){
+		ifstream aux2(initial + "_" + to_string(i) + ".csv");
+		if(aux2.fail())
+			return (initial + "_" + to_string(i) + ".csv");
+	}
+}
+
 void Simulation::verboseSimulation(double reportDeltaTime){
 	double auxTimer = 0.0;
 	outFile << currentTime << ",";

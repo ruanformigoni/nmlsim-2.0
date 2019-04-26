@@ -52,14 +52,21 @@ LLGMagnet::LLGMagnet(string id, FileReader * fReader){
 	this->fixedMagnetization = (fReader->getItemProperty(DESIGN, id, "fixedMagnetization") == "true");
 
 	//Geometry
-	double px[4], py[4], thickness;
-	for(int i=0; i<4; i++){
-		parts = splitString(fReader->getItemProperty(COMPONENTS, compName, "P"+to_string(i)), ',');
-		px[i] = stod(parts[0]);
-		py[i] = stod(parts[1]);
-	}
+	// double px[4], py[4], thickness;
+	// for(int i=0; i<4; i++){
+	// 	parts = splitString(fReader->getItemProperty(COMPONENTS, compName, "P"+to_string(i)), ',');
+	// 	px[i] = stod(parts[0]);
+	// 	py[i] = stod(parts[1]);
+	// }
+	// thickness = stod(fReader->getItemProperty(COMPONENTS, compName, "thickness"));
+	// this->magnetizationCalculator = new LLGMagnetMagnetization(px, py, thickness);
+	double width, height, thickness, topCut, bottomCut;
+	width = stod(fReader->getItemProperty(COMPONENTS, compName, "width"));
+	height = stod(fReader->getItemProperty(COMPONENTS, compName, "height"));
 	thickness = stod(fReader->getItemProperty(COMPONENTS, compName, "thickness"));
-	this->magnetizationCalculator = new LLGMagnetMagnetization(px, py, thickness);
+	topCut = stod(fReader->getItemProperty(COMPONENTS, compName, "topCut"));
+	bottomCut = stod(fReader->getItemProperty(COMPONENTS, compName, "bottomCut"));
+	this->magnetizationCalculator = new LLGMagnetMagnetization(width, height, thickness, topCut, bottomCut);
 
 	//Position
 	parts = splitString(fReader->getItemProperty(DESIGN, id, "position"), ',');

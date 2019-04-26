@@ -44,8 +44,11 @@ clean:
 	@rm -f nmlsim
 	@rm -f ModFiles/*.mod
 
-input:="Files/example.xml"
-output:="Files/out.csv"
+eraseCSV:
+	@rm -f Files/*.csv
+
+input:="Files/example"
+output:="SingleFileMode"
 
 run:
 	@./nmlsim $(input) $(output)

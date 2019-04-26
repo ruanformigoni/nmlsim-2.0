@@ -57,6 +57,21 @@ LLGMagnetMagnetization::LLGMagnetMagnetization(double * px, double * py, double 
     this->t = thickness;
 }
 
+LLGMagnetMagnetization::LLGMagnetMagnetization(double widht, double height, double thickness, double topCut, double bottomCut){
+    this->px = (double *) malloc(4*sizeof(double));
+    this->py = (double *) malloc(4*sizeof(double));
+    this->t = thickness;
+    this->px[0] = 0 - widht/2;
+    this->px[1] = widht/2;
+    this->px[2] = widht/2;
+    this->px[3] = 0 - widht/2;
+
+    this->py[0] = (topCut < 0)? (height/2 + topCut):(height/2);
+    this->py[1] = (topCut > 0)? (height/2 - topCut):(height/2);
+    this->py[2] = (bottomCut > 0)? (0 - height/2 + bottomCut):(0 - height/2);
+    this->py[3] = (bottomCut < 0)? (0 - height/2 - bottomCut):(0 - height/2);
+}
+
 double LLGMagnetMagnetization::frand(double xmin, double xmax) {
     return ((double)rand()/RAND_MAX)*(xmax-xmin)+xmin;
 }

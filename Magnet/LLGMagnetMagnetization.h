@@ -27,6 +27,7 @@ private:
 
 public:
 	LLGMagnetMagnetization(double * px, double * py, double thickness);
+	LLGMagnetMagnetization(double widht, double height, double thickness, double topCut, double bottomCut);
 	double ** computeDemag();
 	double * computeDipolar(double * px, double * py, double thickness, double verticalDistance, double horizontalDistance);
 	double * getPx();

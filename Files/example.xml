@@ -5,7 +5,7 @@
 	<!-- There are 2 engines: LLG and Behaviour. There is only iNML technology for now -->
 	<property technology="iNML" engine="LLG"/>
 	<!-- There are 3 simulationMode: exaustive, direct and verbose -->
-	<property simulationMode="verbose"/>
+	<property simulationMode="direct"/>
 	<!-- The report time step. Starting at time 0, the program reports at each reportStep. Only used in verbose mode -->
 	<property reportStep="0.01"/>
 	<!-- Gilbert damping factor -->
@@ -79,24 +79,27 @@
 	<!-- This part also is used to determine if a magnet is fixed or not -->
 	<!-- Each different geometry must be an item -->
 	<!-- Each geometry must have a unique name, which can be whatever -->
-	<item name="magIn">
-		<!-- point on the top left conner of the magnet, using the origin as the center of the magnet -->
-		<property P0="-25.0,50.0"/>
-		<!-- point on the top right conner of the magnet, using the origin as the center of the magnet -->
-		<property P1="25.0,50.0"/>
-		<!-- point on the bottom right conner of the magnet, using the origin as the center of the magnet -->
-		<property P2="25.0,-50.0"/>
-		<!-- point on the bottom left conner of the magnet, using the origin as the center of the magnet -->
-		<property P3="-25.0,-50.0"/>
-		<!-- Thickness of the magnet -->
+	<item name="magOut">
+		<!-- The width of the magnet in nanometers -->
+		<property width="50.0"/>
+		<!-- The height of the magnet in nanometers -->
+		<property height="100.0"/>
+		<!-- The thickness of the magnet in nanometers -->
 		<property thickness="15.0"/>
+		<!-- The cuts in the magnet geometry are defined in nanometers -->
+		<!-- Positive cuts are made on the right side, while negative are made in the left side -->
+		<!-- The cutted side will have the absolute value of the cut reduced from its height, whereas the non-cutted side remains the same -->
+		<!-- The cut in the superior part of the magnet -->
+		<property topCut="10.0"/>
+		<!-- The cut in the inferior part of the magnet -->
+		<property bottomCut="-10.0"/>
 	</item>
-	<item name="magnet">
-		<property P0="-25.0,35.0"/>
-		<property P1="25.0,50.0"/>
-		<property P2="25.0,-50.0"/>
-		<property P3="-25.0,-50.0"/>
+	<item name="magIn">
+		<property width="50.0"/>
+		<property height="100.0"/>
 		<property thickness="15.0"/>
+		<property topCut="0.0"/>
+		<property bottomCut="0.0"/>
 	</item>
 </components>
 
@@ -132,7 +135,7 @@
 		<property magnetization="0.1411,0.99,0.0"/>
 	</item>
 	<item name="o0">
-		<property component="magnet"/>
+		<property component="magOut"/>
 		<property myType="output"/>
 		<property fixedMagnetization="false"/>
 		<property position="0.0,0.0"/>

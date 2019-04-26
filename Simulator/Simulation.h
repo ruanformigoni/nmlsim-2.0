@@ -35,6 +35,8 @@ private:
 
 public:
 	Simulation(string filePath, string outFilePath);
+	Simulation(string singlePath);
+	string getFileName(string initial);
 	void simulate();
 
 };

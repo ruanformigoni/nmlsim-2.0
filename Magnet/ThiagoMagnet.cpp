@@ -36,14 +36,23 @@ ThiagoMagnet::ThiagoMagnet(string id, FileReader * fReader){
 	this->xPosition = stod(vaux[0]);
 	this->yPosition = stod(vaux[1]);
 	ThiagoMagnet::neighborhoodRatio = stod(fReader->getProperty(CIRCUIT, "neighborhoodRatio"));
-	double px[4], py[4], t;
-	for(int i=0; i<4; i++){
-		vaux = splitString(fReader->getItemProperty(COMPONENTS, compId, "P"+to_string(i)), ',');
-		px[i] = stod(vaux[0]);
-		py[i] = stod(vaux[1]);
-	}
-	t = stod(fReader->getItemProperty(COMPONENTS, compId, "thickness"));
-	this->magnetizationCalculator = new LLGMagnetMagnetization(px, py, t);
+
+	// double px[4], py[4], t;
+	// for(int i=0; i<4; i++){
+	// 	vaux = splitString(fReader->getItemProperty(COMPONENTS, compId, "P"+to_string(i)), ',');
+	// 	px[i] = stod(vaux[0]);
+	// 	py[i] = stod(vaux[1]);
+	// }
+	// t = stod(fReader->getItemProperty(COMPONENTS, compId, "thickness"));
+	// this->magnetizationCalculator = new LLGMagnetMagnetization(px, py, t);
+	double widht, height, thickness, topCut, bottomCut;
+	widht = stod(fReader->getItemProperty(COMPONENTS, compId, "widht"));
+	height = stod(fReader->getItemProperty(COMPONENTS, compId, "height"));
+	thickness = stod(fReader->getItemProperty(COMPONENTS, compId, "thickness"));
+	topCut = stod(fReader->getItemProperty(COMPONENTS, compId, "topCut"));
+	bottomCut = stod(fReader->getItemProperty(COMPONENTS, compId, "bottomCut"));
+	this->magnetizationCalculator = new LLGMagnetMagnetization(widht, height, thickness, topCut, bottomCut);
+
 	this->magnetizationCalculator->computeDemag();
 }
 
