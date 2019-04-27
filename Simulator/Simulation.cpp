@@ -13,6 +13,7 @@ Simulation::Simulation(string filePath, string outFilePath){
 }
 
 Simulation::Simulation(string singlePath){
+	singlePath = splitString(singlePath, '.')[0];
 	this->fReader = new FileReader(singlePath + ".xml");
 	this->currentTime = 0.0;
 	this->deltaTime = stod(fReader->getProperty(CIRCUIT, "timeStep"));
