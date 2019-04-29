@@ -116,7 +116,7 @@
 		<!-- Output magnets have their magnetization reported in the end of the direct and exaustive modes -->
 		<!-- Regular magnets have no special interaction -->
 		<property myType="input"/>
-		<!-- fixedMagnetization can be either true or false. true means the magnet is influenced by clock -->
+		<!-- fixedMagnetization can be either true or false. true means the magnet is not influenced by clock -->
 		<property fixedMagnetization="true"/>
 		<!-- Position of the center of the magnet -->
 		<property position="-60.0,0.0"/>
