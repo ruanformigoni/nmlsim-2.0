@@ -4,6 +4,9 @@
 <circuit>
 	<!-- There are 2 engines: LLG and Behaviour. There is only iNML technology for now -->
 	<property technology="iNML" engine="LLG"/>
+	<!-- There are two possible different methods for the LLG engine, the RK4 and the RKW2 - Runge Kutta 4th order and Runge Kutta Weak 2nd order -->
+	<!-- Be mindfull that the RK4 method disconsiders the temperature -->
+	<property method="RK4"/>
 	<!-- There are 3 simulationMode: exaustive, direct and verbose -->
 	<property simulationMode="direct"/>
 	<!-- The report time step. Starting at time 0, the program reports at each reportStep. Only used in verbose mode -->

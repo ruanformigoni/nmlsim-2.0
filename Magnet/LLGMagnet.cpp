@@ -11,6 +11,7 @@ double LLGMagnet::bulk_sha;
 double LLGMagnet::l_shm;
 double LLGMagnet::th_shm;
 bool LLGMagnet::initialized = false;
+bool LLGMagnet::rk4Method = false;
 
 vector<string> LLGMagnet::splitString(string str, char separator){
 	vector<string> parts;
@@ -36,6 +37,9 @@ LLGMagnet::LLGMagnet(string id, FileReader * fReader){
 		this->bulk_sha = stod(fReader->getProperty(CIRCUIT, "spinAngle"));
 		this->l_shm = stod(fReader->getProperty(CIRCUIT, "spinDifusionLenght"));
 		this->th_shm = stod(fReader->getProperty(CIRCUIT, "heavyMaterialThickness"));
+		LLGMagnet::rk4Method = (fReader->getProperty(CIRCUIT, "method") == "RK4");
+		if(LLGMagnet::rk4Method)
+			this->temperature = 0;
 		LLGMagnet::initialized = true;
 	}
 
@@ -104,8 +108,7 @@ void LLGMagnet::crossProduct(double *vect_A, double *vect_B, double *cross_P){
  
 void LLGMagnet::calculateMagnetization(ClockPhase * phase){	
 	double hd[3], hc[3] = {0.0,0.0,0.0}, heff[3];
-	double m_heff[3], mm_heff[3], a[3];
-	double m_v[3], mm_v[3], b[3];
+	double a[3], b[3];
 	double i_s[3];
 	double u[3], u_plus[3], u_minus[3], a_u[3], b_uplus[3], b_uminus[3];
 
@@ -123,15 +126,23 @@ void LLGMagnet::calculateMagnetization(ClockPhase * phase){
 				neighbors[j]->getMagnet()->getMagnetization()[2]*(this->neighbors[j]->getWeight()[i+6]))*-1.0;
 	}
 
-	if(LLGMagnet::temperature == 0){
-		double k1[3], k2[3], k3[3], k4[3], auxSig[3], auxVar[3], auxMag[3];
+	if(LLGMagnet::rk4Method){
+		double k1[3], k2[3], k3[3], k4[3], auxSig[3], auxVar[3], auxMag[3], i_s[3], half_is[3], next_is[3];
 		for(int i=0; i<3; i++){
-			auxSig[i] = phase->getSignal()[i];
-			auxVar[i] = phase->getVariation()[i];
-			//auxVar[i] = phase->getSignal()[i];
+			if(this->fixedMagnetization){
+				auxSig[i] = 0;
+				i_s[i] = 0;
+				auxVar[i] = 0;
+			} else{
+				auxVar[i] = phase->getVariation()[i];
+				auxSig[i] = phase->getSignal()[i];
+				i_s[i] = ((-1)*hbar*this->theta_she*(phase->getSignal()[i+3]*pow(10,12)))/(2*q*this->getThickness()*pow(10,(-9))*Ms);
+				half_is[i] = ((-1)*hbar*this->theta_she*((phase->getSignal()[i+3] + auxVar[i]/2)*pow(10,12)))/(2*q*this->getThickness()*pow(10,(-9))*Ms);
+				next_is[i] = ((-1)*hbar*this->theta_she*((phase->getSignal()[i+3] + auxVar[i])*pow(10,12)))/(2*q*this->getThickness()*pow(10,(-9))*Ms);
+			}
 		}
 
-		f_term(this->magnetization, auxSig, hd, hc, k1);
+		f_term(this->magnetization, auxSig, hd, hc, i_s, k1);
 		for(int i=0; i<3; i++)
 			k1[i] *= this->dt;
 		
@@ -139,13 +150,13 @@ void LLGMagnet::calculateMagnetization(ClockPhase * phase){
 			auxSig[i] += auxVar[i]/2;
 		for(int i=0; i<3; i++)
 			auxMag[i] = this->magnetization[i] + k1[i]/2;
-		f_term(auxMag, auxSig, hd, hc, k2);
+		f_term(auxMag, auxSig, hd, hc, half_is, k2);
 		for(int i=0; i<3; i++)
 			k2[i] *= this->dt;
 		
 		for(int i=0; i<3; i++)
 			auxMag[i] = this->magnetization[i] + k2[i]/2;
-		f_term(auxMag, auxSig, hd, hc, k3);
+		f_term(auxMag, auxSig, hd, hc, half_is, k3);
 		for(int i=0; i<3; i++)
 			k3[i] *= this->dt;
 		
@@ -153,7 +164,7 @@ void LLGMagnet::calculateMagnetization(ClockPhase * phase){
 			auxSig[i] += auxVar[i]/2;
 		for(int i=0; i<3; i++)
 			auxMag[i] = this->magnetization[i] + k3[i];
-		f_term(this->magnetization, auxSig, hd, hc, k4);
+		f_term(this->magnetization, auxSig, hd, hc, next_is, k4);
 		for(int i=0; i<3; i++)
 			k4[i] *= this->dt;
 
@@ -205,9 +216,10 @@ void LLGMagnet::calculateMagnetization(ClockPhase * phase){
 	}
 }
 
-void LLGMagnet::f_term(double * currMag, double * currSignal, double* hd, double* hc, double * result){
+void LLGMagnet::f_term(double * currMag, double * currSignal, double* hd, double* hc, double* i_s, double * result){
 	double heff[3], m_heff[3], mm_heff[3];
 	double m_v[3], mm_v[3], b[3];
+	double m_is[3], mm_is[3];
 
 	for(int i=0; i<3; i++){
 		if(this->fixedMagnetization)
@@ -217,12 +229,15 @@ void LLGMagnet::f_term(double * currMag, double * currSignal, double* hd, double
 		}
 	}
 
+	crossProduct(currMag, i_s, m_is);
+	crossProduct(currMag, m_is, mm_is);
+
 	crossProduct(currMag, heff, m_heff);
 	crossProduct(currMag, m_heff, mm_heff);
 
 	for(int i=0; i<3; i++){
 		result[i] = -1.0*this->alpha_l*(
-			m_heff[i] + this->alpha*mm_heff[i]
+			m_heff[i] + this->alpha*mm_heff[i] - mm_is[i]
 			);
 	}
 }

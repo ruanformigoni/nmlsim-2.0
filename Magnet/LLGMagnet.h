@@ -40,10 +40,11 @@ private:
 	static double l_shm;
 	static double th_shm;
 	static bool initialized;
+	static bool rk4Method;
 
 	void initializeConstants();
 	void crossProduct(double *vect_A, double *vect_B, double *cross_P);
-	void f_term(double * currMag, double * currSignal, double* hd, double* hc, double * result);
+	void f_term(double * currMag, double * currSignal, double* hd, double* hc, double* i_s, double * result);
 	vector<string> splitString(string str, char separator);
 	void a_term(double* a, double* h_eff, double* i_s, double* m);
 	void b_term(double* b, double* m);
