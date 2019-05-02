@@ -30,6 +30,8 @@ public:
 	vector <Magnet *> getAllMagnets();
 	void restartAllPhases();
 	void resetZonesPhases();
+	void restartAllMagnets();
+	void makeHeader(ofstream * outFile);
 };
 
 #endif

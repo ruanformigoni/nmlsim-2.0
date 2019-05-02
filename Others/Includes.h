@@ -27,7 +27,8 @@ enum simulationType{
 enum simulationExecution{
 	DIRECT,
 	EXAUSTIVE,
-	VERBOSE
+	VERBOSE,
+	REPETITIVE
 };
 
 enum propertyType{

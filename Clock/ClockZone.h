@@ -22,6 +22,7 @@ public:
 	void updateTimeInPhase(double variation);
 	void resetTimeInPhase();
 	bool isPhaseEnded();
+	void makeHeader(ofstream * outFile);
 	void updatePhase(ClockPhase * newPhase);
 	void dumpMagnetsValues(ofstream * outFile);
 	vector<string> getPhases();

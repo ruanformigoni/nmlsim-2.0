@@ -57,6 +57,12 @@ void ClockController::dumpMagnetsValues(ofstream * outFile){
 	}
 }
 
+void ClockController::makeHeader(ofstream * outFile){
+	for(int i=0; i<zones.size(); i++){
+		zones[i]->makeHeader(outFile);
+	}	
+}
+
 vector <Magnet *> ClockController::getMagnetsFromAllZones(){
 	vector <Magnet *> magnets, aux;
 	for(int i=0; i<this->zones.size(); i++){

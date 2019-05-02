@@ -21,6 +21,7 @@ public:
 	vector <Magnet *> getMagnetsFromAllZones();
 	void restartAllPhases();
 	void resetZonesPhases();
+	void makeHeader(ofstream * outFile);
 };
 
 #endif

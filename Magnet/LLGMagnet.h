@@ -19,6 +19,7 @@ class LLGMagnet : protected Magnet{
 private:
 	string id;
 	double magnetization[3];
+	double initialMagnetization[3];
 	double newMagnetization[3];
 	vector <Neighbor *> neighbors;
 	bool fixedMagnetization;
@@ -59,12 +60,14 @@ public:
 	void dumpValues(ofstream * outFile);
 	string getId();
 	void setMagnetization(double * magnetization);
+	void resetMagnetization();
 	double * getPx();
 	double * getPy();
 	double getThickness();
 	double getXPosition();
 	double getYPosition();
 	bool isNeighbor(LLGMagnet * magnet, double ratio);
+	void makeHeader(ofstream * out);
 };
 
 #endif

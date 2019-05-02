@@ -32,6 +32,7 @@ ThiagoMagnet::ThiagoMagnet(string id, FileReader * fReader){
 	this->fixedMagnetization = (aux == "true");
 	this->magnetization = stod(fReader->getItemProperty(DESIGN, id, "magnetization"));
 	this->tempMagnetization = magnetization;
+	this->initialMagnetization = magnetization;
 	vaux = splitString(fReader->getItemProperty(DESIGN, id, "position"), ',');
 	this->xPosition = stod(vaux[0]);
 	this->yPosition = stod(vaux[1]);
@@ -173,4 +174,12 @@ double ThiagoMagnet::getXPosition(){
 
 double ThiagoMagnet::getYPosition(){
 	return this->yPosition;
+}
+
+void ThiagoMagnet::resetMagnetization(){
+	this->magnetization = this->initialMagnetization;
+}
+
+void ThiagoMagnet::makeHeader(ofstream * outFile){
+	*(outFile) << this->id << "_y,";
 }

@@ -49,8 +49,10 @@ LLGMagnet::LLGMagnet(string id, FileReader * fReader){
 	//Initial magnetization
 	vector<string> parts;
 	parts = splitString(fReader->getItemProperty(DESIGN, id, "magnetization"), ',');
-	for(int i=0; i<3; i++)
+	for(int i=0; i<3; i++){
 		this->magnetization[i] = stod(parts[i]);
+		this->initialMagnetization[i] = this->magnetization[i];
+	}
 
 	//Fixed magnetization
 	this->fixedMagnetization = (fReader->getItemProperty(DESIGN, id, "fixedMagnetization") == "true");
@@ -312,6 +314,12 @@ void LLGMagnet::setMagnetization(double * magnetization){
 	this->magnetization[2] = magnetization[2];
 }
 
+void LLGMagnet::resetMagnetization(){
+	this->magnetization[0] = initialMagnetization[0];
+	this->magnetization[1] = initialMagnetization[1];
+	this->magnetization[2] = initialMagnetization[2];
+}
+
 double * LLGMagnet::getPx(){
 	return this->magnetizationCalculator->getPx();
 }
@@ -340,4 +348,10 @@ bool LLGMagnet::isNeighbor(LLGMagnet * magnet, double ratio){
 	yDiff = abs(this->yPosition - magnet->getYPosition()) - (mpy[0]-mpy[3]) - (getPy()[0] - getPy()[3]);
 	double dist = sqrt(pow(xDiff, 2.0) + pow(yDiff, 2.0));
 	return dist < ratio;
+}
+
+void LLGMagnet::makeHeader(ofstream * out){
+	*(out) << this->id << "_x,"
+		<< this->id << "_y,"
+		<< this->id << "_z,";
 }

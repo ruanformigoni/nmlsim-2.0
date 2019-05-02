@@ -7,8 +7,10 @@
 	<!-- There are two possible different methods for the LLG engine, the RK4 and the RKW2 - Runge Kutta 4th order and Runge Kutta Weak 2nd order -->
 	<!-- Be mindfull that the RK4 method disconsiders the temperature -->
 	<property method="RK4"/>
-	<!-- There are 3 simulationMode: exaustive, direct and verbose -->
+	<!-- There are 4 simulationMode: exaustive, direct, repetitive and verbose -->
 	<property simulationMode="direct"/>
+	<!-- The number of simulations to be done in the repetitive mode -->
+	<property repetitions="10"/>
 	<!-- The report time step. Starting at time 0, the program reports at each reportStep. Only used in verbose mode -->
 	<property reportStep="0.01"/>
 	<!-- Gilbert damping factor -->

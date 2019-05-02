@@ -78,6 +78,8 @@ simulationExecution FileReader::getSimMode (){
 		return EXAUSTIVE;
 	if(aux == "verbose")
 		return VERBOSE;
+	if(aux == "repetitive")
+		return REPETITIVE;
 }
 
 string FileReader::getProperty(propertyType pType, string propertyName){

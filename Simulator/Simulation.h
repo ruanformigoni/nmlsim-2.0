@@ -31,6 +31,7 @@ private:
 	void verboseSimulation(double reportDeltaTime);
 	void exaustiveSimulation();
 	void directSimulation();
+	void repetitiveSimulation();
 	vector<string> splitString(string str, char separator);
 
 public:

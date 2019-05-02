@@ -15,6 +15,7 @@ private:
 	string id;
 	magnetType myType;
 	double magnetization;
+	double initialMagnetization;
 	double tempMagnetization;
 	bool fixedMagnetization;
 	vector <Neighbor *> neighbors;
@@ -33,6 +34,7 @@ public:
 	void calculateMagnetization(ClockPhase * phase);
 	void updateMagnetization();
 	void dumpValues(ofstream * outFile);
+	void makeHeader(ofstream * outFile);
 	string getId();
 	void setMagnetization(double * magnetization);
 	bool isNeighbor(ThiagoMagnet * magnet);
@@ -43,6 +45,7 @@ public:
 	double getXPosition();
 	double getYPosition();
 	void normalizeWeights();
+	void resetMagnetization();
 };
 
 #endif

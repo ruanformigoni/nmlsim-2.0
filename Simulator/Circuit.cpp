@@ -52,6 +52,10 @@ void Circuit::dumpMagnetsValues(ofstream * outFile){
 	this->clockCtrl->dumpMagnetsValues(outFile);
 }
 
+void Circuit::makeHeader(ofstream * outFile){
+	this->clockCtrl->makeHeader(outFile);
+}
+
 void Circuit::dumpInOutValues(ofstream * outFile){
 //	this->clockCtrl->dumpMagnetsValues(outFile);
 	*(outFile) << "input" << endl;
@@ -114,6 +118,12 @@ vector <Magnet *> Circuit::getAllMagnets(){
 		}
 	}
 	return magnets;
+}
+
+void Circuit::restartAllMagnets(){
+	vector <Magnet *> magnets = getAllMagnets();
+	for(int i=0; i<magnets.size(); i++)
+		magnets[i]->resetMagnetization();
 }
 
 void Circuit::restartAllPhases(){

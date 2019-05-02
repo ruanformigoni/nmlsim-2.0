@@ -38,6 +38,9 @@ string Simulation::getFileName(string initial){
 
 void Simulation::verboseSimulation(double reportDeltaTime){
 	double auxTimer = 0.0;
+	outFile << "Time,";
+	this->circuit->makeHeader(&outFile);
+	outFile << endl;
 	outFile << currentTime << ",";
 	this->circuit->dumpMagnetsValues(&outFile);
 	outFile << endl;
@@ -57,6 +60,7 @@ void Simulation::verboseSimulation(double reportDeltaTime){
 void Simulation::exaustiveSimulation(){
 	int inputSize = circuit->getInputsSize();
 	int limit = (int) pow(2.0, (double) inputSize);
+	cout << "Progress: 0%\n";
 	for(int i=0; i<limit; i++){
 		outFile << "COMBINATION " << i << endl << "Initial Value\n";
 		circuit->setInputs(i, this->mySimType);
@@ -72,6 +76,8 @@ void Simulation::exaustiveSimulation(){
 		this->circuit->dumpInOutValues(&outFile);
 		outFile << endl << endl;
 		circuit->resetZonesPhases();
+		cout << "\033[1A" << "\033[K";
+		cout << "Progress: " << ((double) (i+1) * 100.0)/ (double)limit << "%\n";
 	}
 }
 
@@ -80,8 +86,33 @@ void Simulation::directSimulation(){
 		this->circuit->nextTimeStep();
 		this->currentTime += this->deltaTime;
 	}
+	this->circuit->makeHeader(&outFile);
+	outFile << endl;
 	this->circuit->dumpMagnetsValues(&outFile);
 	outFile << endl;
+}
+
+void Simulation::repetitiveSimulation(){
+	int repetitions = stod(fReader->getProperty(CIRCUIT, "repetitions"));
+	outFile << "Repetition,";
+	this->circuit->makeHeader(&outFile);
+	outFile << endl;
+	cout << "Progress: 0%\n";
+	for(int i=0; i<repetitions; i++){
+		outFile << i << ",";
+		while(this->currentTime < this->simulationDuration){
+			this->circuit->nextTimeStep();
+			this->currentTime += this->deltaTime;
+		}
+		this->circuit->dumpMagnetsValues(&outFile);
+		outFile << endl;
+		this->currentTime = 0;
+		circuit->restartAllPhases();
+		circuit->resetZonesPhases();
+		circuit->restartAllMagnets();
+		cout << "\033[1A" << "\033[K";
+		cout << "Progress: " << ((double) (i+1) * 100.0)/ (double)repetitions << "%\n";
+	}
 }
 
 void Simulation::simulate(){
@@ -96,6 +127,10 @@ void Simulation::simulate(){
 		break;
 		case VERBOSE:{
 			verboseSimulation(stod(fReader->getProperty(CIRCUIT, "reportStep")));
+		}
+		break;
+		case REPETITIVE:{
+			repetitiveSimulation();
 		}
 		break;
 	}
