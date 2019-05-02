@@ -16,6 +16,10 @@ file = open(fileName, 'r')
 content = file.readlines()
 file.close()
 
+labels = content.pop(0)
+labels = labels.split(',')
+
+
 for i in range(columns):
 	aux = []
 	for line in content:
@@ -29,9 +33,9 @@ for i in range(magnets):
 	x = np.array(matrix[i*3+1])
 	y = np.array(matrix[i*3+2])
 	z = np.array(matrix[i*3+3])
-	plt.plot(t, x, label='X', color = 'b')
-	plt.plot(t, y, label='Y', color = 'r')
-	plt.plot(t, z, label='Z', color = 'y')
+	plt.plot(t, x, label=labels[i*3+1], color = 'b')
+	plt.plot(t, y, label=labels[i*3+2], color = 'r')
+	plt.plot(t, z, label=labels[i*3+3], color = 'y')
 	plt.xlabel("Time")
 	plt.ylabel("Magnetization")
 	plt.legend()
