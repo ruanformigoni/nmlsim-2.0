@@ -134,6 +134,8 @@ void LLGMagnet::calculateMagnetization(ClockPhase * phase){
 			if(this->fixedMagnetization){
 				auxSig[i] = 0;
 				i_s[i] = 0;
+				half_is[i] = 0;
+				next_is[i] = 0;
 				auxVar[i] = 0;
 			} else{
 				auxVar[i] = phase->getVariation()[i];
