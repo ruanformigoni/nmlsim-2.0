@@ -1,0 +1,114 @@
+<circuit>
+	<property technology="iNML" engine="LLG"/>
+	<property method="RKW2"/>
+	<property simulationMode="verbose"/>
+	<property repetitions="1000"/>
+	<property reportStep="0.01"/>
+	<property alpha="0.05"/>
+	<property Ms="800000"/>
+	<property temperature="300.0"/>
+	<property timeStep="0.0001"/>
+	<property simTime="20.0"/>
+	<property spinAngle="0.4"/>
+	<property spinDifusionLenght="3.5"/>
+	<property heavyMaterialThickness="5"/>
+	<property neighborhoodRatio="300.0"/>
+</circuit>
+
+<clockPhase>
+	<item name="switch">
+		<property initialSignal="300.0,0.0,0.0,0.0,0.0,0.0"/>
+		<property endSignal="0.0,0.0,0.0,0.0,0.0,0.0"/>
+		<property duration="5.0"/>
+	</item>
+	<item name="hold">
+		<property initialSignal="0.0,0.0,0.0,0.0,0.0,0.0"/>
+		<property endSignal="0.0,0.0,0.0,0.0,0.0,0.0"/>
+		<property duration="5.0"/>
+	</item>
+	<item name="reset">
+		<property initialSignal="0.0,0.0,0.0,0.0,0.0,0.0"/>
+		<property endSignal="300.0,0.0,0.0,0.0,0.0,0.0"/>
+		<property duration="5.0"/>
+	</item>
+	<item name="relax">
+		<property initialSignal="300.0,0.0,0.0,0.0,0.0,0.0"/>
+		<property endSignal="300.0,0.0,0.0,0.0,0.0,0.0"/>
+		<property duration="5.0"/>
+	</item>
+</clockPhase>
+
+<clockZone>
+	<item name="0">
+		<property phase="reset"/>
+		<property phase="relax"/>
+		<property phase="switch"/>
+		<property phase="hold"/>
+	</item>
+</clockZone>
+
+<components>
+	<item name="inputM">
+		<property width="50.0"/>
+		<property height="100.0"/>
+		<property thickness="15.0"/>
+		<property topCut="0.0"/>
+		<property bottomCut="0.0"/>
+	</item>
+	<item name="wireM">
+		<property width="50.0"/>
+		<property height="105.0"/>
+		<property thickness="15.0"/>
+		<property topCut="-29.0"/>
+		<property bottomCut="-29.0"/>
+	</item>
+	<item name="cornerM">
+		<property width="50.0"/>
+		<property height="136.0"/>
+		<property thickness="15.0"/>
+		<property topCut="0.0"/>
+		<property bottomCut="0.0"/>
+	</item>
+	<item name="outputM">
+		<property width="50.0"/>
+		<property height="100.0"/>
+		<property thickness="15.0"/>
+		<property topCut="-35.0"/>
+		<property bottomCut="-35.0"/>
+	</item>
+</components>
+
+<design>
+	<item name="i0">
+		<property component="inputM"/>
+		<property myType="input"/>
+		<property fixedMagnetization="true"/>
+		<property position="0.0,0.0"/>
+		<property clockZone="0"/>
+		<property magnetization="0.1411,-0.99,0.0"/>
+	</item>
+	<item name="w1">
+		<property component="wireM"/>
+		<property myType="regular"/>
+		<property fixedMagnetization="false"/>
+		<property position="59.0,0.0"/>
+		<property clockZone="0"/>
+		<property magnetization="0.1411,-0.99,0.0"/>
+	</item>
+	<item name="c2">
+		<property component="cornerM"/>
+		<property myType="regular"/>
+		<property fixedMagnetization="false"/>
+		<property position="118.0,0.0"/>
+		<property clockZone="0"/>
+		<property magnetization="0.1411,0.99,0.0"/>
+	</item>
+	<item name="o3">
+		<property component="outputM"/>
+		<property myType="output"/>
+		<property fixedMagnetization="false"/>
+		<property position="118.0,-154.0"/>
+		<property clockZone="0"/>
+		<property magnetization="0.1411,0.99,0.0"/>
+	</item>
+</design>
