@@ -1,5 +1,5 @@
 public class TextBox{
-    private boolean isSelected, isValidated;
+    private boolean isSelected, isValidated, isActive;
     private String label, text;
     private float x, y, w, fontSz;
     private color normal, selection, invalid, boxColor, fontColor, insideFontColor, editing;
@@ -20,6 +20,7 @@ public class TextBox{
         this.editing = color(#FFE6D5);
         this.isValidated = false;
         this.isSelected = false;
+        this.isActive = true;
         this.fontSz = fontSize;
         this.text = "";
         textSize(fontSz);
@@ -46,6 +47,8 @@ public class TextBox{
     }
     
     public void drawSelf(){
+        if(!isActive)
+            isSelected = false;
         textSize(fontSz);
         fill(fontColor);
         stroke(fontColor);
@@ -97,6 +100,8 @@ public class TextBox{
     }
     
     public boolean mousePressedMethod(){
+        if(!isActive)
+            return false;
         boolean collided = hitbox.collision(mouseX, mouseY);
         isSelected = collided;
         if (!collided)
@@ -112,6 +117,8 @@ public class TextBox{
     }
     
     public boolean keyPressedMethod(){
+        if(!isActive)
+            return false;
         if(isSelected){
             if(key == BACKSPACE){
                 if(text.length() > 0){
@@ -168,7 +175,6 @@ public class TextBox{
                 Integer.parseInt(text);
                 setValid();
             } catch(NumberFormatException e){
-                resetText();
                 setInvalid();
             }
         } else if(validationType.equals("Float")){
@@ -176,7 +182,6 @@ public class TextBox{
                 Float.parseFloat(text);
                 setValid();
             } catch(NumberFormatException e){
-                resetText();
                 setInvalid();
             }
         }

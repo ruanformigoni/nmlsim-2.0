@@ -138,55 +138,79 @@ class SimulationPanel{
             heavyMaterialThickness.drawSelf();
             spinDifusionLenght.drawSelf();
             spinAngle.drawSelf();
+            heavyMaterialThickness.isActive = true;
+            spinAngle.isActive = true;
+            spinDifusionLenght.isActive = true;
+        } else{
+            heavyMaterialThickness.isActive = false;
+            spinAngle.isActive = false;
+            spinDifusionLenght.isActive = false;
         }
         simTime.drawSelf();
         timeStep.drawSelf();
-        if(engine.getSelectedOption().equals("LLG") & method.getSelectedOption().equals("RKW2"))
+        if(engine.getSelectedOption().equals("LLG") & method.getSelectedOption().equals("RKW2")){
             temperature.drawSelf();
-        if(engine.getSelectedOption().equals("LLG"))
+            temperature.isActive = true;
+        }
+        else{
+            temperature.isActive = false;
+        }
+        if(engine.getSelectedOption().equals("LLG")){
             ms.drawSelf();
-        if(engine.getSelectedOption().equals("LLG"))
+            ms.isActive = true;
+        }
+        else{
+            ms.isActive = false;
+        }
+        if(engine.getSelectedOption().equals("LLG")){
             alpha.drawSelf();
-        if(mode.getSelectedOption().equals("Verbose"))
+            alpha.isActive = true;
+        }
+        else{
+            alpha.isActive = false;
+        }
+        if(mode.getSelectedOption().equals("Verbose")){
             reportStep.drawSelf();
-        if(mode.getSelectedOption().equals("Repetitive"))
+            reportStep.isActive = true;
+        }
+        else{
+            reportStep.isActive = false;
+        }
+        if(mode.getSelectedOption().equals("Repetitive")){
             repetitions.drawSelf();
-        if(engine.getSelectedOption().equals("LLG"))
+            repetitions.isActive = true;
+        }
+        else{
+            repetitions.isActive = false;
+        }
+        if(engine.getSelectedOption().equals("LLG")){
             method.drawSelf();
+            method.isActive = true;
+        }
+        else{
+            method.isActive = false;
+        }
         mode.drawSelf();
         engine.drawSelf();        
     }
     
     public boolean mousePressedMethod(){
-        if(engine.mousePressedMethod())
-            return true;
-        if(mode.mousePressedMethod())
-            return true;
-        if(method.mousePressedMethod())
-            return true;
-        if(repetitions.mousePressedMethod())
-            return true;
-        if(reportStep.mousePressedMethod())
-            return true;
-        if(alpha.mousePressedMethod())
-            return true;
-        if(ms.mousePressedMethod())
-            return true;
-        if(temperature.mousePressedMethod())
-            return true;
-        if(timeStep.mousePressedMethod())
-            return true;
-        if(simTime.mousePressedMethod())
-            return true;
-        if(spinAngle.mousePressedMethod())
-            return true;
-        if(spinDifusionLenght.mousePressedMethod())
-            return true;
-        if(heavyMaterialThickness.mousePressedMethod())
-            return true;
-        if(neighborhoodRadius.mousePressedMethod())
-            return true;
-        return false;
+        boolean hit = false;
+        hit = hit | engine.mousePressedMethod();
+        hit = hit | mode.mousePressedMethod();
+        hit = hit | method.mousePressedMethod();
+        hit = hit | repetitions.mousePressedMethod();
+        hit = hit | reportStep.mousePressedMethod();
+        hit = hit | alpha.mousePressedMethod();
+        hit = hit | ms.mousePressedMethod();
+        hit = hit | temperature.mousePressedMethod();
+        hit = hit | timeStep.mousePressedMethod();
+        hit = hit | simTime.mousePressedMethod();
+        hit = hit | spinAngle.mousePressedMethod();
+        hit = hit | spinDifusionLenght.mousePressedMethod();
+        hit = hit | heavyMaterialThickness.mousePressedMethod();
+        hit = hit | neighborhoodRadius.mousePressedMethod();
+        return hit;
     }
     
     public boolean keyPressedMethod(){

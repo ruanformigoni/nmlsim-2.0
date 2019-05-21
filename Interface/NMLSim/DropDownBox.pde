@@ -3,7 +3,7 @@ public class DropDownBox{
     private ArrayList<String> options;
     private float x, y, w, fontSz;
     private int selectedOpt = -1;
-    private boolean isSelected, isDropping;
+    private boolean isSelected, isDropping, isActive;
     private color fontColor, insideFontColor, boxColor, normal, selected, invalid;
     private HitBox boxhit, arrowhit;
     private ArrayList<HitBox> optionshit;
@@ -17,6 +17,7 @@ public class DropDownBox{
         this.options = new ArrayList<String>();
         this.isSelected = false;
         this.isDropping = false;
+        this.isActive = true;
         this.fontColor = color(255,255,255);
         this.boxColor = color(255,255,255);
         this.normal = color(45,80,22);
@@ -113,6 +114,8 @@ public class DropDownBox{
     }
     
     public boolean mousePressedMethod(){
+        if(!isActive)
+            return false;
         isSelected = boxhit.collision(mouseX, mouseY);
         if(isDropping){
             for(int i=0; i<options.size(); i++)
