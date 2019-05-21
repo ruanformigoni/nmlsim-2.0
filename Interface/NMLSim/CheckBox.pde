@@ -1,6 +1,6 @@
 class CheckBox{
     String label;
-    float x, y, w, h, fontSz;
+    float x, y, w, h;
     color boxColor, strokeColor, checkColor, fontColor;
     boolean isChecked;
     HitBox hitbox;
@@ -11,7 +11,6 @@ class CheckBox{
         this.w = w;
         this.h = h;
         this.isChecked = false;
-        this.fontSz = 30;
         this.label = label;
         boxColor = color(45, 80, 22);
         strokeColor = color(255, 255, 255);

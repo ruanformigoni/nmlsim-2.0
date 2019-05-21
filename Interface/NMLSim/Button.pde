@@ -1,9 +1,9 @@
 class Button{
     private String label, explanation;
     private PImage icon;
-    private float x, y, fontSz;
+    private float x, y;
     private color labelColor, explanationColor, explanationBox, selectedBox;
-    private Boolean active, expanded;
+    private Boolean active, expanded, isValid;
     private HitBox hitbox;
     private int initialTime = -1;
     
@@ -19,7 +19,7 @@ class Button{
         this.selectedBox = color(200, 113, 55);
         this.active = false;
         this.expanded = false;
-        this.fontSz = 15;
+        this.isValid = true;
         hitbox = new HitBox(x, y, icon.width, icon.height);
     }
     
@@ -48,6 +48,8 @@ class Button{
     }
     
     public void onMouseOverMethod(){
+        if(!isValid)
+            return;
         if(hitbox.collision(mouseX, mouseY)){
             int currTime = minute()*60*60 + second()*60 + millis();
             if(initialTime < 0)

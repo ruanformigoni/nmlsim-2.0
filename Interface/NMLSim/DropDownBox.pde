@@ -1,41 +1,19 @@
 public class DropDownBox{
     private String label;
     private ArrayList<String> options;
-    private float x, y, w, fontSz;
+    private float x, y, w;
     private int selectedOpt = -1;
     private boolean isSelected, isDropping, isActive;
     private color fontColor, insideFontColor, boxColor, normal, selected, invalid;
     private HitBox boxhit, arrowhit;
     private ArrayList<HitBox> optionshit;
     
-    public DropDownBox(String label, float xPosition, float yPosition, float boxWidth, float fontSize){
-        this.label = label;
-        this.x = xPosition;
-        this.y = yPosition;
-        this.w = boxWidth/2;
-        this.fontSz = fontSize;
-        this.options = new ArrayList<String>();
-        this.isSelected = false;
-        this.isDropping = false;
-        this.isActive = true;
-        this.fontColor = color(255,255,255);
-        this.boxColor = color(255,255,255);
-        this.normal = color(45,80,22);
-        this.selected = color(255,153,85);
-        this.invalid = color(255,0,0);
-        this.insideFontColor = color(45,80,22);
-        textSize(fontSz);
-        boxhit = new HitBox(x+w, y, w, textAscent()+textDescent());
-        arrowhit = new HitBox(x + 2*w - fontSz, y, fontSz, textAscent()+textDescent());
-        optionshit = new ArrayList<HitBox>();
-    }
-    
     public DropDownBox(String label, float xPosition, float yPosition, float boxWidth){
         this.label = label;
         this.x = xPosition;
         this.y = yPosition;
-        this.w = boxWidth;
-        this.fontSz = 30;
+        this.w = boxWidth/2;
+        this.isActive = true;
         this.options = new ArrayList<String>();
         this.isSelected = false;
         this.isDropping = false;

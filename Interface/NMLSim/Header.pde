@@ -2,7 +2,7 @@ class HeaderContainer{
     private ArrayList <Button> buttons;
     private Boolean isExpanded;
     private String label;
-    private float x, y, fontSz;
+    private float x, y;
     private color containerColor, expandedColor, labelColor;
     private HitBox hitbox;
     
@@ -11,7 +11,7 @@ class HeaderContainer{
         this.isExpanded = false;
         this.x = x;
         this.y = y;
-        this.fontSz = 20;
+        //this.fontSz = 20;
         this.buttons = new ArrayList<Button>();
         this.containerColor = color(45, 80, 22);
         this.expandedColor = color(83, 108, 83);
@@ -28,7 +28,7 @@ class HeaderContainer{
                 big = buttons.get(i+1).getWidth();
             boxWidth += big + 5;
         } boxWidth += 10;
-        textSize(fontSz);
+        textSize(fontSz+5);
         if(textWidth(label) > boxWidth){
             centerFactor = (textWidth(label) + 10 - boxWidth)/2;
             boxWidth = textWidth(label) + 10;
@@ -43,11 +43,11 @@ class HeaderContainer{
         rect(x, y, boxWidth, textAscent() + textDescent() + buttons.get(0).getHeight()*2 + 10);
         fill(labelColor);
         stroke(labelColor);
-        hitbox.updateBox(x + (boxWidth - textWidth(label))/2, y, textWidth(label), fontSz);
-        textSize(fontSz);
-        text(label, x + (boxWidth - textWidth(label))/2, y+fontSz);
+        hitbox.updateBox(x + (boxWidth - textWidth(label))/2, y, textWidth(label), fontSz+5);
+        textSize(fontSz+5);
+        text(label, x + (boxWidth - textWidth(label))/2, y+fontSz+5);
         //println(boxWidth + "  -  " + textWidth(label) + "  -  " + (boxWidth - textWidth(label))/2);
-        float tempX = x+5+centerFactor, tempY = y+fontSz+5, bigger = 0;
+        float tempX = x+5+centerFactor, tempY = y+fontSz+10, bigger = 0;
         for(int i=0; i<buttons.size(); i++){
             Button b = buttons.get(i);
             b.setPosition(tempX, tempY);
@@ -77,7 +77,7 @@ class HeaderContainer{
     }
     
     public float getHeight(){
-        textSize(fontSz);
+        textSize(fontSz+5);
         return textAscent() + textDescent() + buttons.get(0).getHeight()*2 + 10;
     }
     
@@ -121,13 +121,13 @@ class HeaderContainer{
 
 class Header{
     HeaderContainer file, magnet, substrate, others;
-    float x, y, myW, fontSz;
+    float x, y, myW;
     
     public Header(float x, float y, float w){
         this.x = x;
         this.y = y;
         this.myW = w;
-        fontSz = 30;
+        //fontSz = 30;
         
         file = new HeaderContainer("File", x+5, y);
         file.addButton(new Button("Save", "Saves the NML circuit file", sprites.saveIconWhite, 0, 0));
@@ -163,7 +163,7 @@ class Header{
     
     public void drawSelf(){
         float tempX, h = file.getHeight();
-        textSize(fontSz);
+        textSize(fontSz+15);
         fill(45, 80, 22);
         stroke(45, 80, 22);
         rect(x, y, myW, h);

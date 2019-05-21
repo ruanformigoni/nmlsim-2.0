@@ -1,7 +1,8 @@
 class SpriteCenter{
     public PImage copyIconWhite, openIconWhite, saveIconWhite, saveAsIconWhite, newIconWhite, lineAddWhite, editIconWhite, moveIconWhite, deleteIconWhite, pinIconWhite;
     public PImage pasteIconWhite, groupIconWhite, gridIconWhite, zoomInIconWhite, zoomOutIconWhite, bulletsIconWhite, lightIconWhite, zoneUpIconWhite, zoneDownIconWhite;
-    public PImage undoIconWhite, redoIconWhite;
+    public PImage undoIconWhite, redoIconWhite, orangeArrowUpIcon, orangeArrowDownIcon, smallSaveIconWhite, smallNewIconWhite;
+    public PImage nanoDeleteIconWhite, nanoEditIconWhite, nanoZoneUpIconWhite, nanoZoneDownIconWhite;
     
     public SpriteCenter(){
         copyIconWhite = loadImage("../Sprites/copyIconWhite.png");
@@ -10,18 +11,26 @@ class SpriteCenter{
         openIconWhite.resize(35,35);
         saveIconWhite = loadImage("../Sprites/saveIconWhite.png");
         saveIconWhite.resize(35,35);
+        smallSaveIconWhite = loadImage("../Sprites/saveIconWhite.png");
+        smallSaveIconWhite.resize(20,20);
         saveAsIconWhite = loadImage("../Sprites/saveAsIconWhite.png");
         saveAsIconWhite.resize(35,35);
         newIconWhite = loadImage("../Sprites/newIconWhite.png");
         newIconWhite.resize(35,35);
+        smallNewIconWhite = loadImage("../Sprites/newIconWhite.png");
+        smallNewIconWhite.resize(20,20);
         lineAddWhite = loadImage("../Sprites/lineAddWhite.png");
         lineAddWhite.resize(35,35);
         editIconWhite = loadImage("../Sprites/editIconWhite.png");
         editIconWhite.resize(35,35);
+        nanoEditIconWhite = loadImage("../Sprites/editIconWhite.png");
+        nanoEditIconWhite.resize(15,15);
         moveIconWhite = loadImage("../Sprites/moveIconWhite.png");
         moveIconWhite.resize(35,35);
         deleteIconWhite = loadImage("../Sprites/deleteIconWhite.png");
         deleteIconWhite.resize(35,35);
+        nanoDeleteIconWhite = loadImage("../Sprites/deleteIconWhite.png");
+        nanoDeleteIconWhite.resize(15,15);
         pinIconWhite = loadImage("../Sprites/pinIconWhite.png");
         pinIconWhite.resize(35,35);
         pasteIconWhite = loadImage("../Sprites/pasteIconWhite.png");
@@ -40,11 +49,19 @@ class SpriteCenter{
         lightIconWhite.resize(35,35);
         zoneUpIconWhite = loadImage("../Sprites/zoneUpIconWhite.png");
         zoneUpIconWhite.resize(35,35);
+        nanoZoneUpIconWhite = loadImage("../Sprites/zoneUpIconWhite.png");
+        nanoZoneUpIconWhite.resize(15,15);
         zoneDownIconWhite = loadImage("../Sprites/zoneDownIconWhite.png");
         zoneDownIconWhite.resize(35,35);
+        nanoZoneDownIconWhite = loadImage("../Sprites/zoneDownIconWhite.png");
+        nanoZoneDownIconWhite.resize(15,15);
         undoIconWhite = loadImage("../Sprites/undoIconWhite.png");
         undoIconWhite.resize(35,35);
         redoIconWhite = loadImage("../Sprites/redoIconWhite.png");
         redoIconWhite.resize(35,35);
+        orangeArrowDownIcon = loadImage("../Sprites/orangeArrowDownIcon.png");
+        orangeArrowDownIcon.resize(10,10);
+        orangeArrowUpIcon = loadImage("../Sprites/orangeArrowUpIcon.png");
+        orangeArrowUpIcon.resize(10,10);
     }
 }

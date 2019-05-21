@@ -1,12 +1,12 @@
 public class TextBox{
     private boolean isSelected, isValidated, isActive;
     private String label, text;
-    private float x, y, w, fontSz;
+    private float x, y, w;
     private color normal, selection, invalid, boxColor, fontColor, insideFontColor, editing;
     private HitBox hitbox;
     private String validationType;
     
-    public TextBox(String label, float xPosition, float yPosition, float boxWidth, float fontSize){
+    public TextBox(String label, float xPosition, float yPosition, float boxWidth){
         this.label = label;
         this.x = xPosition;
         this.y = yPosition;
@@ -21,28 +21,8 @@ public class TextBox{
         this.isValidated = false;
         this.isSelected = false;
         this.isActive = true;
-        this.fontSz = fontSize;
         this.text = "";
         textSize(fontSz);
-        this.hitbox = new HitBox(x+w, y, w, textAscent() + textDescent());
-    }
-
-    public TextBox(String label, float xPosition, float yPosition, float boxWidth){
-        this.label = label;
-        this.x = xPosition;
-        this.y = yPosition;
-        this.w = boxWidth;
-        this.normal = color(45,80,22);
-        this.fontColor = color(255,255,255);
-        this.insideFontColor = color(45,80,22);
-        this.boxColor = color(255,255,255);
-        this.selection = color(255,153,85);
-        this.invalid = color(255,0,0);
-        this.isValidated = false;
-        this.isSelected = false;
-        this.fontSz = 30;
-        this.text = "";
-        textSize(this.fontSz);
         this.hitbox = new HitBox(x+w, y, w, textAscent() + textDescent());
     }
     
@@ -79,7 +59,7 @@ public class TextBox{
         }
         fill(insideFontColor);
         stroke(insideFontColor);
-        text(aux, x+w+5, y+fontSz);        
+        text(aux, x+w+5, y+fontSz);
     }
     
     public void setLabel(String newLabel){
@@ -93,10 +73,6 @@ public class TextBox{
     public void setText(String text){
         this.text = text;
         validateText();
-    }
-    
-    public void setFontSize(float fontSize){
-        this.fontSz = fontSize;
     }
     
     public boolean mousePressedMethod(){
@@ -167,7 +143,7 @@ public class TextBox{
         validationType = type;
     }
     
-    public void validateText(){
+    public boolean validateText(){
         if(validationType.equals("String") & text != "")
             setValid();
         else if(validationType.equals("Integer")){
@@ -176,6 +152,7 @@ public class TextBox{
                 setValid();
             } catch(NumberFormatException e){
                 setInvalid();
+                return false;
             }
         } else if(validationType.equals("Float")){
             try{
@@ -183,8 +160,13 @@ public class TextBox{
                 setValid();
             } catch(NumberFormatException e){
                 setInvalid();
+                return false;
             }
+        } else{
+            setInvalid();
+            return false;
         }
+        return true;
     }
     
     public void updatePosition(float x, float y){
