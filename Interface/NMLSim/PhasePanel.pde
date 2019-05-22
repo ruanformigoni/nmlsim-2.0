@@ -243,6 +243,12 @@ class PhasePanel{
         onMouseOverMethod();
     }
     
+    ArrayList<String> getPhasesNames(){
+        if(sp.getEngine().equals("LLG"))
+            return llgPhases.getItems();
+        return behaPhases.getItems();
+    }
+    
     void onMouseOverMethod(){
         saveButton.onMouseOverMethod();
         newButton.onMouseOverMethod();
@@ -311,6 +317,38 @@ class PhasePanel{
                     behaPhaseValues.put(name.getText(), value);
                     if(!behaPhases.isIn(name.getText()))
                         behaPhases.addItem(name.getText());
+                }
+            }
+            return true;
+        }
+        if(saveButton.mousePressedMethod()){
+            boolean invalid = false;
+            saveButton.deactivate();
+            invalid = invalid | !name.validateText();
+            invalid = invalid | !duration.validateText();
+            if(sp.getEngine().equals("LLG")){
+                invalid = invalid | !initialField.validateText();
+                invalid = invalid | !endField.validateText();
+                invalid = invalid | !initialCurr.validateText();
+                invalid = invalid | !endCurr.validateText();
+            } else{
+                invalid = invalid | !initialBeha.validateText();
+                invalid = invalid | !endBeha.validateText();
+            }
+            if(!invalid){
+                String value = name.getText() + ";";
+                if(sp.getEngine().equals("LLG")){
+                    value += initialField.getText() + ";";
+                    value += endField.getText() + ";";
+                    value += initialCurr.getText() + ";";
+                    value += endCurr.getText() + ";";
+                    value += duration.getText();
+                    llgPhaseValues.put(name.getText(), value);
+                } else{
+                    value += initialBeha.getText() + ";";
+                    value += endBeha.getText() + ";";
+                    value += duration.getText();
+                    behaPhaseValues.put(name.getText(), value);
                 }
             }
             return true;

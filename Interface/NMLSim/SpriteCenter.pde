@@ -1,10 +1,14 @@
 class SpriteCenter{
     public PImage copyIconWhite, openIconWhite, saveIconWhite, saveAsIconWhite, newIconWhite, lineAddWhite, editIconWhite, moveIconWhite, deleteIconWhite, pinIconWhite;
     public PImage pasteIconWhite, groupIconWhite, gridIconWhite, zoomInIconWhite, zoomOutIconWhite, bulletsIconWhite, lightIconWhite, zoneUpIconWhite, zoneDownIconWhite;
-    public PImage undoIconWhite, redoIconWhite, orangeArrowUpIcon, orangeArrowDownIcon, smallSaveIconWhite, smallNewIconWhite;
-    public PImage nanoDeleteIconWhite, nanoEditIconWhite, nanoZoneUpIconWhite, nanoZoneDownIconWhite, smallDeleteIconWhite;
+    public PImage undoIconWhite, redoIconWhite, orangeArrowUpIcon, orangeArrowDownIcon, smallSaveIconWhite, smallNewIconWhite, nanoNewIconWhite, nanoArrowDownIconWhite;
+    public PImage nanoDeleteIconWhite, nanoEditIconWhite, nanoZoneUpIconWhite, nanoZoneDownIconWhite, smallDeleteIconWhite, nanoArrowUpIconWhite;
     
     public SpriteCenter(){
+        nanoArrowUpIconWhite = loadImage("../Sprites/arrowUpIconWhite.png");
+        nanoArrowUpIconWhite.resize(15,15);
+        nanoArrowDownIconWhite = loadImage("../Sprites/arrowDownIconWhite.png");
+        nanoArrowDownIconWhite.resize(15,15);
         copyIconWhite = loadImage("../Sprites/copyIconWhite.png");
         copyIconWhite.resize(35,35);
         openIconWhite = loadImage("../Sprites/openIconWhite.png");
@@ -19,6 +23,8 @@ class SpriteCenter{
         newIconWhite.resize(35,35);
         smallNewIconWhite = loadImage("../Sprites/newIconWhite.png");
         smallNewIconWhite.resize(20,20);
+        nanoNewIconWhite = loadImage("../Sprites/newIconWhite.png");
+        nanoNewIconWhite.resize(15,15);
         lineAddWhite = loadImage("../Sprites/lineAddWhite.png");
         lineAddWhite.resize(35,35);
         editIconWhite = loadImage("../Sprites/editIconWhite.png");

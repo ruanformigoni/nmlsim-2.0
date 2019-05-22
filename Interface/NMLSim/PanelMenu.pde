@@ -2,6 +2,7 @@ class PanelMenu{
     float x, y, panelW, panelH;
     SimulationPanel simPanel;
     PhasePanel phasePanel;
+    ZonePanel zonePanel;
     ArrayList<String> labels;
     ArrayList<HitBox> hitboxes;
     int selectedPanel;
@@ -25,6 +26,10 @@ class PanelMenu{
         auxW = textWidth("Phases");
         hitboxes.add(new HitBox(auxX, y, auxW, h));
         auxX += auxW+10;
+        labels.add("Zones");
+        auxW = textWidth("Zones");
+        hitboxes.add(new HitBox(auxX, y, auxW, h));
+        auxX += auxW+10;
 
         //labels.add("Zones");
         //labels.add("Magnet");
@@ -39,6 +44,7 @@ class PanelMenu{
         
         simPanel = new SimulationPanel(x, y-ph, pw, ph);
         phasePanel = new PhasePanel(x, y-ph, pw, ph, simPanel);
+        zonePanel = new ZonePanel(x, y-ph, pw, ph, phasePanel);
     }
     
     void drawSelf(){
@@ -54,6 +60,9 @@ class PanelMenu{
             break;
             case 1:
                 phasePanel.drawSelf();
+            break;
+            case 2:
+                zonePanel.drawSelf();
             break;
             default:{}
         }
@@ -99,12 +108,18 @@ class PanelMenu{
         else if(!(i >= hitboxes.size()))
             selectedPanel = i;
         
+        if(i == 2)
+            zonePanel.updatePhases();
+        
         switch(selectedPanel){
             case 0:
                 simPanel.mousePressedMethod();
             break;
             case 1:
                 phasePanel.mousePressedMethod();
+            break;
+            case 2:
+                zonePanel.mousePressedMethod();
             break;
             default:{}
         }
@@ -115,6 +130,9 @@ class PanelMenu{
             case 1:
                 phasePanel.mouseWheelMethod(v);
             break;
+            case 2:
+                zonePanel.mouseWheelMethod(v);
+            break;
             default:{}
         }
     }
@@ -123,6 +141,9 @@ class PanelMenu{
         switch(selectedPanel){
             case 1:
                 phasePanel.mouseDraggedMethod();
+            break;
+            case 2:
+                zonePanel.mouseDraggedMethod();
             break;
             default:{}
         }
@@ -135,6 +156,9 @@ class PanelMenu{
             break;
             case 1:
                 phasePanel.keyPressedMethod();
+            break;
+            case 2:
+                zonePanel.keyPressedMethod();
             break;
             default:{}
         }

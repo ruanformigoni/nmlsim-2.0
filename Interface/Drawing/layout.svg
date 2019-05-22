@@ -26,16 +26,16 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.49415168"
-     inkscape:cx="-1240.3242"
-     inkscape:cy="209.22753"
+     inkscape:zoom="1.397672"
+     inkscape:cx="-1944.0709"
+     inkscape:cy="568.02485"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1536"
-     inkscape:window-height="801"
-     inkscape:window-x="-8"
-     inkscape:window-y="-8"
+     inkscape:window-width="1855"
+     inkscape:window-height="1056"
+     inkscape:window-x="65"
+     inkscape:window-y="24"
      inkscape:window-maximized="1" />
   <metadata
      id="metadata7">
@@ -8005,5 +8005,88 @@
        inkscape:export-filename="C:\Users\lucas\Desktop\Interface\Sprites\redoIconWhite.png"
        inkscape:export-xdpi="257.14001"
        inkscape:export-ydpi="257.14001" />
+    <rect
+       style="fill:none;fill-opacity:1;stroke:none"
+       id="rect6042"
+       width="2.504164"
+       height="4.2928529"
+       x="-1516.0031"
+       y="374.40451" />
+    <rect
+       style="fill:none;fill-opacity:1;stroke:none"
+       id="rect6048"
+       width="2.4818053"
+       height="4.2481356"
+       x="-1513.8789"
+       y="374.3598" />
+    <rect
+       style="fill:none;fill-opacity:1;stroke:none"
+       id="rect6054"
+       width="2.5265226"
+       height="4.1587009"
+       x="-1516.4279"
+       y="374.1362" />
+    <g
+       id="g6191"
+       transform="matrix(0.07868369,0,0,-0.07868369,-1913.7875,579.59743)"
+       style="fill:#ffffff"
+       inkscape:export-filename="/home/lascasas/Desktop/GitHub/NMLSim/Interface/Sprites/arrowDownIconWhite.png"
+       inkscape:export-xdpi="257.14285"
+       inkscape:export-ydpi="257.14285">
+      <g
+         id="g6151"
+         style="fill:#ffffff">
+        <path
+           id="path6153"
+           d="M 433.968,278.657 248.387,92.79 c -7.419,-7.044 -16.08,-10.566 -25.977,-10.566 -10.088,0 -18.652,3.521 -25.697,10.566 L 10.848,278.657 C 3.615,285.887 0,294.549 0,304.637 c 0,10.28 3.619,18.843 10.848,25.693 l 21.411,21.413 c 6.854,7.23 15.42,10.852 25.697,10.852 10.278,0 18.842,-3.621 25.697,-10.852 L 222.41,213.271 361.168,351.74 c 6.848,7.228 15.413,10.852 25.7,10.852 10.082,0 18.747,-3.624 25.975,-10.852 l 21.409,-21.412 c 7.043,-7.043 10.567,-15.608 10.567,-25.693 0,-10.09 -3.614,-18.751 -10.851,-25.978 z"
+           inkscape:connector-curvature="0"
+           style="fill:#ffffff" />
+      </g>
+      <g
+         id="g6155"
+         style="fill:#ffffff" />
+      <g
+         id="g6157-6"
+         style="fill:#ffffff" />
+      <g
+         id="g6159"
+         style="fill:#ffffff" />
+      <g
+         id="g6161"
+         style="fill:#ffffff" />
+      <g
+         id="g6163"
+         style="fill:#ffffff" />
+      <g
+         id="g6165-7"
+         style="fill:#ffffff" />
+      <g
+         id="g6167"
+         style="fill:#ffffff" />
+      <g
+         id="g6169"
+         style="fill:#ffffff" />
+      <g
+         id="g6171"
+         style="fill:#ffffff" />
+      <g
+         id="g6173"
+         style="fill:#ffffff" />
+      <g
+         id="g6175"
+         style="fill:#ffffff" />
+      <g
+         id="g6177"
+         style="fill:#ffffff" />
+      <g
+         id="g6179-5"
+         style="fill:#ffffff" />
+      <g
+         id="g6181"
+         style="fill:#ffffff" />
+      <g
+         id="g6183"
+         style="fill:#ffffff" />
+    </g>
   </g>
 </svg>

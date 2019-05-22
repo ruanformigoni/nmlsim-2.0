@@ -67,6 +67,11 @@ class Scrollbar{
         index = (index<0)?0:index;
     }
     
+    void resetMaxIndex(){
+        index = 0;
+        maxIndex = 1;
+    }
+    
     void drawSelf(){
         fill(trail);
         stroke(trail);
@@ -108,8 +113,11 @@ class Scrollbar{
                 return false;
             }
             index = int((mouseY - y - 20)/((h-40)/maxIndex));
-            if(index>maxIndex-foldSize)
+            if(index>maxIndex-foldSize){
                 index = maxIndex-foldSize;
+                if(index < 0)
+                    index = 0;
+            }
             else if (index < 0)
                 index = 0;
             return true;

@@ -41,7 +41,9 @@ class Button{
     }
 
     public Boolean mousePressedMethod(){
-    	Boolean collided = hitbox.collision(mouseX, mouseY);
+    	if(!isValid)
+            return false;
+        Boolean collided = hitbox.collision(mouseX, mouseY);
         if(collided)
             active = !active;
         return collided;

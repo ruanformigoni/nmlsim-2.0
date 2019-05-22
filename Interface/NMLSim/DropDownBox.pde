@@ -91,6 +91,11 @@ public class DropDownBox{
         optionshit.remove(index);
     }
     
+    public void removeAllOptions(){
+        options.clear();
+        optionshit.clear();
+    }
+    
     public boolean mousePressedMethod(){
         if(!isActive)
             return false;

@@ -8,7 +8,6 @@ PanelMenu pm;
 
 float fontSz = 15;
 float scaleFactor = 1;
-
 //Chart c;
 
 void setup(){
