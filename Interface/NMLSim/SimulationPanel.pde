@@ -2,6 +2,7 @@ class SimulationPanel{
     float x, y, w, h;
     DropDownBox engine, mode, method;
     TextBox repetitions, reportStep, alpha, ms, temperature, timeStep, simTime, spinAngle, spinDifusionLenght, heavyMaterialThickness, neighborhoodRadius;
+    VectorTextBox subSize, cellSize, bulletSpacing;
     color panelColor, textColor;
     
     public SimulationPanel(float x, float y, float w, float h){
@@ -69,13 +70,25 @@ class SimulationPanel{
         neighborhoodRadius = new TextBox("Neigh. Radius", 0, 0, w-20);
         neighborhoodRadius.setValidationType("Float");
         neighborhoodRadius.setText("300");
+        
+        subSize = new VectorTextBox("Subst. Size (nm)", 0, 0, w-20, 2);
+        subSize.setValidationType("Float");
+        subSize.setText("1000,1000");
+
+        cellSize = new VectorTextBox("Cell Size (nm)", 0, 0, w-20, 2);
+        cellSize.setValidationType("Float");
+        cellSize.setText("1,1");
+
+        bulletSpacing = new VectorTextBox("Bullet Dist. (nm)", 0, 0, w-20, 2);
+        bulletSpacing.setValidationType("Float");
+        bulletSpacing.setText("60,125");
     }
     
     public void drawSelf(){
         textSize(fontSz+5);
         fill(panelColor);
         stroke(panelColor);
-        rect(x, y, w, h);
+        rect(x, y, w, h, 0, 15, 0, 0);
         fill(textColor);
         noStroke();
         float aux = textAscent()+textDescent(), auxY;
@@ -130,6 +143,28 @@ class SimulationPanel{
         neighborhoodRadius.updatePosition(x+10, auxY);
         auxY += aux+5;
         
+        auxY += 5;
+        fill(textColor);
+        stroke(textColor);
+        strokeWeight(4);
+        line(x+10, auxY+2, x+w-10, auxY+2);
+        strokeWeight(1);
+        noStroke();
+        auxY += 8;
+        
+        text("Substract Configurations", x+10, auxY+fontSz);
+        auxY += aux+5;
+        
+        subSize.updatePosition(x+10, auxY);
+        auxY += aux+5;
+        cellSize.updatePosition(x+10, auxY);
+        auxY += aux+5;
+        bulletSpacing.updatePosition(x+10, auxY);
+        auxY += aux+5;
+        
+        bulletSpacing.drawSelf();
+        cellSize.drawSelf();
+        subSize.drawSelf();
         neighborhoodRadius.drawSelf();
         if(engine.getSelectedOption().equals("LLG")){
             heavyMaterialThickness.drawSelf();
@@ -207,6 +242,9 @@ class SimulationPanel{
         hit = hit | spinDifusionLenght.mousePressedMethod();
         hit = hit | heavyMaterialThickness.mousePressedMethod();
         hit = hit | neighborhoodRadius.mousePressedMethod();
+        hit = hit | subSize.mousePressedMethod();
+        hit = hit | cellSize.mousePressedMethod();
+        hit = hit | bulletSpacing.mousePressedMethod();
         return hit;
     }
     
@@ -288,7 +326,22 @@ class SimulationPanel{
             return true;
         }
         if(neighborhoodRadius.keyPressedMethod()){
-            if(key == ENTER | key == TAB){
+            if(key == ENTER | key == TAB)
+                subSize.select();
+            return true;
+        }
+        if(subSize.keyPressedMethod()){
+            if((key == ENTER | key == TAB) & !subSize.isSelected())
+                cellSize.select();
+            return true;
+        }
+        if(cellSize.keyPressedMethod()){
+            if((key == ENTER | key == TAB) & !cellSize.isSelected())
+                bulletSpacing.select();
+            return true;
+        }
+        if(bulletSpacing.keyPressedMethod()){
+            if((key == ENTER | key == TAB) & !bulletSpacing.isSelected()){
                 if(mode.getSelectedOption().equals("Repetitive")){
                     repetitions.select();
                 } else if(mode.getSelectedOption().equals("Verbose")){

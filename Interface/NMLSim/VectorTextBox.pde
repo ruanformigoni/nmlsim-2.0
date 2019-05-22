@@ -62,7 +62,7 @@ public class VectorTextBox{
                 stroke(invalid);
             }
             float h = textAscent() + textDescent();
-            rect(x+w+(((w-(fields-1)*5)/fields)*i + i*5), y, (w-(fields-1)*5)/fields, h);
+            rect(x+w+(((w-(fields-1)*5)/fields)*i + i*5), y, (w-(fields-1)*5)/fields, h, 5);
             
             String aux = texts.get(i);
             while(textWidth(aux) > w){
@@ -81,7 +81,7 @@ public class VectorTextBox{
     public String getText(){
         String textAux = "";
         for(int i=0; i<fields; i++)
-            textAux += texts.get(i);
+            textAux += texts.get(i) + ",";
         return textAux;
     }
     
@@ -132,6 +132,14 @@ public class VectorTextBox{
         validateText();
     }
     
+    public void select(){
+        selectedIndex = 0;
+    }
+    
+    public boolean isSelected(){
+        return selectedIndex != -1;
+    }
+    
     public void resetText(){
         for(int i=0; i<fields; i++)
             this.texts.set(i, "");
@@ -143,9 +151,9 @@ public class VectorTextBox{
     
     public boolean validateText(){
         for(int i=0; i<fields; i++){
-            if(validationType.equals("String") & texts.get(i) != "")
+            if(validationType.equals("String") && texts.get(i) != "" && texts.get(i).contains(";")){
                 isValid.set(i, true);
-            else if(validationType.equals("Integer")){
+            } else if(validationType.equals("Integer")){
                 try{
                     Integer.parseInt(texts.get(i));
                     isValid.set(i, true);

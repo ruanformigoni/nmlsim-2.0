@@ -1,5 +1,5 @@
 class ListContainer{
-    String label;
+    String label, editionField;
     float x, y, w, h;
     int maxIndex;
     boolean deleteEnabled, editEnabled, upEnabled, downEnabled;
@@ -21,6 +21,7 @@ class ListContainer{
         editEnabled = false;
         upEnabled = false;
         downEnabled = false;
+        editionField = "";
         items = new ArrayList<String>();
         delete = new ArrayList<Button>();
         edit = new ArrayList<Button>();
@@ -105,7 +106,11 @@ class ListContainer{
         scroll.drawSelf();
     }
     
-    void mousePressedMethod(){
+    String getEditionField(){
+        return editionField;
+    }
+    
+    boolean mousePressedMethod(){
         scroll.mousePressedMethod();
         int index;
         if(deleteEnabled){
@@ -124,8 +129,23 @@ class ListContainer{
                     up.remove(index);
                 if(downEnabled)
                     down.remove(index);
+                return true;
             }
         }
+        if(editEnabled){
+            for(index=0; index<edit.size(); index++){
+                if(edit.get(index).mousePressedMethod())
+                    break;
+            }
+            if(index < edit.size()){
+                edit.get(index).deactivate();
+                editionField = items.get(index);
+                return true;
+            } else{
+                editionField = "";
+            }
+        }
+        return false;
     }
     
     void mouseDraggedMethod(){

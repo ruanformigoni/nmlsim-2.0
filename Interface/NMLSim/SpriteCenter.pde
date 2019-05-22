@@ -2,7 +2,7 @@ class SpriteCenter{
     public PImage copyIconWhite, openIconWhite, saveIconWhite, saveAsIconWhite, newIconWhite, lineAddWhite, editIconWhite, moveIconWhite, deleteIconWhite, pinIconWhite;
     public PImage pasteIconWhite, groupIconWhite, gridIconWhite, zoomInIconWhite, zoomOutIconWhite, bulletsIconWhite, lightIconWhite, zoneUpIconWhite, zoneDownIconWhite;
     public PImage undoIconWhite, redoIconWhite, orangeArrowUpIcon, orangeArrowDownIcon, smallSaveIconWhite, smallNewIconWhite;
-    public PImage nanoDeleteIconWhite, nanoEditIconWhite, nanoZoneUpIconWhite, nanoZoneDownIconWhite;
+    public PImage nanoDeleteIconWhite, nanoEditIconWhite, nanoZoneUpIconWhite, nanoZoneDownIconWhite, smallDeleteIconWhite;
     
     public SpriteCenter(){
         copyIconWhite = loadImage("../Sprites/copyIconWhite.png");
@@ -29,6 +29,8 @@ class SpriteCenter{
         moveIconWhite.resize(35,35);
         deleteIconWhite = loadImage("../Sprites/deleteIconWhite.png");
         deleteIconWhite.resize(35,35);
+        smallDeleteIconWhite = loadImage("../Sprites/deleteIconWhite.png");
+        smallDeleteIconWhite.resize(20,20);
         nanoDeleteIconWhite = loadImage("../Sprites/deleteIconWhite.png");
         nanoDeleteIconWhite.resize(15,15);
         pinIconWhite = loadImage("../Sprites/pinIconWhite.png");

@@ -64,9 +64,9 @@ public class DropDownBox{
         
         fill(normal);
         if(isDropping)
-            triangle(x + 2*w - (fontSz-5), y+h-5, x + 2*w - 5, y+h-5, x + 2*w - (fontSz)/2, y+10);
+            triangle(x + 2*w - (h-5), y+h-5, x + 2*w - 5, y+h-5, x + 2*w - (h)/2, y+5);
         else
-            triangle(x + 2*w - (fontSz-5), y+10, x + 2*w - 5, y+10, x + 2*w - (fontSz)/2, y+h-5);
+            triangle(x + 2*w - (h-5), y+5, x + 2*w - 5, y+5, x + 2*w - (h)/2, y+h-5);
             
         fill(insideFontColor);
         if(isDropping){
