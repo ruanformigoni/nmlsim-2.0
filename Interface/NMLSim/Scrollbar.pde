@@ -59,6 +59,7 @@ class Scrollbar{
     void incrementIndex(){
         index++;
         index = (index>maxIndex-foldSize)?maxIndex-foldSize:index;
+        index = (index<0)?0:index;
     }
     
     void decreaseIndex(){
@@ -69,17 +70,17 @@ class Scrollbar{
     void drawSelf(){
         fill(trail);
         stroke(trail);
-        rect(x, y, w, h);
+        rect(x, y, w, h, 15);
                 
         fill(buttons);
         stroke(buttons);
         if(isVertical){
-            image(auicon,x+(w-10)/2, y+5);
-            image(adicon,x+(w-10)/2, y+h-15);
+            image(auicon,x+(w-auicon.width)/2, y+5);
+            image(adicon,x+(w-auicon.width)/2, y+h-15);
             float barH = ((h-40)/maxIndex)*foldSize;
             barH = (barH > h-40)?h-40:barH;
             float barPos = y+20+((h-40)/maxIndex)*index;
-            rect(x, barPos, w, barH);
+            rect(x, barPos, w, barH, 15);
             bar.updateBox(x, barPos, w, barH);
         } else{
             image(auicon,x+5, y+(h-10)/2);

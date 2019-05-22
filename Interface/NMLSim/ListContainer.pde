@@ -60,37 +60,47 @@ class ListContainer{
     
     void drawSelf(){
         textSize(fontSz);
-        float auxY = y+25;
+        float auxY = y+15;
         fill(textColor);
         noStroke();
-        text(label, x, y);
+        text(label, x, y+5);
         int currIndex = scroll.getIndex();
-        for(int i=0; i<maxIndex; i++){
-            if(items.size() <= i+currIndex)
-                break;
-            text(items.get(i+currIndex), x, auxY);
-            float auxX = x+w-40;
-            if(deleteEnabled){
-                delete.get(i+currIndex).setPosition(auxX, auxY);
-                auxX -= 20;
-                delete.get(i+currIndex).drawSelf();                
+        if(currIndex >= 0){
+            for(int i=0; i<maxIndex; i++){
+                if(items.size() <= i+currIndex)
+                    break;
+                String textAux = items.get(i+currIndex);
+                float space = w - 25 -((deleteEnabled)?20:0) -((editEnabled)?20:0) -((upEnabled)?20:0) -((downEnabled)?20:0);
+                while(textWidth(textAux) > space)
+                    textAux = textAux.substring(0, textAux.length()-1);
+                textAux += " ";
+                while(textWidth(textAux) < space - 10)
+                    textAux += "-";
+                text(textAux, x, auxY+fontSz);
+                float auxX = x+w-40;
+                auxY+=2;
+                if(deleteEnabled){
+                    delete.get(i+currIndex).setPosition(auxX, auxY);
+                    auxX -= 20;
+                    delete.get(i+currIndex).drawSelf();                
+                }
+                if(editEnabled){
+                    edit.get(i+currIndex).setPosition(auxX, auxY);
+                    auxX -= 20;
+                    edit.get(i+currIndex).drawSelf();                
+                }
+                if(upEnabled){
+                    up.get(i+currIndex).setPosition(auxX, auxY);
+                    auxX -= 20;
+                    up.get(i+currIndex).drawSelf();                
+                }
+                if(downEnabled){
+                    down.get(i+currIndex).setPosition(auxX, auxY);
+                    auxX -= 20;
+                    down.get(i+currIndex).drawSelf();                
+                }
+                auxY += 25;
             }
-            if(editEnabled){
-                edit.get(i+currIndex).setPosition(auxX, auxY);
-                auxX -= 20;
-                edit.get(i+currIndex).drawSelf();                
-            }
-            if(upEnabled){
-                up.get(i+currIndex).setPosition(auxX, auxY);
-                auxX -= 20;
-                up.get(i+currIndex).drawSelf();                
-            }
-            if(downEnabled){
-                down.get(i+currIndex).setPosition(auxX, auxY);
-                auxX -= 20;
-                down.get(i+currIndex).drawSelf();                
-            }
-            auxY += 25;
         }
         scroll.drawSelf();
     }

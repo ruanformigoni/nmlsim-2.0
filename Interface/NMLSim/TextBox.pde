@@ -51,7 +51,7 @@ public class TextBox{
             stroke(invalid);
         }
         float h = textAscent() + textDescent();
-        rect(x+w, y, w, h);
+        rect(x+w, y, w, h, 5);
         
         String aux = text;
         while(textWidth(aux) > w){

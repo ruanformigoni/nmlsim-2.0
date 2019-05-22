@@ -48,9 +48,9 @@ public class DropDownBox{
             stroke(invalid);
 
         if(isDropping){
-            rect(x+w, y, w, (options.size()+1)*(h+5)-5);
+            rect(x+w, y, w, (options.size()+1)*(h+5)-5, 5);
         } else{
-            rect(x+w, y, w, h);
+            rect(x+w, y, w, h, 5);
         }
 
         fill(insideFontColor);

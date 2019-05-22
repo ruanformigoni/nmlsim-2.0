@@ -8,8 +8,10 @@ Scrollbar sb;
 PApplet ref;
 
 float fontSz = 15;
+float scaleFactor = 1;
 
 void setup(){
+    //size(2560, 1440);
     size(1280, 720);
     sprites = new SpriteCenter();
     h = new Header(0, 0, 1280);
@@ -27,6 +29,11 @@ void setup(){
 }
 
 void draw(){
+    if(displayWidth > 2560){
+        surface.setSize(2560, 1440);
+        scaleFactor = 2;
+    }
+    scale(scaleFactor);
     //background(45,80,22);
     background(200,200,200);
     h.drawSelf();

@@ -2,17 +2,17 @@ class HitBox{
     private float x, y, w, h;
     
     HitBox(float xPos, float yPos, float boxWidth, float boxHeight){
-        x = xPos;
-        y = yPos;
-        w = boxWidth;
-        h = boxHeight;
+        x = xPos*scaleFactor;
+        y = yPos*scaleFactor;
+        w = boxWidth*scaleFactor;
+        h = boxHeight*scaleFactor;
     }
     
     public void updateBox(float xPos, float yPos, float boxWidth, float boxHeight){
-        x = xPos;
-        y = yPos;
-        w = boxWidth;
-        h = boxHeight;
+        x = xPos*scaleFactor;
+        y = yPos*scaleFactor;
+        w = boxWidth*scaleFactor;
+        h = boxHeight*scaleFactor;
     }
     
     public void drawSelf(){
