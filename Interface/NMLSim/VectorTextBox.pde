@@ -65,7 +65,7 @@ public class VectorTextBox{
             rect(x+w+(((w-(fields-1)*5)/fields)*i + i*5), y, (w-(fields-1)*5)/fields, h, 5);
             
             String aux = texts.get(i);
-            while(textWidth(aux) > w){
+            while(textWidth(aux) > (w-(fields-1)*5)/fields-2){
                 aux = aux.substring(1, aux.length());
             }
             fill(insideFontColor);
@@ -159,7 +159,6 @@ public class VectorTextBox{
                     isValid.set(i, true);
                 } catch(NumberFormatException e){
                     isValid.set(i, false);
-                    return false;
                 }
             } else if(validationType.equals("Float")){
                 try{
@@ -167,13 +166,14 @@ public class VectorTextBox{
                     isValid.set(i, true);
                 } catch(NumberFormatException e){
                     isValid.set(i, false);
-                    return false;
                 }
             } else{
                 isValid.set(i, false);
-                return false;
             }
         }
+        for(int i=0; i<isValid.size(); i++)
+            if(!isValid.get(i))
+                return false;
         return true;
     }
     

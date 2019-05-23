@@ -3,6 +3,7 @@ class PanelMenu{
     SimulationPanel simPanel;
     PhasePanel phasePanel;
     ZonePanel zonePanel;
+    MagnetPanel magnetPanel;
     ArrayList<String> labels;
     ArrayList<HitBox> hitboxes;
     int selectedPanel;
@@ -30,9 +31,11 @@ class PanelMenu{
         auxW = textWidth("Zones");
         hitboxes.add(new HitBox(auxX, y, auxW, h));
         auxX += auxW+10;
+        labels.add("Magnet");
+        auxW = textWidth("Magnet");
+        hitboxes.add(new HitBox(auxX, y, auxW, h));
+        auxX += auxW+10;
 
-        //labels.add("Zones");
-        //labels.add("Magnet");
         
         
         textColor = color(255,255,255);
@@ -45,6 +48,7 @@ class PanelMenu{
         simPanel = new SimulationPanel(x, y-ph, pw, ph);
         phasePanel = new PhasePanel(x, y-ph, pw, ph, simPanel);
         zonePanel = new ZonePanel(x, y-ph, pw, ph, phasePanel);
+        magnetPanel = new MagnetPanel(x, y-ph, pw, ph, zonePanel);
     }
     
     void drawSelf(){
@@ -53,19 +57,6 @@ class PanelMenu{
         fill(normalColor);
         stroke(normalColor);
         rect(x, y, width, h);
-
-        switch(selectedPanel){
-            case 0:
-                simPanel.drawSelf();
-            break;
-            case 1:
-                phasePanel.drawSelf();
-            break;
-            case 2:
-                zonePanel.drawSelf();
-            break;
-            default:{}
-        }
 
         stroke(lineColor);
         strokeWeight(2);
@@ -95,8 +86,22 @@ class PanelMenu{
 
             auxX += textWidth(labels.get(i))+10;
         }
-        //for(int i=0; i<hitboxes.size(); i++)
-        //    hitboxes.get(i).drawSelf();
+        
+        switch(selectedPanel){
+            case 0:
+                simPanel.drawSelf();
+            break;
+            case 1:
+                phasePanel.drawSelf();
+            break;
+            case 2:
+                zonePanel.drawSelf();
+            break;
+            case 3:
+                magnetPanel.drawSelf();
+            break;
+            default:{}
+        }
     }
     
     void mousePressedMethod(){
@@ -112,6 +117,8 @@ class PanelMenu{
         
         if(i == 2)
             zonePanel.updatePhases();
+        if(i == 3)
+            magnetPanel.updateZones();
         
         switch(selectedPanel){
             case 0:
@@ -122,6 +129,9 @@ class PanelMenu{
             break;
             case 2:
                 zonePanel.mousePressedMethod();
+            break;
+            case 3:
+                magnetPanel.mousePressedMethod();
             break;
             default:{}
         }
@@ -161,6 +171,9 @@ class PanelMenu{
             break;
             case 2:
                 zonePanel.keyPressedMethod();
+            break;
+            case 3:
+                magnetPanel.keyPressedMethod();
             break;
             default:{}
         }

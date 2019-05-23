@@ -127,15 +127,15 @@ class Chart{
         h = labels.size()*(textAscent() + textDescent() + 5) + 5;
         fill(popUpColor);
         stroke(popUpColor);
-        rect(mouseX, mouseY-h, w, h, 5);
-        float auxY = mouseY-h + 5;
+        rect(x+this.w, y, w, h, 5);
+        float auxY = y + 5;
         for(int i=0; i<labels.size(); i++){
             fill(colors.get(i));
             stroke(255, 255, 255);
-            rect(mouseX+5, auxY+2, 15, 15, 5);
+            rect(x+this.w+5, auxY+2, 15, 15, 5);
             fill(255,255,255);
             noStroke();
-            text(labels.get(i), mouseX+25, auxY+fontSz);
+            text(labels.get(i), x+this.w+25, auxY+fontSz);
             auxY += textAscent() + textDescent() + 5;
         }
     }

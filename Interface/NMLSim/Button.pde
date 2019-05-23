@@ -59,10 +59,10 @@ class Button{
             if(currTime - initialTime > 2000){
                 fill(explanationBox);
                 stroke(explanationBox);
-                rect(mouseX + 20, mouseY, textWidth(explanation), textAscent() + textDescent());
+                rect(x+icon.width/2, y+icon.height/2, textWidth(explanation), textAscent() + textDescent());
                 fill(explanationColor);
                 noStroke();
-                text(explanation, mouseX + 20, mouseY + fontSz);
+                text(explanation, x+icon.width/2, y+icon.height/2 + fontSz);
             }
         } else{
             initialTime = -1;

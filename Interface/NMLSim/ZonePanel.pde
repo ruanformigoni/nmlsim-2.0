@@ -205,6 +205,16 @@ class ZonePanel{
         onMouseOverMethod();
     }
     
+    ArrayList <String> getZoneNames(){
+        if(phasePanel.getEngine().equals("LLG"))
+            return llgZones.getItems();
+        return behaZones.getItems();
+    }
+    
+    String getEngine(){
+        return phasePanel.getEngine();
+    }
+    
     void updatePhases(){
         myPhases.clearList();
         label.resetText();

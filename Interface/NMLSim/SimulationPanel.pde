@@ -4,6 +4,7 @@ class SimulationPanel{
     TextBox repetitions, reportStep, alpha, ms, temperature, timeStep, simTime, spinAngle, spinDifusionLenght, heavyMaterialThickness, neighborhoodRadius;
     VectorTextBox subSize, cellSize, bulletSpacing;
     color panelColor, textColor;
+    Button clearButton, defaultButton;
     
     public SimulationPanel(float x, float y, float w, float h){
         this.x = x;
@@ -82,6 +83,9 @@ class SimulationPanel{
         bulletSpacing = new VectorTextBox("Bullet Dist. (nm)", 0, 0, w-20, 2);
         bulletSpacing.setValidationType("Float");
         bulletSpacing.setText("60,125");
+        
+        clearButton = new Button("Clear", "Clear all fields", sprites.smallDeleteIconWhite, x+w-55, y+h-22.5);
+        defaultButton = new Button("Defalt", "Set all fields to the default option", sprites.smallDefaultIconWhite, x+w-30, y+h-22.5);
     }
     
     public void drawSelf(){
@@ -162,6 +166,8 @@ class SimulationPanel{
         bulletSpacing.updatePosition(x+10, auxY);
         auxY += aux+5;
         
+        defaultButton.drawSelf();
+        clearButton.drawSelf();
         bulletSpacing.drawSelf();
         cellSize.drawSelf();
         subSize.drawSelf();
@@ -223,11 +229,53 @@ class SimulationPanel{
             method.isActive = false;
         }
         mode.drawSelf();
-        engine.drawSelf();        
+        engine.drawSelf();
+        onMouseOverMethod();
+    }
+    
+    void onMouseOverMethod(){
+        clearButton.onMouseOverMethod();
+        defaultButton.onMouseOverMethod();
     }
     
     public boolean mousePressedMethod(){
         boolean hit = false;
+        if(clearButton.mousePressedMethod()){
+            clearButton.deactivate();
+            reportStep.resetText();
+            repetitions.resetText();
+            temperature.resetText();
+            method.resetOption();
+            alpha.resetText();
+            ms.resetText();
+            spinAngle.resetText();
+            spinDifusionLenght.resetText();
+            heavyMaterialThickness.resetText();
+            engine.resetOption();
+            mode.resetOption();
+            timeStep.resetText();
+            simTime.resetText();
+            neighborhoodRadius.resetText();
+            subSize.resetText();
+            cellSize.resetText();
+            bulletSpacing.resetText();
+        }
+        if(defaultButton.mousePressedMethod()){
+            defaultButton.deactivate();
+            reportStep.setText("0.01");
+            alpha.setText("0.05");
+            ms.setText("800000");
+            timeStep.setText("0.0001");
+            spinAngle.setText("0.4");
+            spinDifusionLenght.setText("3.5");
+            heavyMaterialThickness.setText("5");
+            neighborhoodRadius.setText("300");
+            subSize.setText("1000,1000");
+            cellSize.setText("1,1");
+            bulletSpacing.setText("60,125");
+            temperature.setText("300");
+            repetitions.setText("100");
+        }
         hit = hit | engine.mousePressedMethod();
         hit = hit | mode.mousePressedMethod();
         hit = hit | method.mousePressedMethod();

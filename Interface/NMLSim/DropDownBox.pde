@@ -70,7 +70,8 @@ public class DropDownBox{
             
         fill(insideFontColor);
         if(isDropping){
-            line(x+w+5, y+h+5, x+2*w-5, y+h+5);
+            if(options.size() > 0)
+                line(x+w+5, y+h+5, x+2*w-5, y+h+5);
             for(int i=0; i<options.size(); i++){
                 String aux = options.get(i);
                 while(textWidth(aux) > w-5)
