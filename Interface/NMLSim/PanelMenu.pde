@@ -95,6 +95,8 @@ class PanelMenu{
 
             auxX += textWidth(labels.get(i))+10;
         }
+        //for(int i=0; i<hitboxes.size(); i++)
+        //    hitboxes.get(i).drawSelf();
     }
     
     void mousePressedMethod(){

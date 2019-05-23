@@ -94,6 +94,7 @@ public class DropDownBox{
     public void removeAllOptions(){
         options.clear();
         optionshit.clear();
+        resetOption();
     }
     
     public boolean mousePressedMethod(){

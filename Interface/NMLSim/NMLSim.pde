@@ -7,12 +7,18 @@ Header h;
 PanelMenu pm;
 
 float fontSz = 15;
-float scaleFactor = 1;
+float scaleFactor;
 //Chart c;
 
 void setup(){
     //size(2560, 1440);
     size(1280, 720);
+    if(displayWidth > 2560){
+        surface.setSize(2560, 1440);
+        scaleFactor = 2;
+    }else{
+        scaleFactor = 1;
+    }
     sprites = new SpriteCenter();
     h = new Header(0, 0, 1280);
     //sp = new SimulationPanel(400, 200, 300, 500);
@@ -33,10 +39,6 @@ void setup(){
 }
 
 void draw(){
-    if(displayWidth > 2560){
-        surface.setSize(2560, 1440);
-        scaleFactor = 2;
-    }
     scale(scaleFactor);
     //background(45,80,22);
     background(200,200,200);

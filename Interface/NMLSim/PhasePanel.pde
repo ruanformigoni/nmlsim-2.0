@@ -101,12 +101,12 @@ class PhasePanel{
         auxY += aux+5;
         
         if(name.validateText()){
-            if(sp.getEngine().equals("LLG") & llgPhases.isIn(name.getText())){
+            if(sp.getEngine().equals("LLG") && llgPhases.isIn(name.getText())){
                 saveButton.setPosition(x+w-30,auxY);
                 saveButton.drawSelf();
                 newButton.isValid = false;
                 saveButton.isValid = true;
-            } else if(behaPhases.isIn(name.getText())){
+            } else if(!sp.getEngine().equals("LLG") && behaPhases.isIn(name.getText())){
                 saveButton.setPosition(x+w-30,auxY);
                 saveButton.drawSelf();
                 newButton.isValid = false;
@@ -192,7 +192,7 @@ class PhasePanel{
                                 {0,Float.parseFloat(initData[0])},
                                 {Float.parseFloat(duration.getText()),Float.parseFloat(endData[0])}
                                 },
-                            color(0,0,255    ));
+                            color(0,0,255));
                     preview.addSeires("External Field Y",
                             new float[][]{
                                 {0,Float.parseFloat(initData[1])},
@@ -247,6 +247,16 @@ class PhasePanel{
         if(sp.getEngine().equals("LLG"))
             return llgPhases.getItems();
         return behaPhases.getItems();
+    }
+    
+    String getEngine(){
+        return sp.getEngine();
+    }
+    
+    String getPhaseInfo(String phaseName){
+        if(sp.getEngine().equals("LLG"))
+            return llgPhaseValues.get(phaseName);
+        return behaPhaseValues.get(phaseName);
     }
     
     void onMouseOverMethod(){

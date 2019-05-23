@@ -36,6 +36,39 @@ class ListContainer{
         return items.contains(element);
     }
     
+    boolean hasExtraItems(ArrayList <String> options){
+        for(int i=0; i<items.size(); i++)
+            if(!options.contains(items.get(i)))
+                return true;
+        return false;
+    }
+    
+    void removeExtraItems(ArrayList <String> options){
+        for(int i=0; i<items.size(); i++)
+            if(!options.contains(items.get(i))){
+                items.remove(i);
+                if(deleteEnabled) delete.remove(i);
+                if(editEnabled) edit.remove(i);
+                if(upEnabled) up.remove(i);
+                if(downEnabled) down.remove(i);
+                i--;
+                scroll.decreaseMaxIndex();
+            }
+    }
+        
+    void removeItem(String option){
+        for(int i=0; i<items.size(); i++)
+            if(items.get(i).equals(option)){
+                items.remove(i);
+                if(deleteEnabled) delete.remove(i);
+                if(editEnabled) edit.remove(i);
+                if(upEnabled) up.remove(i);
+                if(downEnabled) down.remove(i);
+                scroll.decreaseMaxIndex();
+                return;
+            }
+    }
+        
     ArrayList <String> getItems(){
         return items;
     }

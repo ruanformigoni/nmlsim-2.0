@@ -61,7 +61,7 @@ class HeaderContainer{
                 tempX += bigger + 5;
                 bigger = 0;
             }
-        }   
+        }
     }
     
     public float getWidth(){
