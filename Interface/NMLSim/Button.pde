@@ -3,7 +3,7 @@ class Button{
     private PImage icon;
     private float x, y;
     private color labelColor, explanationColor, explanationBox, selectedBox, mouseOverColor, mouseOverExpandedColor;
-    private Boolean active, expanded, isValid, isMouseOver;
+    private Boolean active, expanded, isValid, isMouseOver, explanationOnRight;
     private HitBox hitbox;
     private int initialTime = -1;
     
@@ -20,6 +20,7 @@ class Button{
         this.mouseOverColor = color(83,108,83);
         this.mouseOverExpandedColor = color(45,80,22);
         this.active = false;
+        explanationOnRight = true;
         this.expanded = false;
         this.isValid = true;
         this.isMouseOver = false;
@@ -75,10 +76,16 @@ class Button{
             if(currTime - initialTime > 2000){
                 fill(explanationBox);
                 stroke(explanationBox);
-                rect(x+icon.width, y, textWidth(explanation)+10, textAscent() + textDescent(), 5);
+                if(explanationOnRight)
+                    rect(x+icon.width, y, textWidth(explanation)+10, textAscent() + textDescent(), 5);
+                else
+                    rect(x-10-textWidth(explanation), y, textWidth(explanation)+10, textAscent() + textDescent(), 5);
                 fill(explanationColor);
                 noStroke();
-                text(explanation, x+icon.width+5, y + fontSz);
+                if(explanationOnRight)
+                    text(explanation, x+icon.width+5, y + fontSz);
+                else
+                    text(explanation, x-5-textWidth(explanation), y + fontSz);
             }
         } else{
             initialTime = -1;
@@ -111,5 +118,113 @@ class Button{
     
     public float getHeight(){
         return icon.height;
+    }
+}
+
+class TextButton{
+    private String label;
+    private float x, y, w;
+    private color labelColor, selectedColor, mouseOverColor, buttonColor;
+    private Boolean isSelected, isValid, isTyping;
+    private HitBox hitbox;
+    
+    TextButton(String label, float x, float y, float w){
+        this.x = x;
+        this.y = y;
+        this.label = label;
+        labelColor = color(255,255,255);
+        selectedColor = color(212,85,0);
+        mouseOverColor = color(83,108,83);
+        buttonColor = color(45,80,22);
+        isSelected = false;
+        isValid = true;
+        isTyping = false;
+        textSize(fontSz);
+        hitbox = new HitBox(x, y, w, textAscent()+textDescent());
+    }
+    
+    void drawSelf(){
+        textSize(fontSz);
+        float h = textAscent()+textDescent();
+        if(isSelected){
+            fill(selectedColor);
+            stroke(selectedColor);
+        } else if(hitbox.collision(mouseX, mouseY)){
+            fill(mouseOverColor);
+            stroke(mouseOverColor);
+        } else{
+            fill(buttonColor);
+            stroke(buttonColor);
+        }
+        rect(x, y, w, h, 5);
+        fill(labelColor);
+        noStroke();
+        String aux = label;
+        while(textWidth(aux) > w-10)
+            if(isTyping)
+                aux = aux.substring(1, aux.length());
+            else
+                aux = aux.substring(0, aux.length()-1);
+        text(aux, x+5, y+fontSz);
+    }
+
+    public Boolean mousePressedMethod(){
+        if(!isValid)
+            return false;
+        Boolean collided = hitbox.collision(mouseX, mouseY);
+        if(collided)
+            isSelected = !isSelected;
+        return collided;
+    }
+    
+    public void unselect(){
+        isSelected = false;
+    }
+    
+    String getText(){
+        return label;
+    }
+    
+    boolean keyPressedMethod(){
+        if(!isValid)
+            return false;
+        if(isSelected){
+            if(key == BACKSPACE){
+                if(label.length() > 0){
+                    this.label = label.substring(0, label.length()-1);
+                }
+            } else if (key == ENTER | key == TAB){
+                unselect();
+            } else {
+                label += key;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public void deactivate(){
+        this.isSelected = false;
+    }
+    
+    public void select(){
+        isSelected = true;
+    }
+    
+    public void setPosition(float x, float y){
+        this.x = x;
+        this.y = y;
+        textSize(fontSz);
+        hitbox.updateBox(x, y, w, textAscent()+textDescent());
+    }
+    
+    void setWidth(float w){
+        this.w = w;
+        textSize(fontSz);
+        hitbox.updateBox(x, y, w, textAscent()+textDescent());
+    }
+    
+    void setText(String s){
+        label = s;
     }
 }

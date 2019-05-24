@@ -263,7 +263,7 @@ class ZonePanel{
         }
         if(newButton.mousePressedMethod()){
             newButton.deactivate();
-            if(label.validateText()){
+            if(label.validateText() && myPhases.getItems().size() > 0){
                 ArrayList<String> aux = myPhases.getItems();
                 String strAux = label.getText() + ";";
                 for(int i=0; i<aux.size(); i++){
@@ -281,7 +281,7 @@ class ZonePanel{
         }
         if(saveButton.mousePressedMethod()){
             saveButton.deactivate();
-            if(label.validateText()){
+            if(label.validateText() && myPhases.getItems().size() > 0){
                 ArrayList<String> aux = myPhases.getItems();
                 String strAux = label.getText() + ";";
                 for(int i=0; i<aux.size(); i++){

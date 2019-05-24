@@ -106,6 +106,7 @@ class ListContainer{
     }
     
     void drawSelf(){
+        scroll.drawSelf();
         textSize(fontSz);
         float auxY = y+15;
         fill(textColor);
@@ -114,6 +115,8 @@ class ListContainer{
         int currIndex = scroll.getIndex();
         if(currIndex >= 0){
             for(int i=0; i<maxIndex; i++){
+                fill(textColor);
+                noStroke();
                 if(items.size() <= i+currIndex)
                     break;
                 String textAux = items.get(i+currIndex);
@@ -129,27 +132,30 @@ class ListContainer{
                 if(deleteEnabled){
                     delete.get(i+currIndex).setPosition(auxX, auxY);
                     auxX -= 20;
-                    delete.get(i+currIndex).drawSelf();                
+                    delete.get(i+currIndex).drawSelf();
+                    delete.get(i+currIndex).onMouseOverMethod();
                 }
                 if(editEnabled){
                     edit.get(i+currIndex).setPosition(auxX, auxY);
                     auxX -= 20;
-                    edit.get(i+currIndex).drawSelf();                
+                    edit.get(i+currIndex).drawSelf();        
+                    edit.get(i+currIndex).onMouseOverMethod();
                 }
                 if(downEnabled){
                     down.get(i+currIndex).setPosition(auxX, auxY);
                     auxX -= 20;
                     down.get(i+currIndex).drawSelf();                
+                    down.get(i+currIndex).onMouseOverMethod();
                 }
                 if(upEnabled){
                     up.get(i+currIndex).setPosition(auxX, auxY);
                     auxX -= 20;
                     up.get(i+currIndex).drawSelf();                
+                    up.get(i+currIndex).onMouseOverMethod();
                 }
                 auxY += 25;
             }
         }
-        scroll.drawSelf();
     }
     
     String getEditionField(){

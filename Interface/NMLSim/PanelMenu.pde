@@ -4,10 +4,13 @@ class PanelMenu{
     PhasePanel phasePanel;
     ZonePanel zonePanel;
     MagnetPanel magnetPanel;
+    StructurePanel structurePanel;
     ArrayList<String> labels;
     ArrayList<HitBox> hitboxes;
     int selectedPanel;
     color selectedColor, normalColor, textColor, lineColor;
+    boolean structurePanelActive;
+    HitBox structureLabelHitbox;
     
     PanelMenu(float x, float y, float pw, float ph){
         this.x = x;
@@ -45,12 +48,16 @@ class PanelMenu{
         
         selectedPanel = -1;
         
+        structurePanelActive = false;
+        structurePanel = new StructurePanel(width-pw/2, y-ph, pw/2, ph);
         simPanel = new SimulationPanel(x, y-ph, pw, ph);
         phasePanel = new PhasePanel(x, y-ph, pw, ph, simPanel);
         zonePanel = new ZonePanel(x, y-ph, pw, ph, phasePanel);
-        magnetPanel = new MagnetPanel(x, y-ph, pw, ph, zonePanel);
+        magnetPanel = new MagnetPanel(x, y-ph, pw, ph, zonePanel, structurePanel);
+        
+        structureLabelHitbox = new HitBox(width-textWidth("Structures")-10, y, textWidth("Structures")+10, textAscent()+textDescent());
     }
-    
+        
     void drawSelf(){
         float h = textAscent()+textDescent(), auxX = x+5;
         textSize(fontSz);
@@ -87,6 +94,25 @@ class PanelMenu{
             auxX += textWidth(labels.get(i))+10;
         }
         
+        fill(textColor);
+        noStroke();
+        if(structurePanelActive){
+            fill(selectedColor);
+            stroke(selectedColor);
+            rect(width-textWidth("Structures")-10, y, textWidth("Structures")+10, h);
+        }
+        noStroke();
+        fill(textColor);
+        text("Structures", width-textWidth("Structures")-5, y+fontSz);
+        stroke(lineColor);
+        strokeWeight(2);
+        line(width-textWidth("Structures")-10, y+1, width-textWidth("Structures")-10, y+h-2);
+        strokeWeight(1);
+        noStroke();
+        
+        if(structurePanelActive)
+            structurePanel.drawSelf();
+        
         switch(selectedPanel){
             case 0:
                 simPanel.drawSelf();
@@ -105,6 +131,8 @@ class PanelMenu{
     }
     
     void mousePressedMethod(){
+        if(structureLabelHitbox.collision(mouseX,mouseY))
+            structurePanelActive = !structurePanelActive;
         int i;
         for(i=0; i<hitboxes.size(); i++){
             if(hitboxes.get(i).collision(mouseX, mouseY))
@@ -119,6 +147,8 @@ class PanelMenu{
             zonePanel.updatePhases();
         if(i == 3)
             magnetPanel.updateZones();
+        
+        structurePanel.mousePressedMethod();
         
         switch(selectedPanel){
             case 0:
@@ -138,6 +168,7 @@ class PanelMenu{
     }
     
     void mouseWheelMethod(float v){
+        structurePanel.mouseWheelMethod(v);
         switch(selectedPanel){
             case 1:
                 phasePanel.mouseWheelMethod(v);
@@ -150,6 +181,7 @@ class PanelMenu{
     }
     
     void mouseDraggedMethod(){
+        structurePanel.mouseDraggedMethod();
         switch(selectedPanel){
             case 1:
                 phasePanel.mouseDraggedMethod();
@@ -162,6 +194,7 @@ class PanelMenu{
     }
     
     void keyPressedMethod(){
+        structurePanel.keyPressedMethod();
         switch(selectedPanel){
             case 0:
                 simPanel.keyPressedMethod();

@@ -11,13 +11,15 @@ class MagnetPanel{
     
     color panelColor, textColor;
     ZonePanel zonePanel;
+    StructurePanel structurePanel;
 
-    public MagnetPanel(float x, float y, float w, float h, ZonePanel zp){
+    public MagnetPanel(float x, float y, float w, float h, ZonePanel zp, StructurePanel sp){
         this.x = x;
         this.y = y;
         this.w = w;
         this.h = h;
         zonePanel = zp;
+        structurePanel = sp;
         
         label = new TextBox("Label", x, y, w-20);
         label.setValidationType("String");
@@ -221,7 +223,52 @@ class MagnetPanel{
         clearButton.onMouseOverMethod();
     }
     
+    boolean validateAllFields(){
+        boolean valid = true;
+        valid = valid & label.validateText();
+        valid = valid & !type.getSelectedOption().equals("");
+        valid = valid & !clockZone.getSelectedOption().equals("");
+        if(zonePanel.getEngine().equals("LLG")){
+            valid = valid & llgInitMag.validateText();
+        } else{
+            valid = valid & behaInitMag.validateText();
+        }
+        valid = valid & magBottomCut.validateText();
+        valid = valid & magHeight.validateText();
+        valid = valid & magThickness.validateText();
+        valid = valid & magTopCut.validateText();
+        valid = valid & magWidth.validateText();
+        valid = valid & position.validateText();
+        return valid;
+    }
+    
+    String getValue(boolean toStructure){
+        String value = "";
+        if(!toStructure)
+            value += label.getText() + ";";
+        value += type.getSelectedOption() + ";";
+        value += clockZone.getSelectedOption() + ";";
+        if(zonePanel.getEngine().equals("LLG")){
+            value += llgInitMag.getText() + ";";
+        } else{
+            value += behaInitMag.getText() + ";";
+        }
+        value += fixedMag.isChecked + ";";
+        value += magWidth.getText() + ";";
+        value += magHeight.getText() + ";";
+        value += magThickness.getText() + ";";
+        value += magTopCut.getText() + ";";
+        value += magBottomCut.getText() + ";";
+        value += position.getText() + ";";
+        return value;
+    }
+    
     void mousePressedMethod(){
+        if(saveTemplateButton.mousePressedMethod() && validateAllFields()){
+            saveTemplateButton.deactivate();
+            structurePanel.addStructure(label.getText(), getValue(true));
+        }
+        saveTemplateButton.deactivate();
         label.mousePressedMethod();
         type.mousePressedMethod();
         clockZone.mousePressedMethod();
@@ -277,14 +324,14 @@ class MagnetPanel{
             return;
         }
         if(zonePanel.getEngine().equals("LLG")){
-            if(llgInitMag.keyPressedMethod()){
+            if(llgInitMag.keyPressedMethod() && (key == ENTER || key == TAB)){
                 if(!llgInitMag.isSelected()){
                     magWidth.select();
                     return;
                 }
             }
         } else{
-            if(behaInitMag.keyPressedMethod()){
+            if(behaInitMag.keyPressedMethod() && (key == ENTER || key == TAB)){
                 magWidth.select();
                 return;
             }

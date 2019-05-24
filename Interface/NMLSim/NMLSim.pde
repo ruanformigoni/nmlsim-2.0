@@ -13,6 +13,7 @@ float scaleFactor;
 void setup(){
     //size(2560, 1440);
     size(1280, 720);
+    //surface.setResizable(true);
     if(displayWidth > 2560){
         surface.setSize(2560, 1440);
         scaleFactor = 2;
@@ -39,6 +40,8 @@ void setup(){
 }
 
 void draw(){
+    //scaleFactor = (float(width)/1280.0);
+    //println(scaleFactor);
     scale(scaleFactor);
     //background(45,80,22);
     background(200,200,200);

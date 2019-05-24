@@ -105,6 +105,7 @@ public class TextBox{
             } else {
                 text += key;
             }
+            validateText();
             return true;
         }
         return false;
@@ -144,7 +145,7 @@ public class TextBox{
     }
     
     public boolean validateText(){
-        if(validationType.equals("String") & text != "" & !text.contains(";"))
+        if(validationType.equals("String") && text != "" && !text.contains(";"))
             setValid();
         else if(validationType.equals("Integer")){
             try{
