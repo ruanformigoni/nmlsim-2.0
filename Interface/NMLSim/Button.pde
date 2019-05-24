@@ -2,8 +2,8 @@ class Button{
     private String label, explanation;
     private PImage icon;
     private float x, y;
-    private color labelColor, explanationColor, explanationBox, selectedBox;
-    private Boolean active, expanded, isValid;
+    private color labelColor, explanationColor, explanationBox, selectedBox, mouseOverColor, mouseOverExpandedColor;
+    private Boolean active, expanded, isValid, isMouseOver;
     private HitBox hitbox;
     private int initialTime = -1;
     
@@ -17,9 +17,12 @@ class Button{
         this.explanationColor = color(255, 255, 255);
         this.explanationBox = color(212, 85, 0);
         this.selectedBox = color(200, 113, 55);
+        this.mouseOverColor = color(83,108,83);
+        this.mouseOverExpandedColor = color(45,80,22);
         this.active = false;
         this.expanded = false;
         this.isValid = true;
+        this.isMouseOver = false;
         hitbox = new HitBox(x, y, icon.width, icon.height);
     }
     
@@ -32,11 +35,23 @@ class Button{
             stroke(labelColor);
             text(label, x + icon.width + 5, y + icon.height - textDescent() - offset);
         }
+        if(!isValid)
+            isMouseOver = false;
         if(active){
             fill(selectedBox);
             stroke(selectedBox);
             rect(x, y, icon.width, icon.height);
+        } else if(isMouseOver){
+            if(!expanded){
+                fill(mouseOverColor);
+                stroke(mouseOverColor);
+            } else{
+                fill(mouseOverExpandedColor);
+                stroke(mouseOverExpandedColor);
+            }
+            rect(x, y, icon.width, icon.height);
         }
+
         image(icon, x, y);
     }
 
@@ -53,19 +68,21 @@ class Button{
         if(!isValid)
             return;
         if(hitbox.collision(mouseX, mouseY)){
+            isMouseOver = true;
             int currTime = minute()*60*60 + second()*60 + millis();
             if(initialTime < 0)
                 initialTime = currTime;
             if(currTime - initialTime > 2000){
                 fill(explanationBox);
                 stroke(explanationBox);
-                rect(x+icon.width/2, y+icon.height/2, textWidth(explanation), textAscent() + textDescent());
+                rect(x+icon.width, y, textWidth(explanation)+10, textAscent() + textDescent(), 5);
                 fill(explanationColor);
                 noStroke();
-                text(explanation, x+icon.width/2, y+icon.height/2 + fontSz);
+                text(explanation, x+icon.width+5, y + fontSz);
             }
         } else{
             initialTime = -1;
+            isMouseOver = false;
         }
     }
     
