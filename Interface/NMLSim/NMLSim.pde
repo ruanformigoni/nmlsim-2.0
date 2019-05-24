@@ -5,6 +5,7 @@ Header h;
 //Scrollbar sb;
 //ListContainer lc;
 PanelMenu pm;
+SubstractGrid sg;
 
 float fontSz = 15;
 float scaleFactor;
@@ -33,6 +34,7 @@ void setup(){
     //lc.addItem("Relax");
     //lc.addItem("Hold");
     pm = new PanelMenu(0, 670, 300, 500);
+    sg = new SubstractGrid(0, 110, 1280, 550, 1, 1, 100, 100);
     //c = new Chart(400, 200, 600, 400);
     //c.addSeires("Red",new float[][]{{0,-00},{5,100}},color(255,0,0));
     //c.addSeires("Green",new float[][]{{0,0},{5,50}},color(0,255,0));
@@ -46,6 +48,7 @@ void draw(){
     //background(45,80,22);
     background(200,200,200);
     h.drawSelf();
+    sg.drawSelf();
     pm.drawSelf();
     //c.drawSelf();
     //c.onMouseOver();
@@ -69,6 +72,7 @@ void mousePressed(){
 
 void keyPressed(){
     pm.keyPressedMethod();
+    sg.mousePressedMethod();
     //pp.keyPressedMethod();
     //sp.keyPressedMethod();
 }
@@ -76,6 +80,7 @@ void keyPressed(){
 void mouseWheel(MouseEvent e){
     float v = e.getCount();
     pm.mouseWheelMethod(v);
+    sg.mouseWheelMethod(v);
     //sb.mouseWheelMethod(v);
     //pp.mouseWheelMethod(v);
     //lc.mouseWheelMethod(v);
@@ -83,6 +88,7 @@ void mouseWheel(MouseEvent e){
 
 void mouseDragged(){
     pm.mouseDraggedMethod();
+    sg.mouseDraggedMethod();
     //sb.mouseDraggedMethod();
     //pp.mouseDraggedMethod();
     //lc.mouseDraggedMethod();

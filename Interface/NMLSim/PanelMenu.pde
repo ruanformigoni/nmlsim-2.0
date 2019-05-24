@@ -38,8 +38,6 @@ class PanelMenu{
         auxW = textWidth("Magnet");
         hitboxes.add(new HitBox(auxX, y, auxW, h));
         auxX += auxW+10;
-
-        
         
         textColor = color(255,255,255);
         lineColor = color(255,255,255);

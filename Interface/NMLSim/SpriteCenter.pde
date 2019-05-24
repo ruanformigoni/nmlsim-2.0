@@ -3,7 +3,7 @@ class SpriteCenter{
     public PImage pasteIconWhite, groupIconWhite, gridIconWhite, zoomInIconWhite, zoomOutIconWhite, bulletsIconWhite, lightIconWhite, zoneUpIconWhite, zoneDownIconWhite;
     public PImage undoIconWhite, redoIconWhite, orangeArrowUpIcon, orangeArrowDownIcon, smallSaveIconWhite, smallNewIconWhite, nanoNewIconWhite, nanoArrowDownIconWhite;
     public PImage nanoDeleteIconWhite, nanoEditIconWhite, nanoZoneUpIconWhite, nanoZoneDownIconWhite, smallDeleteIconWhite, nanoArrowUpIconWhite,smallSaveTemplateIconWhite;
-    public PImage smallDefaultIconWhite, smallEditIconWhite;
+    public PImage smallDefaultIconWhite, smallEditIconWhite, orangeArrowLeftIcon, orangeArrowRightIcon;
     
     public SpriteCenter(){
         nanoArrowUpIconWhite = loadImage("../Sprites/arrowUpIconWhite.png");
@@ -78,5 +78,9 @@ class SpriteCenter{
         orangeArrowDownIcon.resize(10,10);
         orangeArrowUpIcon = loadImage("../Sprites/orangeArrowUpIcon.png");
         orangeArrowUpIcon.resize(10,10);
+        orangeArrowLeftIcon = loadImage("../Sprites/orangeArrowLeftIcon.png");
+        orangeArrowLeftIcon.resize(10,10);
+        orangeArrowRightIcon = loadImage("../Sprites/orangeArrowRightIcon.png");
+        orangeArrowRightIcon.resize(10,10);
     }
 }

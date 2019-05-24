@@ -18,16 +18,25 @@ class Scrollbar{
         index = 0;
         this.isVertical = isVertical;
         this.isDragging = false;
-        auicon = sprites.orangeArrowUpIcon;
-        adicon = sprites.orangeArrowDownIcon;
         fullScroll = new HitBox(x, y, w, h);
         if(isVertical){
+            auicon = sprites.orangeArrowUpIcon;
+            adicon = sprites.orangeArrowDownIcon;
             minusArrow = new HitBox(x+(w-10)/2-5, y, 20, 20);
             plusArrow = new HitBox(x+(w-10)/2-5, y+h-20, 20, 20);
             float barH = ((h-40)/maxIndex)*foldSize;
             barH = (barH > h-40)?h-40:barH;
             float barPos = y+20+((h-40)/maxIndex)*index;
             bar = new HitBox(x, barPos, w, h);
+        } else{
+            auicon = sprites.orangeArrowLeftIcon;
+            adicon = sprites.orangeArrowRightIcon;
+            minusArrow = new HitBox(x, y, 20, 20);
+            plusArrow = new HitBox(x+w-20, y, 20, 20);
+            float barW = ((w-40)/maxIndex)*foldSize;
+            barW = (barW > w-40)?w-40:barW;
+            float barPos = x+20+((w-40)/maxIndex)*index;
+            bar = new HitBox(barPos, y, w, h);
         }
     }
     
@@ -41,6 +50,9 @@ class Scrollbar{
         if(isVertical){
             minusArrow.updateBox(x+(w-10)/2-5, y, 20, 20);
             plusArrow.updateBox(x+(w-10)/2-5, y+h-20, 20, 20);
+        } else{
+            minusArrow = new HitBox(x, y, 20, 20);
+            plusArrow = new HitBox(x+w-20, y, 20, 20);
         }
     }
     
@@ -89,7 +101,12 @@ class Scrollbar{
             bar.updateBox(x, barPos, w, barH);
         } else{
             image(auicon,x+5, y+(h-10)/2);
-            image(adicon,x+w-5, y+(h-10)/2);
+            image(adicon,x+w-15, y+(h-10)/2);
+            float barW = ((w-40)/maxIndex)*foldSize;
+            barW = (barW > w-40)?w-40:barW;
+            float barPos = x+20+((w-40)/maxIndex)*index;
+            rect(barPos, y, barW, h, 15);
+            bar.updateBox(x, barPos, barW, h);
         }
     }
     
