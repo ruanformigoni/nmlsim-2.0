@@ -1,6 +1,6 @@
 class Scrollbar{
     float x, y, w, h, mx, my;
-    boolean isVertical, isDragging;
+    boolean isVertical, isDragging, isFlipped;
     color buttons, trail;
     int maxIndex, index, foldSize;
     HitBox plusArrow, minusArrow, bar, fullScroll;
@@ -18,6 +18,7 @@ class Scrollbar{
         index = 0;
         this.isVertical = isVertical;
         this.isDragging = false;
+        this.isFlipped = false;
         fullScroll = new HitBox(x, y, w, h);
         if(isVertical){
             auicon = sprites.orangeArrowUpIcon;
@@ -54,6 +55,8 @@ class Scrollbar{
             minusArrow = new HitBox(x, y, 20, 20);
             plusArrow = new HitBox(x+w-20, y, 20, 20);
         }
+        index = (index>maxIndex-foldSize)?maxIndex-foldSize:index;
+        index = (index<0)?0:index;
     }
     
     void increaseMaxIndex(){
@@ -97,17 +100,29 @@ class Scrollbar{
             float barH = ((h-40)/maxIndex)*foldSize;
             barH = (barH > h-40)?h-40:barH;
             float barPos = y+20+((h-40)/maxIndex)*index;
-            rect(x, barPos, w, barH, 15);
-            bar.updateBox(x, barPos, w, barH);
+            if(!isFlipped)
+                rect(x, barPos, w, barH, 15);
+            else
+                rect(x, y+h-(barPos-y)-barH, w, barH, 15);
+            if(!isFlipped)
+                bar.updateBox(x, barPos, w, barH);
+            else
+                bar.updateBox(x, y+h-(barPos-y)-barH, w, barH);
         } else{
             image(auicon,x+5, y+(h-10)/2);
             image(adicon,x+w-15, y+(h-10)/2);
             float barW = ((w-40)/maxIndex)*foldSize;
             barW = (barW > w-40)?w-40:barW;
             float barPos = x+20+((w-40)/maxIndex)*index;
-            rect(barPos, y, barW, h, 15);
-            bar.updateBox(x, barPos, barW, h);
-        }
+            if(!isFlipped)
+                rect(barPos, y, barW, h, 15);
+            else
+                rect(x+w-(barPos-x)-barW, y, barW, h, 15);
+            if(!isFlipped)
+                bar.updateBox(barPos, y, barW, h);
+            else
+                bar.updateBox(x+w-(barPos-x)-barW, y, barW, h);
+        }        
     }
     
     int getIndex(){
@@ -115,10 +130,18 @@ class Scrollbar{
     }
     
     void mousePressedMethod(){
-        if(plusArrow.collision(mouseX, mouseY))
-            incrementIndex();
-        else if(minusArrow.collision(mouseX, mouseY))
-            decreaseIndex();
+        if(plusArrow.collision(mouseX, mouseY)){
+            if(!isFlipped)
+                incrementIndex();
+            else
+                decreaseIndex();
+        }
+        else if(minusArrow.collision(mouseX, mouseY)){
+            if(!isFlipped)
+                decreaseIndex();
+            else
+                incrementIndex();
+        }
         else if(bar.collision(mouseX, mouseY))
             isDragging = true;
     }
@@ -129,7 +152,17 @@ class Scrollbar{
                 isDragging = false;
                 return false;
             }
-            index = int((mouseY - y - 20)/((h-40)/maxIndex));
+            if(isVertical){
+                if(!isFlipped)
+                    index = int((mouseY/scaleFactor - y - 20)/((h-40)/maxIndex));
+                else
+                    index = maxIndex - int((mouseY/scaleFactor - y - 20)/((h-40)/maxIndex));
+            } else{
+                if(!isFlipped)
+                    index = int((mouseX/scaleFactor - x - 20)/((w-40)/maxIndex));
+                else
+                    index = maxIndex - int((mouseX/scaleFactor - x - 20)/((w-40)/maxIndex));
+            }
             if(index>maxIndex-foldSize){
                 index = maxIndex-foldSize;
                 if(index < 0)
@@ -144,10 +177,19 @@ class Scrollbar{
     
     boolean mouseWheelMethod(float value){
         if(fullScroll.collision(mouseX, mouseY)){
-            if(value > 0)
-                incrementIndex();
-            else
-                decreaseIndex();
+            if(value > 0){
+                if(!isFlipped){
+                    incrementIndex();
+                } else{
+                    decreaseIndex();
+                }
+            } else{
+                if(!isFlipped){
+                    decreaseIndex();
+                } else{
+                    incrementIndex();
+                }
+            }
             return true;
         }
         return false;

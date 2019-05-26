@@ -18,7 +18,7 @@ class HitBox{
     public void drawSelf(){
         stroke(0, 255, 0);
         noFill();
-        rect(x, y, w, h);
+        rect(x/scaleFactor, y/scaleFactor, w/scaleFactor, h/scaleFactor);
     }
     
     public boolean collision(float px, float py){

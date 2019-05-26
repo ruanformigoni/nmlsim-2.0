@@ -5,7 +5,7 @@ Header h;
 //Scrollbar sb;
 //ListContainer lc;
 PanelMenu pm;
-SubstractGrid sg;
+SubstrateGrid sg;
 
 float fontSz = 15;
 float scaleFactor;
@@ -22,7 +22,6 @@ void setup(){
         scaleFactor = 1;
     }
     sprites = new SpriteCenter();
-    h = new Header(0, 0, 1280);
     //sp = new SimulationPanel(400, 200, 300, 500);
     //pp = new PhasePanel(0, 200, 300, 500, sp);
     //sb = new Scrollbar(1200,200,20,300,10,2,true);
@@ -33,8 +32,11 @@ void setup(){
     //lc.addItem("Reset");
     //lc.addItem("Relax");
     //lc.addItem("Hold");
-    pm = new PanelMenu(0, 670, 300, 500);
-    sg = new SubstractGrid(0, 110, 1280, 550, 1, 1, 100, 100);
+    sg = new SubstrateGrid(0, 105, 1280, 564, 10, 10, 1000, 500);
+    sg.setHiddenDimensions(500,300,500,150);
+    sg.setBulletSpacing(100,100);
+    pm = new PanelMenu(0, 670, 300, 500, sg);
+    h = new Header(0, 0, 1280, sg);
     //c = new Chart(400, 200, 600, 400);
     //c.addSeires("Red",new float[][]{{0,-00},{5,100}},color(255,0,0));
     //c.addSeires("Green",new float[][]{{0,0},{5,50}},color(0,255,0));
@@ -45,8 +47,8 @@ void draw(){
     //scaleFactor = (float(width)/1280.0);
     //println(scaleFactor);
     scale(scaleFactor);
-    //background(45,80,22);
-    background(200,200,200);
+    background(83, 108, 83);
+    background(255, 153, 85);
     h.drawSelf();
     sg.drawSelf();
     pm.drawSelf();
@@ -64,6 +66,7 @@ void draw(){
 void mousePressed(){
     h.mousePressedMethod();
     pm.mousePressedMethod();
+    sg.mousePressedMethod();
     //sp.mousePressedMethod();
     //pp.mousePressedMethod();
     //sb.mousePressedMethod();
@@ -72,7 +75,6 @@ void mousePressed(){
 
 void keyPressed(){
     pm.keyPressedMethod();
-    sg.mousePressedMethod();
     //pp.keyPressedMethod();
     //sp.keyPressedMethod();
 }

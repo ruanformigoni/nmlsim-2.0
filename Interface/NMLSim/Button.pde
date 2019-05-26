@@ -56,6 +56,10 @@ class Button{
         image(icon, x, y);
     }
 
+    String getLabel(){
+        return label;
+    }
+
     public Boolean mousePressedMethod(){
     	if(!isValid)
             return false;

@@ -11,12 +11,14 @@ class PanelMenu{
     color selectedColor, normalColor, textColor, lineColor;
     boolean structurePanelActive;
     HitBox structureLabelHitbox;
+    SubstrateGrid substrateGrid;
     
-    PanelMenu(float x, float y, float pw, float ph){
+    PanelMenu(float x, float y, float pw, float ph, SubstrateGrid sg){
         this.x = x;
         this.y = y;
         panelH = ph;
         panelW = pw;
+        substrateGrid = sg;
         
         textSize(fontSz);
         float auxX = x+5, h = textAscent()+textDescent(), auxW;
@@ -47,13 +49,13 @@ class PanelMenu{
         selectedPanel = -1;
         
         structurePanelActive = false;
-        structurePanel = new StructurePanel(width-pw/2, y-ph, pw/2, ph);
+        structurePanel = new StructurePanel(width/scaleFactor-pw/2-23, y-ph, pw/2, ph);
         simPanel = new SimulationPanel(x, y-ph, pw, ph);
         phasePanel = new PhasePanel(x, y-ph, pw, ph, simPanel);
         zonePanel = new ZonePanel(x, y-ph, pw, ph, phasePanel);
         magnetPanel = new MagnetPanel(x, y-ph, pw, ph, zonePanel, structurePanel);
         
-        structureLabelHitbox = new HitBox(width-textWidth("Structures")-10, y, textWidth("Structures")+10, textAscent()+textDescent());
+        structureLabelHitbox = new HitBox(width/scaleFactor-textWidth("Structures")-33, y, textWidth("Structures")+10, textAscent()+textDescent());
     }
         
     void drawSelf(){
@@ -61,11 +63,11 @@ class PanelMenu{
         textSize(fontSz);
         fill(normalColor);
         stroke(normalColor);
-        rect(x, y, width, h);
+        rect(x, y, width/scaleFactor, h);
 
         stroke(lineColor);
         strokeWeight(2);
-        line(x, y+1, width, y+1);
+        line(x, y+1, width/scaleFactor, y+1);
         strokeWeight(1);
         
         fill(textColor);
@@ -97,14 +99,20 @@ class PanelMenu{
         if(structurePanelActive){
             fill(selectedColor);
             stroke(selectedColor);
-            rect(width-textWidth("Structures")-10, y, textWidth("Structures")+10, h);
+            rect(width/scaleFactor-textWidth("Structures")-33, y, textWidth("Structures")+10, h);
         }
-        noStroke();
-        fill(textColor);
-        text("Structures", width-textWidth("Structures")-5, y+fontSz);
+        
         stroke(lineColor);
         strokeWeight(2);
-        line(width-textWidth("Structures")-10, y+1, width-textWidth("Structures")-10, y+h-2);
+        line(width/scaleFactor-23, y+1, width/scaleFactor-23, y+h-2);
+        strokeWeight(1);
+
+        noStroke();
+        fill(textColor);
+        text("Structures", width/scaleFactor-textWidth("Structures")-28, y+fontSz);
+        stroke(lineColor);
+        strokeWeight(2);
+        line(width/scaleFactor-textWidth("Structures")-33, y+1, width/scaleFactor-textWidth("Structures")-33, y+h-2);
         strokeWeight(1);
         noStroke();
         
@@ -129,17 +137,24 @@ class PanelMenu{
     }
     
     void mousePressedMethod(){
-        if(structureLabelHitbox.collision(mouseX,mouseY))
+        if(structureLabelHitbox.collision(mouseX,mouseY)){
             structurePanelActive = !structurePanelActive;
+            substrateGrid.toggleHideGrid("right");
+        }
         int i;
         for(i=0; i<hitboxes.size(); i++){
             if(hitboxes.get(i).collision(mouseX, mouseY))
                 break;
         }
-        if(i == selectedPanel)
+        if(i == selectedPanel){
             selectedPanel = -1;
-        else if(!(i >= hitboxes.size()))
+            substrateGrid.toggleHideGrid("left");
+        }
+        else if(!(i >= hitboxes.size())){
             selectedPanel = i;
+            if(!substrateGrid.isLeftHidden)
+                substrateGrid.toggleHideGrid("left");
+        }
         
         if(i == 2)
             zonePanel.updatePhases();

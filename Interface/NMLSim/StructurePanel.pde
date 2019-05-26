@@ -55,7 +55,7 @@ class StructurePanel{
         float auxY = y+aux+5;
         fill(panelColor);
         stroke(panelColor);
-        rect(x, y, w, h, 15, 0, 0, 0);
+        rect(x, y, w, h, 15, 15, 0, 0);
 
         fill(textColor);
         noStroke();

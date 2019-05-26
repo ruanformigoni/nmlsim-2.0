@@ -11,7 +11,6 @@ class HeaderContainer{
         this.isExpanded = false;
         this.x = x;
         this.y = y;
-        //this.fontSz = 20;
         this.buttons = new ArrayList<Button>();
         this.containerColor = color(45, 80, 22);
         this.expandedColor = color(83, 108, 83);
@@ -24,7 +23,7 @@ class HeaderContainer{
         float boxWidth = 0;
         for(int i=0; i<buttons.size(); i+=2){
             float big = buttons.get(i).getWidth();
-            if(i+1 < buttons.size() & buttons.get(i+1).getWidth() > big)
+            if(i+1 < buttons.size() && buttons.get(i+1).getWidth() > big)
                 big = buttons.get(i+1).getWidth();
             boxWidth += big + 5;
         } boxWidth += 10;
@@ -68,7 +67,7 @@ class HeaderContainer{
         float boxWidth = 0;
         for(int i=0; i<buttons.size(); i+=2){
             float big = buttons.get(i).getWidth();
-            if(i+1 < buttons.size() & buttons.get(i+1).getWidth() > big)
+            if(i+1 < buttons.size() && buttons.get(i+1).getWidth() > big)
                 big = buttons.get(i+1).getWidth();
             boxWidth += big + 5;
         }
@@ -97,36 +96,46 @@ class HeaderContainer{
             buttons.get(i).setExpanded(isExpanded);
     }
     
-    public boolean mousePressedMethod(){
+    public String mousePressedMethod(){
         if(hitbox.collision(mouseX, mouseY)){
             isExpanded = !isExpanded;
             for(int i=0; i<buttons.size(); i++)
                 buttons.get(i).setExpanded(isExpanded);
-            return true;
-        } else{
-            for(int i=0; i<buttons.size(); i++){
-                if(buttons.get(i).mousePressedMethod()){
-                    return true;
-                }
+            return "HeaderLabel";
+        }
+        for(int i=0; i<buttons.size(); i++){
+            if(buttons.get(i).mousePressedMethod()){
+                return buttons.get(i).getLabel();
             }
         }
-        return false;
+        return "None";
     }
     
     public void addButton(Button b){
+        if(b.getLabel().equals("Grid") || b.getLabel().equals("Bullet"))
+            b.active = true;
         b.setExpanded(isExpanded);
         buttons.add(b);
+    }
+    
+    public void deactiveteButton(String label){
+        for(int i=0; i<buttons.size(); i++){
+            if(buttons.get(i).getLabel().equals(label))
+                buttons.get(i).deactivate();
+        }
     }
 }
 
 class Header{
     HeaderContainer file, magnet, substrate, others;
     float x, y, myW;
+    SubstrateGrid substrateGrid;
     
-    public Header(float x, float y, float w){
+    public Header(float x, float y, float w, SubstrateGrid sg){
         this.x = x;
         this.y = y;
         this.myW = w;
+        substrateGrid = sg;
         //fontSz = 30;
         
         file = new HeaderContainer("File", x+5, y);
@@ -150,10 +159,9 @@ class Header{
         substrate = new HeaderContainer("Substrate", x, y);
         substrate.addButton(new Button("Grid", "Shows the ruler for the minimum cell definition", sprites.gridIconWhite, 0, 0));
         substrate.addButton(new Button("Bullet", "Shows the bullets for reference", sprites.bulletsIconWhite, 0, 0));
-        substrate.addButton(new Button("Move", "Moves the substrate", sprites.moveIconWhite, 0, 0));
-        substrate.addButton(new Button("Light", "Toggles the light scheme on the substract", sprites.lightIconWhite, 0, 0));
         substrate.addButton(new Button("Zoom In", "Zooms in the subtract", sprites.zoomInIconWhite, 0, 0));
         substrate.addButton(new Button("Zoom Out", "Zooms out of the substract", sprites.zoomOutIconWhite, 0, 0));
+        substrate.addButton(new Button("Light", "Toggles the light scheme on the substract", sprites.lightIconWhite, 0, 0));
 
         others = new HeaderContainer("Others", x, y);
         others.isExpanded = true;
@@ -262,29 +270,60 @@ class Header{
         others.onMouseOverMethod();
     }
     
+    float getHeight(){
+        return file.getHeight();
+    }
+    
     public boolean mousePressedMethod(){
-        if(file.mousePressedMethod()){
+        String buttonLabel;
+        buttonLabel = file.mousePressedMethod();
+        if(buttonLabel.equals("HeaderLabel")){
             if(file.isExpanded){
                 magnet.setExpanded(false);
                 substrate.setExpanded(false);
             }
             return true;
         }
-        else if(magnet.mousePressedMethod()){
+        buttonLabel = magnet.mousePressedMethod();
+        if(buttonLabel.equals("HeaderLabel")){
             if(magnet.isExpanded){
                 file.setExpanded(false);
                 substrate.setExpanded(false);
             }
             return true;
         }
-        else if(substrate.mousePressedMethod()){
+        buttonLabel = substrate.mousePressedMethod();
+        if(buttonLabel.equals("HeaderLabel")){
             if(substrate.isExpanded){
                 file.setExpanded(false);
                 magnet.setExpanded(false);
             }
             return true;
         }
-        else if(others.mousePressedMethod())
+        if(buttonLabel.equals("Grid")){
+            substrateGrid.isRulerActive = !substrateGrid.isRulerActive;
+            return true;
+        }
+        if(buttonLabel.equals("Light")){
+            substrateGrid.isLightColor = !substrateGrid.isLightColor;
+            return true;
+        }
+        if(buttonLabel.equals("Zoom In")){
+            substrateGrid.zoomIn();
+            substrate.deactiveteButton("Zoom In");
+            return true;
+        }
+        if(buttonLabel.equals("Zoom Out")){
+            substrateGrid.zoomOut();
+            substrate.deactiveteButton("Zoom Out");
+            return true;
+        }
+        if(buttonLabel.equals("Bullet")){
+            substrateGrid.toggleBullet();
+            return true;
+        }
+        buttonLabel = others.mousePressedMethod();
+        if(buttonLabel.equals("HeaderLabel"))
             return true;
         return false;
     }
