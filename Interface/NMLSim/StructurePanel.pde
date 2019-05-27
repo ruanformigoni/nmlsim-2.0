@@ -106,6 +106,12 @@ class StructurePanel{
         scroll.drawSelf();
     }
     
+    String getSelectedStructure(){
+        if(selectedStructure == -1)
+            return "";
+        return structuresValues.get(structuresButtons.get(selectedStructure).getText());
+    }
+    
     void keyPressedMethod(){
         if(isEditing){
             for(int i=0; i<structuresButtons.size(); i++){

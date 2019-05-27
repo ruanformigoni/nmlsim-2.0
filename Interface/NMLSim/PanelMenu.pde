@@ -12,6 +12,7 @@ class PanelMenu{
     boolean structurePanelActive;
     HitBox structureLabelHitbox;
     SubstrateGrid substrateGrid;
+    String subProperty = "";
     
     PanelMenu(float x, float y, float pw, float ph, SubstrateGrid sg){
         this.x = x;
@@ -50,6 +51,7 @@ class PanelMenu{
         
         structurePanelActive = false;
         structurePanel = new StructurePanel(width/scaleFactor-pw/2-23, y-ph, pw/2, ph);
+        substrateGrid.setStructurePanel(structurePanel);
         simPanel = new SimulationPanel(x, y-ph, pw, ph);
         phasePanel = new PhasePanel(x, y-ph, pw, ph, simPanel);
         zonePanel = new ZonePanel(x, y-ph, pw, ph, phasePanel);
@@ -133,6 +135,13 @@ class PanelMenu{
                 magnetPanel.drawSelf();
             break;
             default:{}
+        }
+        
+        if(!simPanel.getGridProperties().equals("") && !simPanel.getGridProperties().equals(subProperty)){
+            subProperty = simPanel.getGridProperties();
+            String parts[] = subProperty.split(",");
+            substrateGrid.setGridSizes(Float.parseFloat(parts[0]), Float.parseFloat(parts[1]), Float.parseFloat(parts[2]), Float.parseFloat(parts[3]));
+            substrateGrid.setBulletSpacing(Float.parseFloat(parts[4]), Float.parseFloat(parts[5]));
         }
     }
     

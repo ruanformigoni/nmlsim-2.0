@@ -32,9 +32,9 @@ void setup(){
     //lc.addItem("Reset");
     //lc.addItem("Relax");
     //lc.addItem("Hold");
-    sg = new SubstrateGrid(0, 105, 1280, 564, 10, 10, 1000, 500);
+    sg = new SubstrateGrid(0, 105, 1280, 564, 10, 10, 1000, 5000);
     sg.setHiddenDimensions(500,300,500,150);
-    sg.setBulletSpacing(100,100);
+    sg.setBulletSpacing(60,124);
     pm = new PanelMenu(0, 670, 300, 500, sg);
     h = new Header(0, 0, 1280, sg);
     //c = new Chart(400, 200, 600, 400);
@@ -49,9 +49,9 @@ void draw(){
     scale(scaleFactor);
     background(83, 108, 83);
     background(255, 153, 85);
-    h.drawSelf();
     sg.drawSelf();
     pm.drawSelf();
+    h.drawSelf();
     //c.drawSelf();
     //c.onMouseOver();
     //sp.drawSelf();

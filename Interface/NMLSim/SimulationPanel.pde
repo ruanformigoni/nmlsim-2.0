@@ -78,7 +78,7 @@ class SimulationPanel{
 
         cellSize = new VectorTextBox("Cell Size (nm)", 0, 0, w-20, 2);
         cellSize.setValidationType("Float");
-        cellSize.setText("1,1");
+        cellSize.setText("10,10");
 
         bulletSpacing = new VectorTextBox("Bullet Dist. (nm)", 0, 0, w-20, 2);
         bulletSpacing.setValidationType("Float");
@@ -271,7 +271,7 @@ class SimulationPanel{
             heavyMaterialThickness.setText("5");
             neighborhoodRadius.setText("300");
             subSize.setText("1000,1000");
-            cellSize.setText("1,1");
+            cellSize.setText("10,10");
             bulletSpacing.setText("60,125");
             temperature.setText("300");
             repetitions.setText("100");
@@ -407,5 +407,13 @@ class SimulationPanel{
     
     String getEngine(){
         return engine.getSelectedOption();
+    }
+    
+    String getGridProperties(){
+        String gp = "";
+        if(bulletSpacing.validateText() && subSize.validateText() && cellSize.validateText()){
+            gp += subSize.getText() + cellSize.getText() + bulletSpacing.getText();
+        }
+        return gp;
     }
 }

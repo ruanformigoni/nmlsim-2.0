@@ -260,6 +260,7 @@ class MagnetPanel{
         value += magTopCut.getText() + ";";
         value += magBottomCut.getText() + ";";
         value += position.getText() + ";";
+        value += zonePanel.getZoneColor(clockZone.getSelectedOption());
         return value;
     }
     

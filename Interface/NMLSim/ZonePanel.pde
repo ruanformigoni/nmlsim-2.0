@@ -210,9 +210,19 @@ class ZonePanel{
             return llgZones.getItems();
         return behaZones.getItems();
     }
-    
+        
     String getEngine(){
         return phasePanel.getEngine();
+    }
+    
+    Integer getZoneColor(String label){
+        if(phasePanel.getEngine().equals("LLG")){
+            String [] parts = llgZonesValues.get(label).split(";");
+            return Integer.parseInt(parts[parts.length-1]);
+        } else{
+            String [] parts = behaZonesValues.get(label).split(";");
+            return Integer.parseInt(parts[parts.length-1]);
+        }
     }
     
     void updatePhases(){
