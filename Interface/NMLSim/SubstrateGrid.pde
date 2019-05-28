@@ -56,7 +56,11 @@ class SubstrateGrid{
     }
     
     void addMagnet(String label, String structure){
-        magnets.put(label, new Magnet(structure));
+        Magnet aux =  new Magnet(structure);
+        for(Magnet mag : magnets.values())
+            if(aux.collision(mag))
+                return;
+        magnets.put(label, aux);
     }
     
     void setGridSizes(float gridW, float gridH, float cellW, float cellH){
@@ -194,6 +198,8 @@ class SubstrateGrid{
         if(isLeftHidden && leftHidden.collision(mouseX, mouseY))
             return;
         if(isRightHidden && rightHidden.collision(mouseX, mouseY))
+            return;
+        if(!fullAreaHitbox.collision(mouseX, mouseY))
             return;
         if(structurePanel != null && !structurePanel.getSelectedStructure().equals("")){
             float xOrigin = hScroll.getIndex()*cellW, yOrigin = vScroll.getIndex()*cellH;

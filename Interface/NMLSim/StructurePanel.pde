@@ -7,7 +7,7 @@ class StructurePanel{
     int selectedStructure, randomName;
     color panelColor, textColor;
     Button editButton, saveTemplateButton, saveButton;
-    HashMap<String, String> structuresValues;
+    //HashMap<String, String> structuresValues;
     boolean isEditing;
     
     StructurePanel(float x, float y, float w, float h){
@@ -22,7 +22,7 @@ class StructurePanel{
         randomName = 0;
         structuresButtons = new ArrayList<TextButton>();
         delete = new ArrayList<Button>();
-        structuresValues = new HashMap<String, String>();
+        //structuresValues = new HashMap<String, String>();
         panelColor = color(45,80,22);
         textColor = color(255,255,255);
         isEditing = false;
@@ -37,13 +37,16 @@ class StructurePanel{
     }
     
     void addStructure(String label, String structure){
-        structuresValues.put(label, structure);
+        //structuresValues.put(label, structure);
         for(int i=0; i<structuresButtons.size(); i++){
             if(structuresButtons.get(i).getText().equals(label)){
+                structuresButtons.get(i).setButtonContent(structure);
                 return;
             }
         }
-        structuresButtons.add(new TextButton(label, 0, 0, w-45));
+        TextButton aux = new TextButton(label, 0, 0, w-45);
+        aux.setButtonContent(structure);
+        structuresButtons.add(aux);
         delete.add(new Button("Delete", "Delete the structure from the list", sprites.nanoDeleteIconWhite, 0, 0));
         delete.get(delete.size()-1).explanationOnRight = false;
         scroll.increaseMaxIndex();
@@ -107,9 +110,10 @@ class StructurePanel{
     }
     
     String getSelectedStructure(){
-        if(selectedStructure == -1)
+        if(selectedStructure == -1 || isEditing)
             return "";
-        return structuresValues.get(structuresButtons.get(selectedStructure).getText());
+        return structuresButtons.get(selectedStructure).getButtonContent();
+        //return structuresValues.get(structuresButtons.get(selectedStructure).getText());
     }
     
     void keyPressedMethod(){
@@ -138,18 +142,22 @@ class StructurePanel{
         }
         if(saveButton.mousePressedMethod()){
             isEditing = false;
+            selectedStructure = -1;
             saveButton.deactivate();
             for(int i=0; i<structuresButtons.size(); i++){
                 if(structuresButtons.get(i).getText().equals("")){
                     structuresButtons.get(i).setText("Structure" + randomName);
                     randomName++;
                 }
+//                structuresValues.put(structuresButtons.get(i).getText(),)
             }
         }
         for(int i=0; i<structuresButtons.size(); i++){
             if(structuresButtons.get(i).mousePressedMethod())
                 selectedStructure = i;
         }
+        if(selectedStructure >= 0 && !structuresButtons.get(selectedStructure).isSelected)
+            selectedStructure = -1;
         for(int i=0; i<structuresButtons.size(); i++){
             if(i != selectedStructure)
                 structuresButtons.get(i).deactivate();

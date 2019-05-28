@@ -7,11 +7,12 @@ class MagnetPanel{
     VectorTextBox position, llgInitMag;
     CheckBox fixedMag;
     
-    Button saveButton, saveTemplateButton, clearButton;
+    Button saveButton, saveTemplateButton, clearButton, addButton;
     
     color panelColor, textColor;
     ZonePanel zonePanel;
     StructurePanel structurePanel;
+    SubstrateGrid substrateGrid;
 
     public MagnetPanel(float x, float y, float w, float h, ZonePanel zp, StructurePanel sp){
         this.x = x;
@@ -21,7 +22,7 @@ class MagnetPanel{
         zonePanel = zp;
         structurePanel = sp;
         
-        label = new TextBox("Label", x, y, w-20);
+        label = new TextBox("Mag. or Stru. Label", x, y, w-20);
         label.setValidationType("String");
         
         behaInitMag = new TextBox("Initial Mag.", x, y, w-20);
@@ -69,9 +70,10 @@ class MagnetPanel{
         
         isEditing = false;
         
-        saveButton = new Button("Save", "Save the changes in the current magnet", sprites.smallSaveIconWhite, x+w-80, y+h-30);
+        saveButton = new Button("Save", "Save the changes in the current magnet", sprites.smallSaveIconWhite, x+w-105, y+h-30);
         saveTemplateButton = new Button("Save Template", "Save the configuration as a new template", sprites.smallSaveTemplateIconWhite, x+w-30, y+h-30);
         clearButton = new Button("Clear", "Clear all fields", sprites.smallDeleteIconWhite, x+w-55, y+h-30);
+        addButton = new Button("Add", "Adds the magnet directly to the grid", sprites.smallNewIconWhite, x+w-80, y+h-30);
     }
     
     public void updateZones(){
@@ -202,6 +204,7 @@ class MagnetPanel{
             saveButton.drawSelf();
         saveTemplateButton.drawSelf();
         clearButton.drawSelf();
+        addButton.drawSelf();
         magWidth.drawSelf();
         magHeight.drawSelf();
         magThickness.drawSelf();
@@ -221,6 +224,7 @@ class MagnetPanel{
             saveButton.onMouseOverMethod();
         saveTemplateButton.onMouseOverMethod();
         clearButton.onMouseOverMethod();
+        addButton.onMouseOverMethod();
     }
     
     boolean validateAllFields(){
@@ -264,6 +268,10 @@ class MagnetPanel{
         return value;
     }
     
+    void setSubstrateGrid(SubstrateGrid sg){
+        substrateGrid = sg;
+    }
+    
     void mousePressedMethod(){
         if(saveTemplateButton.mousePressedMethod() && validateAllFields()){
             saveTemplateButton.deactivate();
@@ -285,6 +293,11 @@ class MagnetPanel{
         magTopCut.mousePressedMethod();
         magWidth.mousePressedMethod();
         position.mousePressedMethod();
+        if(addButton.mousePressedMethod()){
+            addButton.deactivate();
+            if(validateAllFields())
+                substrateGrid.addMagnet(label.getText(), getValue(true));
+        }
         if(clearButton.mousePressedMethod()){
             clearButton.deactivate();
             label.resetText();

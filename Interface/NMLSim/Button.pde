@@ -126,7 +126,7 @@ class Button{
 }
 
 class TextButton{
-    private String label;
+    private String label, content = "";
     private float x, y, w;
     private color labelColor, selectedColor, mouseOverColor, buttonColor;
     private Boolean isSelected, isValid, isTyping;
@@ -205,6 +205,14 @@ class TextButton{
             return true;
         }
         return false;
+    }
+    
+    public String getButtonContent(){
+        return content;
+    }
+    
+    public void setButtonContent(String c){
+        content = c;
     }
 
     public void deactivate(){

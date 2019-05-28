@@ -56,6 +56,7 @@ class PanelMenu{
         phasePanel = new PhasePanel(x, y-ph, pw, ph, simPanel);
         zonePanel = new ZonePanel(x, y-ph, pw, ph, phasePanel);
         magnetPanel = new MagnetPanel(x, y-ph, pw, ph, zonePanel, structurePanel);
+        magnetPanel.setSubstrateGrid(substrateGrid);
         
         structureLabelHitbox = new HitBox(width/scaleFactor-textWidth("Structures")-33, y, textWidth("Structures")+10, textAscent()+textDescent());
     }
