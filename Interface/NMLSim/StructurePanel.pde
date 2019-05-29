@@ -101,6 +101,7 @@ class StructurePanel{
             editButton.isValid = false;
             saveButton.onMouseOverMethod();
         }else{
+            editButton.isTransparent = structuresButtons.size() <= 0;
             editButton.drawSelf();
             editButton.isValid = true;
             saveButton.isValid = false;

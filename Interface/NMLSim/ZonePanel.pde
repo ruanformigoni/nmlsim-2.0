@@ -77,11 +77,13 @@ class ZonePanel{
         
         if(phasePanel.getEngine().equals("LLG")){
             if(label.validateText() && llgZones.isIn(label.getText())){
+                saveButton.isTransparent = !(label.validateText() && myPhases.getItems().size() > 0);
                 saveButton.setPosition(x+w-30, auxY);
                 saveButton.drawSelf();
                 saveButton.isValid = true;
                 newButton.isValid = false;
             } else{
+                newButton.isTransparent = !(label.validateText() && myPhases.getItems().size() > 0);
                 newButton.setPosition(x+w-30, auxY);
                 newButton.drawSelf();
                 newButton.isValid = true;
@@ -89,11 +91,13 @@ class ZonePanel{
             }
         } else{
             if(label.validateText() && behaZones.isIn(label.getText())){
+                saveButton.isTransparent = !(label.validateText() && myPhases.getItems().size() > 0);
                 saveButton.setPosition(x+w-30, auxY);
                 saveButton.drawSelf();
                 saveButton.isValid = true;
                 newButton.isValid = false;
             } else{
+                newButton.isTransparent = !(label.validateText() && myPhases.getItems().size() > 0);
                 newButton.setPosition(x+w-30, auxY);
                 newButton.drawSelf();
                 newButton.isValid = true;
@@ -198,6 +202,7 @@ class ZonePanel{
         else
             behaZones.drawSelf();
         myPhases.drawSelf();
+        addButton.isTransparent = (phases.getSelectedOption().equals(""));
         addButton.drawSelf();
         phases.drawSelf();
         label.drawSelf();

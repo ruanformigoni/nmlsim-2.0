@@ -15,13 +15,9 @@ class SubstrateGrid{
         this.y = y;
         this.w = w;
         this.h = h;
-        normalization = (cellW > cellH)?cellH:cellW;
-        this.cellW = cellW;
-        this.cellH = cellH;
-        this.gridW = gridW;
-        this.gridH = gridH;
-        zoomFactor = 100;
+        zoomFactor = 10;
         structurePanel = null;
+        setGridSizes(gridW, gridH, cellW, cellH);
         
         isLightColor = true;
         darkBG = color(128,128,128);
@@ -32,9 +28,6 @@ class SubstrateGrid{
         lightBullet = color(128,128,128);
         
         fullAreaHitbox = new HitBox(x, y, w-20, h-20);
-        vScroll = new Scrollbar(this.x+this.w-20, this.y, 20, this.h-20, int(this.gridH/normalization), int(this.h/((this.cellH/normalization)*this.zoomFactor/10)), true);
-        vScroll.isFlipped = true;
-        hScroll = new Scrollbar(this.x, this.y+this.h-20, this.w-20, 20, int(this.gridW/normalization), int(this.w/((this.cellW/normalization)*this.zoomFactor/10)), false);
         this.w -= 20;
         this.h -= 20;
         
@@ -64,16 +57,16 @@ class SubstrateGrid{
     }
     
     void setGridSizes(float gridW, float gridH, float cellW, float cellH){
-        normalization = (cellW > cellH)?cellH:cellW;
+        normalization = ((w/(gridW/cellW)) < (h/(gridH/cellH)))?(w/(gridW/cellW)):(h/(gridH/cellH));
         this.cellW = cellW;
         this.cellH = cellH;
         this.gridW = gridW;
         this.gridH = gridH;
         this.w += 20;
         this.h += 20;
-        vScroll = new Scrollbar(this.x+this.w-20, this.y, 20, this.h-20, int(this.gridH/normalization), int(this.h/((this.cellH/normalization)*this.zoomFactor/10)), true);
+        vScroll = new Scrollbar(this.x+this.w-20, this.y, 20, this.h-20, int(this.gridH/this.cellH), int(this.h/normalization*this.zoomFactor/10), true);
         vScroll.isFlipped = true;
-        hScroll = new Scrollbar(this.x, this.y+this.h-20, this.w-20, 20, int(this.gridW/normalization), int(this.w/((this.cellW/normalization)*this.zoomFactor/10)), false);
+        hScroll = new Scrollbar(this.x, this.y+this.h-20, this.w-20, 20, int(this.gridW/this.cellW), int(this.w/normalization*this.zoomFactor/10), false);
         this.w -= 20;
         this.h -= 20;
     }
@@ -105,10 +98,10 @@ class SubstrateGrid{
         float xOrigin = hScroll.getIndex()*cellW, yOrigin = vScroll.getIndex()*cellH;
         
         if(isRulerActive){
-            float cont = 0;
-            float cellPxW = (cellW/normalization)*zoomFactor/10;
+            float cont = 0;//xOrigin*cellW;
+            float cellPxW = (normalization)*zoomFactor/10;
             float auxX = x;
-            float cellPxH = (cellH/normalization)*zoomFactor/10;
+            float cellPxH = (normalization)*zoomFactor/10;
             float auxY = y+h;
             if(isLightColor)
                 stroke(lightRuler);
@@ -120,7 +113,7 @@ class SubstrateGrid{
                 auxX += cellPxW;
                 cont += cellW;
             }
-            cont = 0;
+            cont = 0;//yOrigin*cellH;
             while(auxY > y && cont <= gridH){
                 float temp = (gridW/cellW)*cellPxW;
                 line(x, auxY, x+((temp>w)?w:temp), auxY);
@@ -138,35 +131,35 @@ class SubstrateGrid{
                 stroke(darkBullet);
             }
             float contW = bulletHS/2, contH = bulletVS/2;
-            float bulletPxW = (cellW/normalization)*zoomFactor/10;
+            float bulletPxW = (normalization)*zoomFactor/10;
             float auxX = -(xOrigin+bulletHS/2);
             while(auxX < 0)
                 auxX += bulletHS;
-            auxX = (auxX/normalization)*zoomFactor/10 + x;
-            float bulletPxH = (cellH/normalization)*zoomFactor/10;
+            auxX = auxX/cellW*(normalization)*zoomFactor/10 + x;
+            float bulletPxH = (normalization)*zoomFactor/10;
             float auxY = yOrigin+bulletVS/2;
             while(auxY > 0)
                 auxY -= bulletVS;
-            auxY = (auxY/normalization)*zoomFactor/10 + y + h;
+            auxY = auxY/cellH*(normalization)*zoomFactor/10 + y + h;
             while(auxY >= y && contH <= gridH){
                 while(auxX-bulletPxW <= x+w && contW <= gridW){
                     ellipseMode(CORNER);
                     ellipse(auxX-bulletPxW, auxY, bulletPxW, bulletPxH);
-                    auxX += ((bulletHS/normalization)*zoomFactor/10);
+                    auxX += (((bulletHS/cellW)*normalization)*zoomFactor/10);
                     contW  += bulletHS;
                 }
                 contW = bulletHS/2;
                 auxX = -(xOrigin+bulletHS/2);
                 while(auxX < 0)
                     auxX += bulletHS;
-                auxX = (auxX/normalization)*zoomFactor/10 + x;
-                auxY -= ((bulletVS/normalization)*zoomFactor/10);
+                auxX = auxX/cellW*(normalization)*zoomFactor/10 + x;
+                auxY -= (((bulletVS/cellH)*normalization)*zoomFactor/10);
                 contH += bulletVS;
             }
         }
 
         for(Magnet mag : magnets.values()){
-            mag.drawSelf(xOrigin, yOrigin, normalization, zoomFactor, x, y, w, h);
+            mag.drawSelf(xOrigin, yOrigin, normalization, zoomFactor, x, y, w, h, cellW, cellH);
         }
         
         onMouseOverMethod();
@@ -182,13 +175,14 @@ class SubstrateGrid{
             float xOrigin = hScroll.getIndex()*cellW, yOrigin = vScroll.getIndex()*cellH;
             String structure = structurePanel.getSelectedStructure();
             String parts[] = structure.split(";");
-            parts[9] = (xOrigin+((mouseX/scaleFactor-x)*10)*normalization/zoomFactor) + "," + (yOrigin-(((mouseY/scaleFactor-y-h)*10)/zoomFactor)*normalization);
+            parts[9] = (xOrigin+(((mouseX/scaleFactor-x)*10)/normalization/zoomFactor)*cellW) + "," + (yOrigin-(((mouseY/scaleFactor-y-h)*10)/normalization/zoomFactor)*cellW);
             structure = "";
             for(int i=0; i<parts.length; i++){
                 structure += parts[i] + ";";
             }
             Magnet magAux = new Magnet(structure);
-            magAux.drawSelf(xOrigin, yOrigin, normalization, zoomFactor, x, y, w, h);
+            magAux.isTransparent = true;
+            magAux.drawSelf(xOrigin, yOrigin, normalization, zoomFactor, x, y, w, h, cellW, cellH);
         }
     }
     
@@ -205,8 +199,8 @@ class SubstrateGrid{
             float xOrigin = hScroll.getIndex()*cellW, yOrigin = vScroll.getIndex()*cellH;
             String structure = structurePanel.getSelectedStructure();
             String parts[] = structure.split(";");
-            Float newMagX = (xOrigin+((mouseX/scaleFactor-x)*10)*normalization/zoomFactor);
-            Float newMagY = (yOrigin-(((mouseY/scaleFactor-y-h)*10)/zoomFactor)*normalization);
+            Float newMagX = (xOrigin+(((mouseX/scaleFactor-x)*10)/normalization/zoomFactor)*cellW);
+            Float newMagY = (yOrigin-(((mouseY/scaleFactor-y-h)*10)/normalization/zoomFactor)*cellW);
             if(newMagX < Float.parseFloat(parts[4])/2 || newMagX > gridW - Float.parseFloat(parts[4])/2)
                 return;
             if(newMagY < Float.parseFloat(parts[5])/2 || newMagY > gridH - Float.parseFloat(parts[5])/2)
@@ -242,13 +236,13 @@ class SubstrateGrid{
             isRightHidden = ! isRightHidden;
         }
         if(isLeftHidden & isRightHidden){
-            hScroll.redefine(x+leftHiddenAreaW, y+h, w-leftHiddenAreaW-rightHiddenAreaW, 20, int((w-leftHiddenAreaW-rightHiddenAreaW)/((cellW/normalization)*zoomFactor/10)));
+            hScroll.redefine(x+leftHiddenAreaW, y+h, w-leftHiddenAreaW-rightHiddenAreaW, 20, int(w/(normalization*zoomFactor/10)));
         } else if(isLeftHidden){
-            hScroll.redefine(x+leftHiddenAreaW, y+h, w-leftHiddenAreaW, 20, int((w-leftHiddenAreaW)/((cellW/normalization)*zoomFactor/10)));
+            hScroll.redefine(x+leftHiddenAreaW, y+h, w-leftHiddenAreaW, 20, int(w/(normalization*zoomFactor/10)));
         } else if(isRightHidden){
-            hScroll.redefine(x, y+h, w-rightHiddenAreaW, 20, int((w-rightHiddenAreaW)/((cellW/normalization)*zoomFactor/10)));
+            hScroll.redefine(x, y+h, w-rightHiddenAreaW, 20, int(w/(normalization*zoomFactor/10)));
         } else{
-            hScroll.redefine(x, y+h, w, 20, int(w/((cellW/normalization)*zoomFactor/10)));
+            hScroll.redefine(x, y+h, w, 20, int(w/(normalization*zoomFactor/10)));
         }
     }
     
@@ -279,7 +273,7 @@ class SubstrateGrid{
                 if(zoomFactor < 10)
                     zoomFactor = 10;
             }
-            vScroll.redefine(x+w, y, 20, h, int(h/((cellH/normalization)*zoomFactor/10)));
+            vScroll.redefine(x+w, y, 20, h, int(h/(normalization*zoomFactor/10)));
             toggleHideGrid("none");
             return;
         }
@@ -292,6 +286,7 @@ class Magnet{
     float w, h, bottomCut, topCut, xMag, yMag, x, y;
     String magStr;
     color clockZone;
+    boolean isTransparent = false;
     
     Magnet(String magStr){
         this.magStr = magStr;
@@ -314,8 +309,44 @@ class Magnet{
         clockZone = Integer.parseInt(parts[10]);
     }
     
+    float sign (float p1x, float p1y, float p2x, float p2y, float p3x, float p3y){
+        return (p1x - p3x) * (p2y - p3y) - (p2x - p3x) * (p1y - p3y);
+    }
+    
+    boolean pointInTriangle(float ptx, float pty, boolean isTopCut){
+        float d1, d2, d3;
+        boolean has_neg, has_pos;
+    
+        if(isTopCut){
+            d1 = sign(ptx, pty, x-w/2, ((topCut>0)?y-h/2:y-h/2-topCut), x+w/2, ((topCut<0)?y-h/2:y-h/2+topCut));
+            d2 = sign(ptx, pty, x+w/2, ((topCut<0)?y-h/2:y-h/2+topCut), ((topCut>0)?x-w/2:x+w/2), y-h/2+abs(topCut));
+            d3 = sign(ptx, pty, ((topCut>0)?x-w/2:x+w/2), y-h/2+abs(topCut), x-w/2, ((topCut>0)?y-h/2:y-h/2-topCut));
+        }else{
+            d1 = sign(ptx, pty, x-w/2, ((bottomCut>0)?y+h/2:y+h/2+bottomCut), x+w/2, ((bottomCut<0)?y+h/2:y+h/2-bottomCut));
+            d2 = sign(ptx, pty, x+w/2, ((bottomCut<0)?y+h/2:y+h/2-bottomCut), ((bottomCut>0)?x-w/2:x+w/2), y+h/2-abs(bottomCut));
+            d3 = sign(ptx, pty, ((bottomCut>0)?x-w/2:x+w/2), y+h/2-abs(bottomCut), x-w/2, ((bottomCut>0)?y+h/2:y+h/2+bottomCut));
+        }
+    
+        has_neg = (d1 < 0) || (d2 < 0) || (d3 < 0);
+        has_pos = (d1 > 0) || (d2 > 0) || (d3 > 0);
+    
+        return !(has_neg && has_pos);
+    }
+
     boolean collision(Magnet m){
-        return (m.x-m.w/2 < x+w/2 && m.x+m.w/2 > x-w/2 && m.y-m.h/2 < y+h/2 && m.y+m.h/2 > y-h/2);
+        if(m.x-m.w/2 <= x+w/2 &&
+                m.x+m.w/2 >= x-w/2 &&
+                m.y-m.h/2+abs(m.topCut) < y+h/2-abs(bottomCut) &&
+                m.y+m.h/2-abs(m.bottomCut) > y-h/2+abs(topCut))
+                    return true;
+        if(m.y > y){
+            if(m.pointInTriangle(((topCut>0)?(x-w/2):(x+w/2)), y-h/2, false))
+                return true;
+        } else{
+            if(m.pointInTriangle(((bottomCut>0)?(x-w/2):(x+w/2)), y+h/2, true))
+                return true;
+        }
+        return false;
     }
     
     void drawArrow(float x0, float y0, float x1, float y1, float beginHeadSize, float endHeadSize){
@@ -325,8 +356,8 @@ class Magnet{
         float coeff = 1.5;
 
         strokeCap(SQUARE);
-        fill(0);
-        stroke(0);
+        fill(0, (isTransparent)?128:255);
+        stroke(0, (isTransparent)?128:255);
         
         line(x0+d.x*beginHeadSize*coeff/1.0f, 
             y0+d.y*beginHeadSize*coeff/1.0f, 
@@ -352,21 +383,21 @@ class Magnet{
         popMatrix();
     }
     
-    void drawSelf(float xOrigin,  float yOrigin, float normalization, float zoomFactor, float gx, float gy, float gw, float gh){
-        float auxX = ((x-xOrigin)/normalization)*zoomFactor/10 + gx;
-        float auxY = ((yOrigin-y)/normalization)*zoomFactor/10 + gy + gh;
-        float auxW = (w/normalization)*zoomFactor/10;
-        float auxH = (h/normalization)*zoomFactor/10;
+    void drawSelf(float xOrigin,  float yOrigin, float normalization, float zoomFactor, float gx, float gy, float gw, float gh, float cellW, float cellH){
+        float auxX = (((x-xOrigin)/cellW)*normalization)*zoomFactor/10 + gx;
+        float auxY = (((yOrigin-y)/cellH)*normalization)*zoomFactor/10 + gy + gh;
+        float auxW = (w/cellW*normalization)*zoomFactor/10;
+        float auxH = (h/cellH*normalization)*zoomFactor/10;
         if(auxX-auxW > gx+gw || auxX+auxW < gx || auxY-auxH > gy+gh || auxY+auxH < gy)
             return;
         strokeWeight(zoomFactor/100+1);
-        stroke(clockZone);
+        stroke(clockZone, (isTransparent)?128:255);
         if(xMag > abs(yMag)){
-            fill(200, 200, 200);
+            fill(200, 200, 200, (isTransparent)?128:255);
         } else if(yMag > 0){
-            fill(#FF5555);
+            fill(#FF5555, (isTransparent)?128:255);
         } else{
-            fill(#80B3FF);
+            fill(#80B3FF, (isTransparent)?128:255);
         }
         beginShape();
         if(topCut > 0){

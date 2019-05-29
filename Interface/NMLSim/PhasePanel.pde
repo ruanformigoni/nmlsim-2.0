@@ -102,22 +102,26 @@ class PhasePanel{
         
         if(name.validateText()){
             if(sp.getEngine().equals("LLG") && llgPhases.isIn(name.getText())){
+                saveButton.isTransparent = (!validateAllFields());
                 saveButton.setPosition(x+w-30,auxY);
                 saveButton.drawSelf();
                 newButton.isValid = false;
                 saveButton.isValid = true;
             } else if(!sp.getEngine().equals("LLG") && behaPhases.isIn(name.getText())){
+                saveButton.isTransparent = (!validateAllFields());
                 saveButton.setPosition(x+w-30,auxY);
                 saveButton.drawSelf();
                 newButton.isValid = false;
                 saveButton.isValid = true;
             } else{
+                newButton.isTransparent = (!validateAllFields());
                 newButton.setPosition(x+w-30,auxY);
                 newButton.drawSelf();
                 newButton.isValid = true;
                 saveButton.isValid = false;
             }
         } else{
+            newButton.isTransparent = (!validateAllFields());
             newButton.setPosition(x+w-30,auxY);
             newButton.drawSelf();
             newButton.isValid = true;
@@ -277,6 +281,22 @@ class PhasePanel{
             llgPhases.mouseDraggedMethod();
         else
             behaPhases.mouseWheelMethod(value);
+    }
+    
+    boolean validateAllFields(){
+        boolean invalid = false;
+        invalid = invalid | !name.validateText();
+        invalid = invalid | !duration.validateText();
+        if(sp.getEngine().equals("LLG")){
+            invalid = invalid | !initialField.validateText();
+            invalid = invalid | !endField.validateText();
+            invalid = invalid | !initialCurr.validateText();
+            invalid = invalid | !endCurr.validateText();
+        } else{
+            invalid = invalid | !initialBeha.validateText();
+            invalid = invalid | !endBeha.validateText();
+        }
+        return !invalid;
     }
 
     boolean mousePressedMethod(){

@@ -145,7 +145,7 @@ public class TextBox{
     }
     
     public boolean validateText(){
-        if(validationType.equals("String") && text != "" && !text.contains(";"))
+        if(validationType.equals("String") && !text.equals("") && !text.contains(";"))
             setValid();
         else if(validationType.equals("Integer")){
             try{

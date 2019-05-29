@@ -45,7 +45,6 @@ class HeaderContainer{
         hitbox.updateBox(x + (boxWidth - textWidth(label))/2, y, textWidth(label), fontSz+5);
         textSize(fontSz+5);
         text(label, x + (boxWidth - textWidth(label))/2, y+fontSz+5);
-        //println(boxWidth + "  -  " + textWidth(label) + "  -  " + (boxWidth - textWidth(label))/2);
         float tempX = x+5+centerFactor, tempY = y+fontSz+10, bigger = 0;
         for(int i=0; i<buttons.size(); i++){
             Button b = buttons.get(i);
@@ -145,10 +144,10 @@ class Header{
         file.addButton(new Button("Open", "Opens a NML circuit file", sprites.openIconWhite, 0, 0));
         
         magnet = new HeaderContainer("Magnet", x, y);
-        magnet.addButton(new Button("Line Add", "Adds a line of magnets", sprites.lineAddWhite, 0, 0));
+        //magnet.addButton(new Button("Line Add", "Adds a line of magnets", sprites.lineAddWhite, 0, 0));
         magnet.addButton(new Button("Delete", "Delete a magnet or a group of magnets", sprites.deleteIconWhite, 0, 0));
         magnet.addButton(new Button("Edit", "Edit a magnet or a group of magnets", sprites.editIconWhite, 0, 0));
-        magnet.addButton(new Button("Pin", "Pin a magnet to show animated magnetization", sprites.pinIconWhite, 0, 0));
+        //magnet.addButton(new Button("Pin", "Pin a magnet to show animated magnetization", sprites.pinIconWhite, 0, 0));
         magnet.addButton(new Button("Copy", "Copy a magnet or a group of magnets", sprites.copyIconWhite, 0, 0));
         magnet.addButton(new Button("Paste", "Paste copied magnets", sprites.pasteIconWhite, 0, 0));
         magnet.addButton(new Button("Move", "Move a magnet or a group of magnets", sprites.moveIconWhite, 0, 0));

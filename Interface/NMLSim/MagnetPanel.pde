@@ -202,8 +202,10 @@ class MagnetPanel{
         
         if(isEditing)
             saveButton.drawSelf();
+        saveTemplateButton.isTransparent = !validateAllFields();
         saveTemplateButton.drawSelf();
         clearButton.drawSelf();
+        addButton.isTransparent = !validateAllFields();
         addButton.drawSelf();
         magWidth.drawSelf();
         magHeight.drawSelf();

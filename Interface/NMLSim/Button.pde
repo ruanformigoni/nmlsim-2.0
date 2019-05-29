@@ -3,7 +3,7 @@ class Button{
     private PImage icon;
     private float x, y;
     private color labelColor, explanationColor, explanationBox, selectedBox, mouseOverColor, mouseOverExpandedColor;
-    private Boolean active, expanded, isValid, isMouseOver, explanationOnRight;
+    private Boolean active, expanded, isValid, isMouseOver, explanationOnRight, isTransparent;
     private HitBox hitbox;
     private int initialTime = -1;
     
@@ -21,6 +21,7 @@ class Button{
         this.mouseOverExpandedColor = color(45,80,22);
         this.active = false;
         explanationOnRight = true;
+        isTransparent = false;
         this.expanded = false;
         this.isValid = true;
         this.isMouseOver = false;
@@ -32,28 +33,30 @@ class Button{
         if(expanded){
             float offset = (icon.height - (textAscent()+textDescent()))/2;
             textSize(fontSz);
-            fill(labelColor);
-            stroke(labelColor);
+            fill(labelColor, (isTransparent)?128:255);
+            stroke(labelColor, (isTransparent)?128:255);
             text(label, x + icon.width + 5, y + icon.height - textDescent() - offset);
         }
         if(!isValid)
             isMouseOver = false;
         if(active){
-            fill(selectedBox);
-            stroke(selectedBox);
+            fill(selectedBox, (isTransparent)?128:255);
+            stroke(selectedBox, (isTransparent)?128:255);
             rect(x, y, icon.width, icon.height);
         } else if(isMouseOver){
             if(!expanded){
-                fill(mouseOverColor);
-                stroke(mouseOverColor);
+                fill(mouseOverColor, (isTransparent)?128:255);
+                stroke(mouseOverColor, (isTransparent)?128:255);
             } else{
-                fill(mouseOverExpandedColor);
-                stroke(mouseOverExpandedColor);
+                fill(mouseOverExpandedColor, (isTransparent)?128:255);
+                stroke(mouseOverExpandedColor, (isTransparent)?128:255);
             }
             rect(x, y, icon.width, icon.height);
         }
 
+        tint((isTransparent)?128:255);
         image(icon, x, y);
+        tint(255);
     }
 
     String getLabel(){
@@ -61,7 +64,7 @@ class Button{
     }
 
     public Boolean mousePressedMethod(){
-    	if(!isValid)
+    	if(!isValid || isTransparent)
             return false;
         Boolean collided = hitbox.collision(mouseX, mouseY);
         if(collided)
@@ -70,7 +73,7 @@ class Button{
     }
     
     public void onMouseOverMethod(){
-        if(!isValid)
+        if(!isValid || isTransparent)
             return;
         if(hitbox.collision(mouseX, mouseY)){
             isMouseOver = true;
