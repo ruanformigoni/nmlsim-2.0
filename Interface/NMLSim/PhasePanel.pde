@@ -42,7 +42,7 @@ class PhasePanel{
         endCurr.setText("0,0,0");
         
         duration = new TextBox("Duration", 0, 0, w-20);
-        duration.setValidationType("Float");
+        duration.setValidationType("FloatPos");
         
         initialBeha = new TextBox("Init. Sig.", 0, 0, w-20);
         initialBeha.setValidationType("Float");

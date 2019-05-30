@@ -15,7 +15,7 @@ class ColorPallete{
         colorsBoxes = new ArrayList<HitBox>();
         strokeColor = color(255,255,255);
         palleteColor = color(212,85,0);
-        colors = new color[]{#FF0000,#000080,#008000,#800080,#FF00FF,#FFFF00,#55DDFF,#FF9955,#EEAAFF};
+        colors = new color[]{#008000,#000080,#FFFF00,#5500D4,#502D16,#1ECFD4,#00FF00,#000000,#FF8A00};
         for(int i=0; i<colors.length; i++)
             colorsBoxes.add(new HitBox(x, y, w, h));
         selectedColor = colors[int(random(colors.length))];
@@ -26,7 +26,7 @@ class ColorPallete{
         fill(selectedColor);
         rect(x, y, w, h, 5);
         if(isSelecting){
-            float maxH = (colors.length/3)*(h+5)+5;
+            float maxH = ceil(colors.length/3.0f)*(h+5)+5;
             float maxW = 3*(w+5)+5;
             fill(palleteColor);
             rect(x+w/2-maxW/2, y+h/2-maxH/2, maxW, maxH, 5);

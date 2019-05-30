@@ -30,11 +30,11 @@ class SimulationPanel{
         method.addOption("RK4");
         
         repetitions = new TextBox("Repetitions", 0, 0, w-20);
-        repetitions.setValidationType("Integer");
+        repetitions.setValidationType("IntegerPos");
         repetitions.setText("100");
         
         reportStep = new TextBox("Report Step (ns)", 0, 0, w-20);
-        reportStep.setValidationType("Float");
+        reportStep.setValidationType("FloatPos");
         reportStep.setText("0.01");
         
         alpha = new TextBox("Gilbert Damping", 0, 0, w-20);
@@ -46,15 +46,15 @@ class SimulationPanel{
         ms.setText("800000");
         
         temperature = new TextBox("Temperature (K)", 0, 0, w-20);
-        temperature.setValidationType("Float");
+        temperature.setValidationType("FloatPos");
         temperature.setText("300");
         
         timeStep = new TextBox("Time Step (ns)", 0, 0, w-20);
-        timeStep.setValidationType("Float");
+        timeStep.setValidationType("FloatPos");
         timeStep.setText("0.0001");
         
         simTime = new TextBox("Sim. Time (ns)", 0, 0, w-20);
-        simTime.setValidationType("Float");
+        simTime.setValidationType("FloatPos");
         
         spinAngle = new TextBox("Spin Angle", 0, 0, w-20);
         spinAngle.setValidationType("Float");
@@ -65,23 +65,23 @@ class SimulationPanel{
         spinDifusionLenght.setText("3.5");
         
         heavyMaterialThickness = new TextBox("H.M. Thickness", 0, 0, w-20);
-        heavyMaterialThickness.setValidationType("Float");
+        heavyMaterialThickness.setValidationType("FloatPos");
         heavyMaterialThickness.setText("5");
         
         neighborhoodRadius = new TextBox("Neigh. Radius", 0, 0, w-20);
-        neighborhoodRadius.setValidationType("Float");
+        neighborhoodRadius.setValidationType("FloatPos");
         neighborhoodRadius.setText("300");
         
         subSize = new VectorTextBox("Subst. Size (nm)", 0, 0, w-20, 2);
-        subSize.setValidationType("Float");
+        subSize.setValidationType("FloatPos");
         subSize.setText("1000,1000");
 
         cellSize = new VectorTextBox("Cell Size (nm)", 0, 0, w-20, 2);
-        cellSize.setValidationType("Float");
+        cellSize.setValidationType("FloatPos");
         cellSize.setText("10,10");
 
         bulletSpacing = new VectorTextBox("Bullet Dist. (nm)", 0, 0, w-20, 2);
-        bulletSpacing.setValidationType("Float");
+        bulletSpacing.setValidationType("FloatPos");
         bulletSpacing.setText("60,125");
         
         clearButton = new Button("Clear", "Clear all fields", sprites.smallDeleteIconWhite, x+w-55, y+h-22.5);

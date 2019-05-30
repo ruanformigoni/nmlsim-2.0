@@ -163,6 +163,32 @@ public class TextBox{
                 setInvalid();
                 return false;
             }
+        } else if(validationType.equals("IntegerPos")){
+            try{
+                int aux =Integer.parseInt(text);
+                if(aux > 0)
+                    setValid();
+                else{
+                    setInvalid();
+                    return false;
+                }
+            } catch(NumberFormatException e){
+                setInvalid();
+                return false;
+            }
+        } else if(validationType.equals("FloatPos")){
+            try{
+                float aux = Float.parseFloat(text);
+                if(aux > 0)
+                    setValid();
+                else{
+                    setInvalid();
+                    return false;
+                }
+            } catch(NumberFormatException e){
+                setInvalid();
+                return false;
+            }
         } else{
             setInvalid();
             return false;

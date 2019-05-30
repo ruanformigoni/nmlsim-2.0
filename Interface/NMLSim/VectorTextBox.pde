@@ -167,6 +167,30 @@ public class VectorTextBox{
                 } catch(NumberFormatException e){
                     isValid.set(i, false);
                 }
+            } else if(validationType.equals("IntegerPos")){
+                try{
+                    int aux = Integer.parseInt(texts.get(i));
+                    if(aux > 0){
+                        isValid.set(i, true);
+                    } else{
+                        isValid.set(i, false);
+                        return false;
+                    }
+                } catch(NumberFormatException e){
+                    isValid.set(i, false);
+                }
+            } else if(validationType.equals("FloatPos")){
+                try{
+                    float aux = Float.parseFloat(texts.get(i));
+                    if(aux > 0.0f){
+                        isValid.set(i, true);
+                    } else{
+                        isValid.set(i, false);
+                        return false;
+                    }
+                } catch(NumberFormatException e){
+                    isValid.set(i, false);
+                }
             } else{
                 isValid.set(i, false);
             }

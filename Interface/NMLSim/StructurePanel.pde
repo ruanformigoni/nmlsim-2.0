@@ -7,7 +7,6 @@ class StructurePanel{
     int selectedStructure, randomName;
     color panelColor, textColor;
     Button editButton, saveTemplateButton, saveButton;
-    //HashMap<String, String> structuresValues;
     boolean isEditing;
     
     StructurePanel(float x, float y, float w, float h){
@@ -22,7 +21,6 @@ class StructurePanel{
         randomName = 0;
         structuresButtons = new ArrayList<TextButton>();
         delete = new ArrayList<Button>();
-        //structuresValues = new HashMap<String, String>();
         panelColor = color(45,80,22);
         textColor = color(255,255,255);
         isEditing = false;
@@ -37,7 +35,6 @@ class StructurePanel{
     }
     
     void addStructure(String label, String structure){
-        //structuresValues.put(label, structure);
         for(int i=0; i<structuresButtons.size(); i++){
             if(structuresButtons.get(i).getText().equals(label)){
                 structuresButtons.get(i).setButtonContent(structure);
@@ -114,7 +111,6 @@ class StructurePanel{
         if(selectedStructure == -1 || isEditing)
             return "";
         return structuresButtons.get(selectedStructure).getButtonContent();
-        //return structuresValues.get(structuresButtons.get(selectedStructure).getText());
     }
     
     void keyPressedMethod(){
@@ -150,7 +146,6 @@ class StructurePanel{
                     structuresButtons.get(i).setText("Structure" + randomName);
                     randomName++;
                 }
-//                structuresValues.put(structuresButtons.get(i).getText(),)
             }
         }
         for(int i=0; i<structuresButtons.size(); i++){

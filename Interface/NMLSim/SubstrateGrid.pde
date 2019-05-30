@@ -98,7 +98,7 @@ class SubstrateGrid{
         float xOrigin = hScroll.getIndex()*cellW, yOrigin = vScroll.getIndex()*cellH;
         
         if(isRulerActive){
-            float cont = 0;//xOrigin*cellW;
+            float cont = xOrigin;
             float cellPxW = (normalization)*zoomFactor/10;
             float auxX = x;
             float cellPxH = (normalization)*zoomFactor/10;
@@ -108,14 +108,14 @@ class SubstrateGrid{
             else
                 stroke(darkRuler);
             while(auxX < x+w && cont <= gridW){
-                float temp = (gridH/cellH)*cellPxH;
+                float temp = ((gridH-yOrigin)/cellH)*cellPxH;
                 line(auxX, y+h, auxX, y+h-((temp>h)?h:temp));
                 auxX += cellPxW;
                 cont += cellW;
             }
-            cont = 0;//yOrigin*cellH;
+            cont = yOrigin;
             while(auxY > y && cont <= gridH){
-                float temp = (gridW/cellW)*cellPxW;
+                float temp = ((gridW-xOrigin)/cellW)*cellPxW;
                 line(x, auxY, x+((temp>w)?w:temp), auxY);
                 auxY -= cellPxH;
                 cont += cellH;
@@ -175,7 +175,12 @@ class SubstrateGrid{
             float xOrigin = hScroll.getIndex()*cellW, yOrigin = vScroll.getIndex()*cellH;
             String structure = structurePanel.getSelectedStructure();
             String parts[] = structure.split(";");
-            parts[9] = (xOrigin+(((mouseX/scaleFactor-x)*10)/normalization/zoomFactor)*cellW) + "," + (yOrigin-(((mouseY/scaleFactor-y-h)*10)/normalization/zoomFactor)*cellW);
+            if(isBulletActive)
+                parts[9] =
+                    (int((xOrigin+(((mouseX/scaleFactor-x)*10)/normalization/zoomFactor)*cellW)/bulletHS)*bulletHS+bulletHS/2-cellH/2) + "," + 
+                    (int((yOrigin-(((mouseY/scaleFactor-y-h)*10)/normalization/zoomFactor)*cellW)/bulletVS)*bulletVS+bulletVS/2-cellW/2);
+            else
+                parts[9] = (xOrigin+(((mouseX/scaleFactor-x)*10)/normalization/zoomFactor)*cellW) + "," + (yOrigin-(((mouseY/scaleFactor-y-h)*10)/normalization/zoomFactor)*cellW);
             structure = "";
             for(int i=0; i<parts.length; i++){
                 structure += parts[i] + ";";
@@ -201,11 +206,20 @@ class SubstrateGrid{
             String parts[] = structure.split(";");
             Float newMagX = (xOrigin+(((mouseX/scaleFactor-x)*10)/normalization/zoomFactor)*cellW);
             Float newMagY = (yOrigin-(((mouseY/scaleFactor-y-h)*10)/normalization/zoomFactor)*cellW);
+            if(isBulletActive){
+                newMagX = (int((xOrigin+(((mouseX/scaleFactor-x)*10)/normalization/zoomFactor)*cellW)/bulletHS)*bulletHS+bulletHS/2-cellH/2);
+                newMagY = (int((yOrigin-(((mouseY/scaleFactor-y-h)*10)/normalization/zoomFactor)*cellW)/bulletVS)*bulletVS+bulletVS/2-cellW/2);
+            }
             if(newMagX < Float.parseFloat(parts[4])/2 || newMagX > gridW - Float.parseFloat(parts[4])/2)
                 return;
             if(newMagY < Float.parseFloat(parts[5])/2 || newMagY > gridH - Float.parseFloat(parts[5])/2)
                 return;
-            parts[9] = newMagX + "," + newMagY;
+            if(isBulletActive)
+                parts[9] =
+                    (int((xOrigin+(((mouseX/scaleFactor-x)*10)/normalization/zoomFactor)*cellW)/bulletHS)*bulletHS+bulletHS/2-cellH/2) + "," + 
+                    (int((yOrigin-(((mouseY/scaleFactor-y-h)*10)/normalization/zoomFactor)*cellW)/bulletVS)*bulletVS+bulletVS/2-cellW/2);
+            else
+                parts[9] = newMagX + "," + newMagY;
             structure = "";
             for(int i=0; i<parts.length; i++){
                 structure += parts[i] + ";";
@@ -390,7 +404,7 @@ class Magnet{
         float auxH = (h/cellH*normalization)*zoomFactor/10;
         if(auxX-auxW > gx+gw || auxX+auxW < gx || auxY-auxH > gy+gh || auxY+auxH < gy)
             return;
-        strokeWeight(zoomFactor/100+1);
+        strokeWeight(2*zoomFactor/100+1);
         stroke(clockZone, (isTransparent)?128:255);
         if(xMag > abs(yMag)){
             fill(200, 200, 200, (isTransparent)?128:255);
@@ -425,7 +439,7 @@ class Magnet{
             auxY+(auxH/2)*yMag,
             auxX+(auxW/2)*xMag,
             auxY-(auxH/2)*yMag,
-            0,zoomFactor/100*2);
+            0,((abs(xMag) > abs(yMag))?auxH/10:auxW/10));
         strokeWeight(1);        
     }
 }

@@ -47,7 +47,6 @@ void draw(){
     //scaleFactor = (float(width)/1280.0);
     //println(scaleFactor);
     scale(scaleFactor);
-    background(83, 108, 83);
     background(255, 153, 85);
     sg.drawSelf();
     pm.drawSelf();

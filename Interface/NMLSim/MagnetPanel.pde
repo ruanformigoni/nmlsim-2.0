@@ -30,15 +30,15 @@ class MagnetPanel{
         behaInitMag.setText("0");
         
         magWidth = new TextBox("Width (nm)", x, y, w-20);
-        magWidth.setValidationType("Float");
+        magWidth.setValidationType("FloatPos");
         magWidth.setText("50");
         
         magHeight = new TextBox("Height (nm)", x, y, w-20);
-        magHeight.setValidationType("Float");
+        magHeight.setValidationType("FloatPos");
         magHeight.setText("100");
         
         magThickness = new TextBox("Thickness (nm)", x, y, w-20);
-        magThickness.setValidationType("Float");
+        magThickness.setValidationType("FloatPos");
         magThickness.setText("15");
         
         magTopCut = new TextBox("Top Cut (nm)", x, y, w-20);
@@ -57,7 +57,7 @@ class MagnetPanel{
         clockZone = new DropDownBox("Clock Zone", x, y, w-20);
         
         position = new VectorTextBox("Position (nm)", x, y, w-20, 2);
-        position.setValidationType("Float");
+        position.setValidationType("FloatPos");
         
         llgInitMag = new VectorTextBox("Initial Mag.(x, y, z)", x, y, w-20, 3);
         llgInitMag.setValidationType("Float");
@@ -297,8 +297,13 @@ class MagnetPanel{
         position.mousePressedMethod();
         if(addButton.mousePressedMethod()){
             addButton.deactivate();
-            if(validateAllFields())
+            if(validateAllFields()){
+                String parts[] = position.getText().split(",");
+                if(Float.parseFloat(parts[0]) < Float.parseFloat(magWidth.getText())/2 || Float.parseFloat(parts[1]) < Float.parseFloat(magHeight.getText())/2){
+                    return;
+                }
                 substrateGrid.addMagnet(label.getText(), getValue(true));
+            }
         }
         if(clearButton.mousePressedMethod()){
             clearButton.deactivate();
