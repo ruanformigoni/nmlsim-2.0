@@ -52,9 +52,14 @@ class PanelMenu{
         structurePanelActive = false;
         structurePanel = new StructurePanel(width/scaleFactor-pw/2-23, y-ph, pw/2, ph);
         substrateGrid.setStructurePanel(structurePanel);
+        structurePanel.setSubstrateGrid(substrateGrid);
         simPanel = new SimulationPanel(x, y-ph, pw, ph);
         phasePanel = new PhasePanel(x, y-ph, pw, ph, simPanel);
         zonePanel = new ZonePanel(x, y-ph, pw, ph, phasePanel);
+        phasePanel.setZonePanel(zonePanel);
+        simPanel.setZonePanel(zonePanel);
+        zonePanel.setSubstrateGrid(substrateGrid);
+        substrateGrid.setZonePanel(zonePanel);
         magnetPanel = new MagnetPanel(x, y-ph, pw, ph, zonePanel, structurePanel);
         magnetPanel.setSubstrateGrid(substrateGrid);
         

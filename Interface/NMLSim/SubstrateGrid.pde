@@ -2,13 +2,17 @@ import java.util.Map;
 
 class SubstrateGrid{
     float x, y, w, h, cellW, cellH, gridW, gridH, leftHiddenAreaW, leftHiddenAreaH, rightHiddenAreaW, rightHiddenAreaH, bulletVS, bulletHS, normalization;
-    int zoomFactor, xPos, yPos, randomName = 0;
+    int zoomFactor, xPos, yPos, randomName = 0, randomGroup = 0;
     color darkBG, lightBG, darkRuler, lightRuler, darkBullet, lightBullet;
-    boolean isLightColor, isLeftHidden, isRightHidden, isRulerActive, isBulletActive;
+    boolean isLightColor, isLeftHidden, isRightHidden, isRulerActive, isBulletActive, isPasting = false;
     HitBox fullAreaHitbox, leftHidden, rightHidden;
     Scrollbar vScroll, hScroll;
     HashMap<String, Magnet> magnets;
+    ArrayList<Magnet> selectedMagnets;
+    ArrayList<String> zoneNames;
     StructurePanel structurePanel;
+    ZonePanel zonePanel;
+    String toPasteStructure = "";
     
     SubstrateGrid(float x, float y, float w, float h, float cellW, float cellH, float gridW, float gridH){
         this.x = x;
@@ -37,6 +41,21 @@ class SubstrateGrid{
         isBulletActive = true;
         
         magnets = new HashMap<String, Magnet>();
+        selectedMagnets = new ArrayList<Magnet>();
+        zoneNames = new ArrayList<String>();
+    }
+    
+    void setZonePanel(ZonePanel z){
+        zonePanel = z;
+    }
+    
+    void updateZoneNames(ArrayList<String> zoneNames){
+        this.zoneNames = zoneNames;
+        for(Magnet mag : magnets.values()){
+            if(!zoneNames.contains(mag.getZoneName())){
+                mag.changeZone("none",255);
+            }
+        }
     }
     
     void setStructurePanel(StructurePanel sp){
@@ -49,11 +68,30 @@ class SubstrateGrid{
     }
     
     void addMagnet(String label, String structure){
-        Magnet aux =  new Magnet(structure);
-        for(Magnet mag : magnets.values())
-            if(aux.collision(mag))
-                return;
-        magnets.put(label, aux);
+        if(structure.contains(":")){
+            ArrayList <Magnet> strMags = new ArrayList<Magnet>();
+            String [] parts = structure.split(":");
+            int index = 0;
+            for(String str : parts){
+                Magnet aux = new Magnet(str, label + "_" + index);
+                index++;
+                for(Magnet mag : magnets.values())
+                    if(aux.collision(mag))
+                        return;
+                strMags.add(aux);
+            }
+            index = 0;
+            for(Magnet mag : strMags){
+                magnets.put(label + "_" + index, mag);
+                index++;
+            }
+        } else{
+            Magnet aux =  new Magnet(structure, label);
+            for(Magnet mag : magnets.values())
+                if(aux.collision(mag))
+                    return;
+            magnets.put(label, aux);
+        }
     }
     
     void setGridSizes(float gridW, float gridH, float cellW, float cellH){
@@ -82,6 +120,64 @@ class SubstrateGrid{
         rightHiddenAreaW = rw;
         leftHidden = new HitBox(x, y+h+20-lh, lw, lh);
         rightHidden = new HitBox(x+w-rw-4, y+h+20-rh, rw+4, rh);
+    }
+    
+    void deleteSelectedMagnets(){
+        for(Magnet mag : selectedMagnets){
+            magnets.remove(mag.name);
+        }
+        selectedMagnets.clear();
+    }
+    
+    void copySelectedMagnetsToClipBoard(){
+        toPasteStructure = getSelectedStructure();
+    }
+    
+    void togglePasteState(){
+        isPasting = !isPasting;
+        if(toPasteStructure.equals(""))
+            isPasting = false;
+    }
+    
+    void groupSelectedMagnets(){
+        for(Magnet mag : selectedMagnets){
+            mag.addToGroup("RandomGroupName_"+randomGroup);
+        }
+        randomGroup++;
+    }
+    
+    String getSelectedStructure(){
+        if(selectedMagnets.size() == 0)
+            return "";
+        String structure = "";
+        for(Magnet mag : selectedMagnets){
+            structure += mag.magStr + ":";
+        }
+        structure = structure.substring(0, structure.length()-1);
+        return structure;
+    }
+    
+    void changeSelectedMagnetsZone(boolean isUP){
+        if(zoneNames.size() == 0)
+            return;
+        for(Magnet mag : selectedMagnets){
+            int i;
+            for(i=0; i<zoneNames.size(); i++){
+                if(zoneNames.get(i).equals(mag.getZoneName()))
+                    break;
+            }
+            if(i == zoneNames.size()){
+                i--;
+            }
+            if(isUP)
+                i = (i+1)%zoneNames.size();
+            else{
+                i--;
+                if(i < 0)
+                    i = zoneNames.size()-1;
+            }
+            mag.changeZone(zoneNames.get(i),zonePanel.getZoneColor(zoneNames.get(i)));
+        }
     }
     
     void drawSelf(){
@@ -171,23 +267,31 @@ class SubstrateGrid{
     void onMouseOverMethod(){
         if(!fullAreaHitbox.collision(mouseX, mouseY) || (isLeftHidden && leftHidden.collision(mouseX, mouseY)) || (isRightHidden && rightHidden.collision(mouseX, mouseY)))
             return;
-        if(structurePanel != null && !structurePanel.getSelectedStructure().equals("")){
+        if((structurePanel != null && !structurePanel.getSelectedStructure().equals("")) || isPasting){
             float xOrigin = hScroll.getIndex()*cellW, yOrigin = vScroll.getIndex()*cellH;
-            String structure = structurePanel.getSelectedStructure();
-            String parts[] = structure.split(";");
-            if(isBulletActive)
-                parts[9] =
-                    (int((xOrigin+(((mouseX/scaleFactor-x)*10)/normalization/zoomFactor)*cellW)/bulletHS)*bulletHS+bulletHS/2-cellH/2) + "," + 
-                    (int((yOrigin-(((mouseY/scaleFactor-y-h)*10)/normalization/zoomFactor)*cellW)/bulletVS)*bulletVS+bulletVS/2-cellW/2);
-            else
-                parts[9] = (xOrigin+(((mouseX/scaleFactor-x)*10)/normalization/zoomFactor)*cellW) + "," + (yOrigin-(((mouseY/scaleFactor-y-h)*10)/normalization/zoomFactor)*cellW);
-            structure = "";
-            for(int i=0; i<parts.length; i++){
-                structure += parts[i] + ";";
+            String [] magnetsStr;
+            if(isPasting){
+                magnetsStr = toPasteStructure.split(":");
+            }else{
+                magnetsStr = structurePanel.getSelectedStructure().split(":");
             }
-            Magnet magAux = new Magnet(structure);
-            magAux.isTransparent = true;
-            magAux.drawSelf(xOrigin, yOrigin, normalization, zoomFactor, x, y, w, h, cellW, cellH);
+            float deltaX = (isBulletActive)?(int((xOrigin+(((mouseX/scaleFactor-x)*10)/normalization/zoomFactor)*cellW)/bulletHS)*bulletHS+bulletHS/2-cellH/2):(xOrigin+(((mouseX/scaleFactor-x)*10)/normalization/zoomFactor)*cellW);
+            float deltaY = (isBulletActive)?(int((yOrigin-(((mouseY/scaleFactor-y-h)*10)/normalization/zoomFactor)*cellW)/bulletVS)*bulletVS+bulletVS/2-cellW/2):(yOrigin-(((mouseY/scaleFactor-y-h)*10)/normalization/zoomFactor)*cellW);
+            float xRef = Float.parseFloat(magnetsStr[0].split(";")[9].split(",")[0]);
+            float yRef = Float.parseFloat(magnetsStr[0].split(";")[9].split(",")[1]);
+            for(String structure : magnetsStr){
+                String parts[] = structure.split(";");
+                
+                parts[9] = "" + (Float.parseFloat(parts[9].split(",")[0])-xRef+deltaX) + "," + (Float.parseFloat(parts[9].split(",")[1])-yRef+deltaY);
+
+                structure = "";
+                for(int i=0; i<parts.length; i++){
+                    structure += parts[i] + ";";
+                }
+                Magnet magAux = new Magnet(structure, "Magnet_Aux");
+                magAux.isTransparent = true;
+                magAux.drawSelf(xOrigin, yOrigin, normalization, zoomFactor, x, y, w, h, cellW, cellH);
+            }
         }
     }
     
@@ -200,37 +304,61 @@ class SubstrateGrid{
             return;
         if(!fullAreaHitbox.collision(mouseX, mouseY))
             return;
-        if(structurePanel != null && !structurePanel.getSelectedStructure().equals("")){
+        if((structurePanel != null && !structurePanel.getSelectedStructure().equals("")) || isPasting){
+            for(Magnet mag : selectedMagnets)
+                mag.isSelected = false;
+            selectedMagnets.clear();
             float xOrigin = hScroll.getIndex()*cellW, yOrigin = vScroll.getIndex()*cellH;
-            String structure = structurePanel.getSelectedStructure();
-            String parts[] = structure.split(";");
-            Float newMagX = (xOrigin+(((mouseX/scaleFactor-x)*10)/normalization/zoomFactor)*cellW);
-            Float newMagY = (yOrigin-(((mouseY/scaleFactor-y-h)*10)/normalization/zoomFactor)*cellW);
-            if(isBulletActive){
-                newMagX = (int((xOrigin+(((mouseX/scaleFactor-x)*10)/normalization/zoomFactor)*cellW)/bulletHS)*bulletHS+bulletHS/2-cellH/2);
-                newMagY = (int((yOrigin-(((mouseY/scaleFactor-y-h)*10)/normalization/zoomFactor)*cellW)/bulletVS)*bulletVS+bulletVS/2-cellW/2);
+            String [] magnetsStr;
+            if(isPasting){
+                magnetsStr = toPasteStructure.split(":");
+            }else{
+                magnetsStr = structurePanel.getSelectedStructure().split(":");
             }
-            if(newMagX < Float.parseFloat(parts[4])/2 || newMagX > gridW - Float.parseFloat(parts[4])/2)
-                return;
-            if(newMagY < Float.parseFloat(parts[5])/2 || newMagY > gridH - Float.parseFloat(parts[5])/2)
-                return;
-            if(isBulletActive)
-                parts[9] =
-                    (int((xOrigin+(((mouseX/scaleFactor-x)*10)/normalization/zoomFactor)*cellW)/bulletHS)*bulletHS+bulletHS/2-cellH/2) + "," + 
-                    (int((yOrigin-(((mouseY/scaleFactor-y-h)*10)/normalization/zoomFactor)*cellW)/bulletVS)*bulletVS+bulletVS/2-cellW/2);
-            else
-                parts[9] = newMagX + "," + newMagY;
-            structure = "";
-            for(int i=0; i<parts.length; i++){
-                structure += parts[i] + ";";
-            }
-            Magnet mAux = new Magnet(structure);
-            for(Magnet mag : magnets.values()){
-                if(mAux.collision(mag))
+            float deltaX = (isBulletActive)?(int((xOrigin+(((mouseX/scaleFactor-x)*10)/normalization/zoomFactor)*cellW)/bulletHS)*bulletHS+bulletHS/2-cellH/2):(xOrigin+(((mouseX/scaleFactor-x)*10)/normalization/zoomFactor)*cellW);
+            float deltaY = (isBulletActive)?(int((yOrigin-(((mouseY/scaleFactor-y-h)*10)/normalization/zoomFactor)*cellW)/bulletVS)*bulletVS+bulletVS/2-cellW/2):(yOrigin-(((mouseY/scaleFactor-y-h)*10)/normalization/zoomFactor)*cellW);
+            float xRef = Float.parseFloat(magnetsStr[0].split(";")[9].split(",")[0]);
+            float yRef = Float.parseFloat(magnetsStr[0].split(";")[9].split(",")[1]);
+            String fullStr = "";
+            for(String structure : magnetsStr){
+                String parts[] = structure.split(";");
+                float newMagX = (Float.parseFloat(parts[9].split(",")[0])-xRef+deltaX);
+                float newMagY = (Float.parseFloat(parts[9].split(",")[1])-yRef+deltaY);
+                if(newMagX < Float.parseFloat(parts[4])/2 || newMagX > gridW - Float.parseFloat(parts[4])/2)
                     return;
+                if(newMagY < Float.parseFloat(parts[5])/2 || newMagY > gridH - Float.parseFloat(parts[5])/2)
+                    return;
+                parts[9] = "" + newMagX + "," + newMagY;
+                structure = "";
+                for(int i=0; i<parts.length; i++){
+                    structure += parts[i] + ";";
+                }
+                fullStr += structure + ":";
             }
-            addMagnet("Magnet_" + randomName,structure);
+            fullStr = fullStr.substring(0, fullStr.length()-1);
+            addMagnet("Magnet_" + randomName, fullStr);
             randomName++;
+            return;
+        }
+        if(keyPressed == false || keyCode != SHIFT){
+            for(Magnet mag : selectedMagnets)
+                mag.isSelected = false;
+            selectedMagnets.clear();
+        }
+        for(Magnet mag : magnets.values()){
+            if(mag.collision(mouseX, mouseY)){
+                mag.isSelected = true;
+                if(!mag.getGroup().equals("")){
+                    for(Magnet otherMag : magnets.values()){
+                        if(otherMag.getGroup().equals(mag.getGroup())){
+                            otherMag.isSelected = true;
+                            selectedMagnets.add(otherMag);
+                        }
+                    }
+                } else{
+                    selectedMagnets.add(mag);
+                }
+            }
         }
     }
     
@@ -298,12 +426,17 @@ class SubstrateGrid{
 
 class Magnet{
     float w, h, bottomCut, topCut, xMag, yMag, x, y;
-    String magStr;
+    String magStr, name, groupName, zone;
     color clockZone;
-    boolean isTransparent = false;
+    boolean isTransparent = false, isSelected = false;
+    HitBox hitbox;
     
-    Magnet(String magStr){
+    /*MagStr = type;clockZone;magnetization;fixed;w;h;tc;bc;position;zoneColor*/
+    
+    Magnet(String magStr, String name){
         this.magStr = magStr;
+        this.groupName = "";
+        this.name = name;
         String parts[] = magStr.split(";");
         if(parts[2].contains(",")){
             String [] aux = parts[2].split(",");
@@ -313,6 +446,7 @@ class Magnet{
             yMag = Float.parseFloat(parts[2]);
             xMag = 1-abs(yMag);
         }
+        zone = parts[1];
         w = Float.parseFloat(parts[4]);
         h = Float.parseFloat(parts[5]);
         topCut = Float.parseFloat(parts[7]);
@@ -321,6 +455,30 @@ class Magnet{
         x = Float.parseFloat(aux[0]);
         y = Float.parseFloat(aux[1]);
         clockZone = Integer.parseInt(parts[10]);
+        hitbox = new HitBox(0,0,0,0);
+    }
+    
+    String getZoneName(){
+        return zone;
+    }
+    
+    void changeZone(String zName, Integer zColor){
+        String [] parts = magStr.split(";");
+        parts[1] = zName;
+        zone = zName;
+        parts[10] = zColor.toString();
+        clockZone = color(zColor);
+        magStr = "";
+        for(int i=0; i<parts.length; i++)
+            magStr += parts[i] + ";";
+    }
+    
+    void addToGroup(String group){
+        this.groupName = group;
+    }
+    
+    String getGroup(){
+        return groupName;
     }
     
     float sign (float p1x, float p1y, float p2x, float p2y, float p3x, float p3y){
@@ -350,8 +508,8 @@ class Magnet{
     boolean collision(Magnet m){
         if(m.x-m.w/2 <= x+w/2 &&
                 m.x+m.w/2 >= x-w/2 &&
-                m.y-m.h/2+abs(m.topCut) < y+h/2-abs(bottomCut) &&
-                m.y+m.h/2-abs(m.bottomCut) > y-h/2+abs(topCut))
+                m.y-m.h/2+abs(m.topCut) <= y+h/2-abs(bottomCut) &&
+                m.y+m.h/2-abs(m.bottomCut) >= y-h/2+abs(topCut))
                     return true;
         if(m.y > y){
             if(m.pointInTriangle(((topCut>0)?(x-w/2):(x+w/2)), y-h/2, false))
@@ -361,6 +519,10 @@ class Magnet{
                 return true;
         }
         return false;
+    }
+    
+    boolean collision(float px, float py){
+        return hitbox.collision(px, py);
     }
     
     void drawArrow(float x0, float y0, float x1, float y1, float beginHeadSize, float endHeadSize){
@@ -402,11 +564,14 @@ class Magnet{
         float auxY = (((yOrigin-y)/cellH)*normalization)*zoomFactor/10 + gy + gh;
         float auxW = (w/cellW*normalization)*zoomFactor/10;
         float auxH = (h/cellH*normalization)*zoomFactor/10;
+        hitbox.updateBox(auxX-auxW/2,auxY-auxH/2,auxW,auxH);
         if(auxX-auxW > gx+gw || auxX+auxW < gx || auxY-auxH > gy+gh || auxY+auxH < gy)
             return;
         strokeWeight(2*zoomFactor/100+1);
         stroke(clockZone, (isTransparent)?128:255);
-        if(xMag > abs(yMag)){
+        if(isSelected){
+            fill(255, 255, 255, 255);
+        } else if(xMag > abs(yMag)){
             fill(200, 200, 200, (isTransparent)?128:255);
         } else if(yMag > 0){
             fill(#FF5555, (isTransparent)?128:255);
@@ -440,6 +605,6 @@ class Magnet{
             auxX+(auxW/2)*xMag,
             auxY-(auxH/2)*yMag,
             0,((abs(xMag) > abs(yMag))?auxH/10:auxW/10));
-        strokeWeight(1);        
+        strokeWeight(1);
     }
 }

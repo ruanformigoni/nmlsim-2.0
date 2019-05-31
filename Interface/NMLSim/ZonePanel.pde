@@ -9,6 +9,7 @@ class ZonePanel{
     HashMap<String, String> llgZonesValues, behaZonesValues;
     Chart preview;
     ColorPallete zoneColor;
+    SubstrateGrid substrateGrid;
     
     ZonePanel(float x, float y, float w, float h, PhasePanel pp){
         this.x = x;
@@ -48,6 +49,10 @@ class ZonePanel{
         zoneColor = new ColorPallete(x+w-10, y+82, 15, 15);
     }
     
+    void setSubstrateGrid(SubstrateGrid substrateGrid){
+        this.substrateGrid = substrateGrid;
+    }
+        
     void drawSelf(){
         textSize(fontSz+5);
         fill(panelColor);
@@ -208,6 +213,11 @@ class ZonePanel{
         label.drawSelf();
         zoneColor.drawSelf();
         onMouseOverMethod();
+        if(phasePanel.getEngine().equals("LLG")){
+            substrateGrid.updateZoneNames(llgZones.getItems());
+        } else{
+            substrateGrid.updateZoneNames(behaZones.getItems());
+        }
     }
     
     ArrayList <String> getZoneNames(){
@@ -258,6 +268,11 @@ class ZonePanel{
                         behaZones.removeItem(zoneNames.get(index));
                 }
             }
+        }
+        if(phasePanel.getEngine().equals("LLG")){
+            substrateGrid.updateZoneNames(llgZones.getItems());
+        } else{
+            substrateGrid.updateZoneNames(behaZones.getItems());
         }
     }
     

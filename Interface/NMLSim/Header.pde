@@ -150,7 +150,7 @@ class Header{
         //magnet.addButton(new Button("Pin", "Pin a magnet to show animated magnetization", sprites.pinIconWhite, 0, 0));
         magnet.addButton(new Button("Copy", "Copy a magnet or a group of magnets", sprites.copyIconWhite, 0, 0));
         magnet.addButton(new Button("Paste", "Paste copied magnets", sprites.pasteIconWhite, 0, 0));
-        magnet.addButton(new Button("Move", "Move a magnet or a group of magnets", sprites.moveIconWhite, 0, 0));
+        magnet.addButton(new Button("Cut", "Cut from grid a magnet or a group of magnets", sprites.cutIconWhite, 0, 0));
         magnet.addButton(new Button("Group", "Makes a group with selected magnets", sprites.groupIconWhite, 0, 0));
         magnet.addButton(new Button("Up Zone", "Change a selected magnet or group to the next zone", sprites.zoneUpIconWhite, 0, 0));
         magnet.addButton(new Button("Down Zone", "Change a selected magnet or group to the previos zone", sprites.zoneDownIconWhite, 0, 0));
@@ -289,6 +289,45 @@ class Header{
                 file.setExpanded(false);
                 substrate.setExpanded(false);
             }
+            return true;
+        }
+        if(buttonLabel.equals("Delete")){
+            magnet.deactiveteButton("Delete");
+            substrateGrid.deleteSelectedMagnets();
+            return true;
+        }
+        if(buttonLabel.equals("Group")){
+            magnet.deactiveteButton("Group");
+            substrateGrid.groupSelectedMagnets();
+            return true;
+        }
+        if(buttonLabel.equals("Up Zone")){
+            magnet.deactiveteButton("Up Zone");
+            substrateGrid.changeSelectedMagnetsZone(true);
+            return true;
+        }
+        if(buttonLabel.equals("Down Zone")){
+            magnet.deactiveteButton("Down Zone");
+            substrateGrid.changeSelectedMagnetsZone(false);
+            return true;
+        }
+        if(buttonLabel.equals("Copy")){
+            magnet.deactiveteButton("Copy");
+            substrateGrid.copySelectedMagnetsToClipBoard();
+            return true;
+        }
+        if(buttonLabel.equals("Paste")){
+            if(substrateGrid.toPasteStructure.equals("")){
+                magnet.deactiveteButton("Paste");
+            } else{
+                substrateGrid.togglePasteState();
+            }
+            return true;
+        }
+        if(buttonLabel.equals("Cut")){
+            magnet.deactiveteButton("Cut");
+            substrateGrid.copySelectedMagnetsToClipBoard();
+            substrateGrid.deleteSelectedMagnets();
             return true;
         }
         buttonLabel = substrate.mousePressedMethod();

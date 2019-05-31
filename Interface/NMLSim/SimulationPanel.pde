@@ -5,6 +5,7 @@ class SimulationPanel{
     VectorTextBox subSize, cellSize, bulletSpacing;
     color panelColor, textColor;
     Button clearButton, defaultButton;
+    ZonePanel zonePanel;
     
     public SimulationPanel(float x, float y, float w, float h){
         this.x = x;
@@ -233,6 +234,10 @@ class SimulationPanel{
         onMouseOverMethod();
     }
     
+    void setZonePanel(ZonePanel zonePanel){
+        this.zonePanel = zonePanel;
+    }
+    
     void onMouseOverMethod(){
         clearButton.onMouseOverMethod();
         defaultButton.onMouseOverMethod();
@@ -293,6 +298,7 @@ class SimulationPanel{
         hit = hit | subSize.mousePressedMethod();
         hit = hit | cellSize.mousePressedMethod();
         hit = hit | bulletSpacing.mousePressedMethod();
+        zonePanel.updatePhases();
         return hit;
     }
     

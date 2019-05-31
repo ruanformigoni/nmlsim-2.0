@@ -151,7 +151,7 @@ public class VectorTextBox{
     
     public boolean validateText(){
         for(int i=0; i<fields; i++){
-            if(validationType.equals("String") && texts.get(i) != "" && texts.get(i).contains(";")){
+            if(validationType.equals("String") && texts.get(i) != "" && !texts.get(i).contains(";") && !texts.get(i).contains("$")){
                 isValid.set(i, true);
             } else if(validationType.equals("Integer")){
                 try{

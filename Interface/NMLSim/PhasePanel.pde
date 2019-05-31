@@ -8,6 +8,7 @@ class PhasePanel{
     ListContainer llgPhases, behaPhases;
     HashMap<String, String> llgPhaseValues, behaPhaseValues;
     Chart preview;
+    ZonePanel zonePanel;
 
     PhasePanel(float x, float y, float w, float h, SimulationPanel sp){
         this.x = x;
@@ -63,6 +64,10 @@ class PhasePanel{
         behaPhases.editEnabled = true;
     }
     
+    void setZonePanel(ZonePanel zonePanel){
+        this.zonePanel = zonePanel;
+    }
+        
     void drawSelf(){
         textSize(fontSz+5);
         fill(panelColor);
@@ -390,6 +395,7 @@ class PhasePanel{
             boolPhasesAux = behaPhases.mousePressedMethod();
         }
         if(boolPhasesAux){
+            zonePanel.updatePhases();
             String auxKey = (sp.getEngine().equals("LLG"))?llgPhases.getEditionField():behaPhases.getEditionField();
             if(auxKey != ""){
                 if(sp.getEngine().equals("LLG")){

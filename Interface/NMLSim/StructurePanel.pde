@@ -8,6 +8,7 @@ class StructurePanel{
     color panelColor, textColor;
     Button editButton, saveTemplateButton, saveButton;
     boolean isEditing;
+    SubstrateGrid substrateGrid;
     
     StructurePanel(float x, float y, float w, float h){
         this.x = x;
@@ -47,6 +48,10 @@ class StructurePanel{
         delete.add(new Button("Delete", "Delete the structure from the list", sprites.nanoDeleteIconWhite, 0, 0));
         delete.get(delete.size()-1).explanationOnRight = false;
         scroll.increaseMaxIndex();
+    }
+    
+    void setSubstrateGrid(SubstrateGrid substrateGrid){
+        this.substrateGrid = substrateGrid;
     }
     
     void drawSelf(){
@@ -133,6 +138,13 @@ class StructurePanel{
     
     void mousePressedMethod(){
         scroll.mousePressedMethod();
+        if(saveTemplateButton.mousePressedMethod()){
+            saveTemplateButton.deactivate();
+            if(!substrateGrid.getSelectedStructure().equals("")){
+                addStructure("Structure_" + randomName, substrateGrid.getSelectedStructure());
+                randomName++;
+            }
+        }
         if(editButton.mousePressedMethod()){
             isEditing = true;
             editButton.deactivate();
@@ -143,7 +155,7 @@ class StructurePanel{
             saveButton.deactivate();
             for(int i=0; i<structuresButtons.size(); i++){
                 if(structuresButtons.get(i).getText().equals("")){
-                    structuresButtons.get(i).setText("Structure" + randomName);
+                    structuresButtons.get(i).setText("Structure_" + randomName);
                     randomName++;
                 }
             }
