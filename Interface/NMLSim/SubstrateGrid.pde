@@ -579,24 +579,25 @@ class Magnet{
             fill(#80B3FF, (isTransparent)?128:255);
         }
         beginShape();
+        
         if(topCut > 0){
             vertex((auxX-auxW/2), auxY-auxH/2);
-            vertex(auxX+auxW/2, auxY-auxH/2+((topCut/normalization)*zoomFactor/10));
+            vertex(auxX+auxW/2, auxY-auxH/2+((topCut/cellH*normalization)*zoomFactor/10));
         } else{
-            vertex(auxX-auxW/2, auxY-auxH/2-((topCut/normalization)*zoomFactor/10));
+            vertex(auxX-auxW/2, auxY-auxH/2-((topCut/cellH*normalization)*zoomFactor/10));
             vertex(auxX+auxW/2, auxY-auxH/2);
         }
         if(bottomCut > 0){
-            vertex(auxX+auxW/2, auxY+auxH/2-((bottomCut/normalization)*zoomFactor/10));
+            vertex(auxX+auxW/2, auxY+auxH/2-((bottomCut/cellH*normalization)*zoomFactor/10));
             vertex(auxX-auxW/2, auxY+auxH/2);
         } else{
             vertex(auxX+auxW/2, auxY+auxH/2);
-            vertex(auxX-auxW/2, auxY+auxH/2+((bottomCut/normalization)*zoomFactor/10));
+            vertex(auxX-auxW/2, auxY+auxH/2+((bottomCut/cellH*normalization)*zoomFactor/10));
         }
         if(topCut > 0){
             vertex(auxX-auxW/2, auxY-auxH/2);
         } else{
-            vertex(auxX-auxW/2, auxY-auxH/2-((topCut/normalization)*zoomFactor/10));
+            vertex(auxX-auxW/2, auxY-auxH/2-((topCut/cellH*normalization)*zoomFactor/10));
         }
         endShape();
         drawArrow(
