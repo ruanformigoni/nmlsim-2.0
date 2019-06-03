@@ -157,6 +157,26 @@ class SubstrateGrid{
         return structure;
     }
     
+    void editSelectedMagnets(String newStrucutres){
+        if(selectedMagnets.size() == 0)
+            return;
+        String[]parts = newStrucutres.split(":");
+        int i=0;
+        for(Magnet mag : selectedMagnets){
+            boolean flag = false;
+            magnets.remove(mag.name);
+            Magnet magAux = new Magnet(parts[i], mag.name);
+            for(Magnet otherMag : magnets.values())
+                if(otherMag.collision(mag))
+                    flag = true;
+            if(flag)
+                magnets.put(mag.name, mag);
+            else
+                magnets.put(magAux.name, magAux);
+            i++;
+        }
+    }
+    
     void changeSelectedMagnetsZone(boolean isUP){
         if(zoneNames.size() == 0)
             return;
@@ -456,6 +476,28 @@ class Magnet{
         y = Float.parseFloat(aux[1]);
         clockZone = Integer.parseInt(parts[10]);
         hitbox = new HitBox(0,0,0,0);
+    }
+    
+    void editStructure(String newStructure){
+        this.magStr = newStructure;
+        String parts[] = magStr.split(";");
+        if(parts[2].contains(",")){
+            String [] aux = parts[2].split(",");
+            xMag = Float.parseFloat(aux[0]);
+            yMag = Float.parseFloat(aux[1]);
+        } else{
+            yMag = Float.parseFloat(parts[2]);
+            xMag = 1-abs(yMag);
+        }
+        zone = parts[1];
+        w = Float.parseFloat(parts[4]);
+        h = Float.parseFloat(parts[5]);
+        topCut = Float.parseFloat(parts[7]);
+        bottomCut = Float.parseFloat(parts[8]);
+        String [] aux = parts[9].split(",");
+        x = Float.parseFloat(aux[0]);
+        y = Float.parseFloat(aux[1]);
+        clockZone = Integer.parseInt(parts[10]);
     }
     
     String getZoneName(){

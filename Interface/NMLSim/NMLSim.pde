@@ -37,6 +37,7 @@ void setup(){
     sg.setBulletSpacing(60,124);
     pm = new PanelMenu(0, 670, 300, 500, sg);
     h = new Header(0, 0, 1280, sg);
+    h.setPanelMenu(pm);
     //c = new Chart(400, 200, 600, 400);
     //c.addSeires("Red",new float[][]{{0,-00},{5,100}},color(255,0,0));
     //c.addSeires("Green",new float[][]{{0,0},{5,50}},color(0,255,0));

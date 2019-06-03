@@ -13,6 +13,8 @@ class MagnetPanel{
     ZonePanel zonePanel;
     StructurePanel structurePanel;
     SubstrateGrid substrateGrid;
+    
+    String editingStructure;
 
     public MagnetPanel(float x, float y, float w, float h, ZonePanel zp, StructurePanel sp){
         this.x = x;
@@ -70,7 +72,7 @@ class MagnetPanel{
         
         isEditing = false;
         
-        saveButton = new Button("Save", "Save the changes in the current magnet", sprites.smallSaveIconWhite, x+w-105, y+h-30);
+        saveButton = new Button("Save", "Save the changes in the current magnet", sprites.smallSaveIconWhite, x+w-30, y+h-30);
         saveTemplateButton = new Button("Save Template", "Save the configuration as a new template", sprites.smallSaveTemplateIconWhite, x+w-30, y+h-30);
         clearButton = new Button("Clear", "Clear all fields", sprites.smallDeleteIconWhite, x+w-55, y+h-30);
         addButton = new Button("Add", "Adds the magnet directly to the grid", sprites.smallNewIconWhite, x+w-80, y+h-30);
@@ -152,9 +154,11 @@ class MagnetPanel{
         auxY += aux+5;
         magBottomCut.updatePosition(x+10, auxY);
         auxY += aux+5;
-        position.updatePosition(x+10,auxY);
-        auxY += aux+5;
-
+        if(!isEditing){
+            position.updatePosition(x+10,auxY);
+            auxY += aux+5;
+        }
+        
         strokeWeight(4);
         stroke(color(255,255,255));
         auxY += 3;
@@ -200,19 +204,28 @@ class MagnetPanel{
             endShape();
         }
         
-        if(isEditing)
+        if(isEditing){
+            saveButton.isTransparent = !((zonePanel.getEngine().equals("LLG")?llgInitMag.validateText():behaInitMag.validateText()) &&
+                                        magBottomCut.validateText() && magHeight.validateText() && magThickness.validateText() && magTopCut.validateText() && magWidth.validateText());
             saveButton.drawSelf();
-        saveTemplateButton.isTransparent = !validateAllFields();
-        saveTemplateButton.drawSelf();
+        }
+        if(!isEditing){
+            saveTemplateButton.isTransparent = !validateAllFields();
+            saveTemplateButton.drawSelf();
+        }
         clearButton.drawSelf();
-        addButton.isTransparent = !validateAllFields();
-        addButton.drawSelf();
+        if(!isEditing){
+            addButton.isTransparent = !validateAllFields();
+            addButton.drawSelf();
+        }
         magWidth.drawSelf();
         magHeight.drawSelf();
         magThickness.drawSelf();
         magTopCut.drawSelf();
         magBottomCut.drawSelf();
-        position.drawSelf();
+        if(!isEditing){
+            position.drawSelf();
+        }
         fixedMag.drawSelf();
         if(zonePanel.getEngine().equals("LLG"))
             llgInitMag.drawSelf();
@@ -224,9 +237,28 @@ class MagnetPanel{
             label.drawSelf();
         if(isEditing)
             saveButton.onMouseOverMethod();
-        saveTemplateButton.onMouseOverMethod();
+        if(!isEditing)
+            saveTemplateButton.onMouseOverMethod();
         clearButton.onMouseOverMethod();
-        addButton.onMouseOverMethod();
+        if(!isEditing)
+            addButton.onMouseOverMethod();
+    }
+    
+    void setEditing(String structure){
+        //type;clockZone;magnetization;fixed;w;h;tc;bc;position;zoneColor
+        editingStructure = structure;
+        String strParts[] = structure.split(":");
+        String fields[] = strParts[0].split(";");
+        if(zonePanel.getEngine().equals("LLG")){
+            llgInitMag.setText(fields[2]);
+        } else{
+            behaInitMag.setText(fields[2]);
+        }
+        magWidth.setText(fields[4]);
+        magHeight.setText(fields[5]);
+        magThickness.setText(fields[6]);
+        magTopCut.setText(fields[7]);
+        magBottomCut.setText(fields[8]);
     }
     
     boolean validateAllFields(){
@@ -275,7 +307,7 @@ class MagnetPanel{
     }
     
     void mousePressedMethod(){
-        if(saveTemplateButton.mousePressedMethod() && validateAllFields()){
+        if(!isEditing && saveTemplateButton.mousePressedMethod() && validateAllFields()){
             saveTemplateButton.deactivate();
             structurePanel.addStructure(label.getText(), getValue(true));
         }
@@ -295,7 +327,7 @@ class MagnetPanel{
         magTopCut.mousePressedMethod();
         magWidth.mousePressedMethod();
         position.mousePressedMethod();
-        if(addButton.mousePressedMethod()){
+        if(!isEditing && addButton.mousePressedMethod()){
             addButton.deactivate();
             if(validateAllFields()){
                 String parts[] = position.getText().split(",");
@@ -332,6 +364,39 @@ class MagnetPanel{
             magWidth.validateText();
             position.resetText();
             position.validateText();
+        }
+        if(isEditing && saveButton.mousePressedMethod()){
+            saveButton.deactivate();
+            String magnets[] = editingStructure.split(":");
+            editingStructure = "";
+            //type;clockZone;magnetization;fixed;w;h;tc;bc;position;zoneColor
+            for(String magnet : magnets){
+                String parts[] = magnet.split(";");
+                if(!type.getSelectedOption().equals("")){
+                    parts[0] = type.getSelectedOption();
+                }
+                if(!clockZone.getSelectedOption().equals("")){
+                    parts[1] = clockZone.getSelectedOption();
+                }
+                if(zonePanel.getEngine().equals("LLG")){
+                    parts[2] = llgInitMag.getText();
+                } else{
+                    parts[2] = behaInitMag.getText();
+                }
+                parts[3] = (fixedMag.isChecked)?"true":"false";
+                parts[4] = magWidth.getText();
+                parts[5] = magHeight.getText();
+                parts[6] = magThickness.getText();
+                parts[7] = magTopCut.getText();
+                parts[8] = magBottomCut.getText();
+                parts[10] = zonePanel.getZoneColor(parts[1]).toString();
+                for(int i=0; i<parts.length; i++)
+                    editingStructure += parts[i] + ";";
+                editingStructure += ":";
+            }
+            editingStructure = editingStructure.substring(0, editingStructure.length()-1);
+            substrateGrid.editSelectedMagnets(editingStructure);
+            isEditing = false;
         }
     }
     

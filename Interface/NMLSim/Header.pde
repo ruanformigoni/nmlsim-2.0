@@ -126,9 +126,10 @@ class HeaderContainer{
 }
 
 class Header{
-    HeaderContainer file, magnet, substrate, others;
+    HeaderContainer file, magnet, substrate;//, others;
     float x, y, myW;
     SubstrateGrid substrateGrid;
+    PanelMenu panelMenu;
     
     public Header(float x, float y, float w, SubstrateGrid sg){
         this.x = x;
@@ -146,14 +147,14 @@ class Header{
         magnet = new HeaderContainer("Magnet", x, y);
         //magnet.addButton(new Button("Line Add", "Adds a line of magnets", sprites.lineAddWhite, 0, 0));
         magnet.addButton(new Button("Delete", "Delete a magnet or a group of magnets", sprites.deleteIconWhite, 0, 0));
-        magnet.addButton(new Button("Edit", "Edit a magnet or a group of magnets", sprites.editIconWhite, 0, 0));
+        //magnet.addButton(new Button("Edit", "Edit a magnet or a group of magnets", sprites.editIconWhite, 0, 0));
         //magnet.addButton(new Button("Pin", "Pin a magnet to show animated magnetization", sprites.pinIconWhite, 0, 0));
+        magnet.addButton(new Button("Cut", "Cut from grid a magnet or a group of magnets", sprites.cutIconWhite, 0, 0));
         magnet.addButton(new Button("Copy", "Copy a magnet or a group of magnets", sprites.copyIconWhite, 0, 0));
         magnet.addButton(new Button("Paste", "Paste copied magnets", sprites.pasteIconWhite, 0, 0));
-        magnet.addButton(new Button("Cut", "Cut from grid a magnet or a group of magnets", sprites.cutIconWhite, 0, 0));
-        magnet.addButton(new Button("Group", "Makes a group with selected magnets", sprites.groupIconWhite, 0, 0));
         magnet.addButton(new Button("Up Zone", "Change a selected magnet or group to the next zone", sprites.zoneUpIconWhite, 0, 0));
         magnet.addButton(new Button("Down Zone", "Change a selected magnet or group to the previos zone", sprites.zoneDownIconWhite, 0, 0));
+        magnet.addButton(new Button("Group", "Makes a group with selected magnets", sprites.groupIconWhite, 0, 0));
         
         substrate = new HeaderContainer("Substrate", x, y);
         substrate.addButton(new Button("Grid", "Shows the ruler for the minimum cell definition", sprites.gridIconWhite, 0, 0));
@@ -162,11 +163,11 @@ class Header{
         substrate.addButton(new Button("Zoom Out", "Zooms out of the substract", sprites.zoomOutIconWhite, 0, 0));
         substrate.addButton(new Button("Light", "Toggles the light scheme on the substract", sprites.lightIconWhite, 0, 0));
 
-        others = new HeaderContainer("Others", x, y);
+/*        others = new HeaderContainer("Others", x, y);
         others.isExpanded = true;
         others.addButton(new Button("Undo", "Undo last action", sprites.undoIconWhite, 0, 0));
-        others.addButton(new Button("Redo", "Redo last undone action", sprites.redoIconWhite, 0, 0));
-}
+        others.addButton(new Button("Redo", "Redo last undone action", sprites.redoIconWhite, 0, 0));*/
+    }
     
     public void drawSelf(){
         float tempX, h = file.getHeight();
@@ -246,27 +247,31 @@ class Header{
             stroke(45, 80, 22);
             rect(tempX-10, y, 5, h);
         }
-        if(others.isExpanded){
-            fill(83, 108, 83);
-            stroke(83, 108, 83);
-            rect(tempX-5, y, 5, h);
-        } else{
-            fill(45, 80, 22);
-            stroke(45, 80, 22);
-            rect(tempX-5, y, 5, h);
-        }
-        others.setPosition(tempX,y);
-        others.drawSelf();
-        strokeWeight(4);
-        fill(255,255,255);
-        stroke(255,255,255);
-        line(tempX-5, y+15, tempX-5, y + h - 15);
-        strokeWeight(1);
+        //if(others.isExpanded){
+        //    fill(83, 108, 83);
+        //    stroke(83, 108, 83);
+        //    rect(tempX-5, y, 5, h);
+        //} else{
+        //    fill(45, 80, 22);
+        //    stroke(45, 80, 22);
+        //    rect(tempX-5, y, 5, h);
+        //}
+        //others.setPosition(tempX,y);
+        //others.drawSelf();
+        //strokeWeight(4);
+        //fill(255,255,255);
+        //stroke(255,255,255);
+        //line(tempX-5, y+15, tempX-5, y + h - 15);
+        //strokeWeight(1);
         
         file.onMouseOverMethod();
         magnet.onMouseOverMethod();
         substrate.onMouseOverMethod();
-        others.onMouseOverMethod();
+        //others.onMouseOverMethod();
+    }
+    
+    void setPanelMenu(PanelMenu panelMenu){
+        this.panelMenu = panelMenu;
     }
     
     float getHeight(){
@@ -324,6 +329,13 @@ class Header{
             }
             return true;
         }
+        if(buttonLabel.equals("Edit")){
+            magnet.deactiveteButton("Edit");
+            panelMenu.enableEditing();
+            if(!substrateGrid.isLeftHidden)
+                substrateGrid.toggleHideGrid("left");
+            return true;
+        }
         if(buttonLabel.equals("Cut")){
             magnet.deactiveteButton("Cut");
             substrateGrid.copySelectedMagnetsToClipBoard();
@@ -360,9 +372,9 @@ class Header{
             substrateGrid.toggleBullet();
             return true;
         }
-        buttonLabel = others.mousePressedMethod();
-        if(buttonLabel.equals("HeaderLabel"))
-            return true;
+        //buttonLabel = others.mousePressedMethod();
+        //if(buttonLabel.equals("HeaderLabel"))
+        //    return true;
         return false;
     }
 }

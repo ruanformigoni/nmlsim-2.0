@@ -65,6 +65,12 @@ class PanelMenu{
         
         structureLabelHitbox = new HitBox(width/scaleFactor-textWidth("Structures")-33, y, textWidth("Structures")+10, textAscent()+textDescent());
     }
+    
+    void enableEditing(){
+        magnetPanel.isEditing = true;
+        magnetPanel.setEditing(substrateGrid.getSelectedStructure());
+        selectedPanel = 3;
+    }
         
     void drawSelf(){
         float h = textAscent()+textDescent(), auxX = x+5;
