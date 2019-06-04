@@ -130,6 +130,7 @@ class Header{
     float x, y, myW;
     SubstrateGrid substrateGrid;
     PanelMenu panelMenu;
+    String fileBaseName;
     
     public Header(float x, float y, float w, SubstrateGrid sg){
         this.x = x;
@@ -162,6 +163,7 @@ class Header{
         substrate.addButton(new Button("Zoom In", "Zooms in the subtract", sprites.zoomInIconWhite, 0, 0));
         substrate.addButton(new Button("Zoom Out", "Zooms out of the substract", sprites.zoomOutIconWhite, 0, 0));
         substrate.addButton(new Button("Light", "Toggles the light scheme on the substract", sprites.lightIconWhite, 0, 0));
+        substrate.addButton(new Button("Move", "Enables cursor to move the substract", sprites.moveIconWhite, 0, 0));
 
 /*        others = new HeaderContainer("Others", x, y);
         others.isExpanded = true;
@@ -277,7 +279,7 @@ class Header{
     float getHeight(){
         return file.getHeight();
     }
-    
+        
     public boolean mousePressedMethod(){
         String buttonLabel;
         buttonLabel = file.mousePressedMethod();
@@ -286,6 +288,12 @@ class Header{
                 magnet.setExpanded(false);
                 substrate.setExpanded(false);
             }
+            return true;
+        }
+        if(buttonLabel.equals("New")){
+            file.deactiveteButton("New");
+            File start = new File(sketchPath("")+"/test");
+            selectOutput("Select a file to save", "saveXML", start);
             return true;
         }
         buttonLabel = magnet.mousePressedMethod();
@@ -370,6 +378,10 @@ class Header{
         }
         if(buttonLabel.equals("Bullet")){
             substrateGrid.toggleBullet();
+            return true;
+        }
+        if(buttonLabel.equals("Move")){
+            substrateGrid.toggleMoving();
             return true;
         }
         //buttonLabel = others.mousePressedMethod();

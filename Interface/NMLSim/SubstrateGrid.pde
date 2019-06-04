@@ -1,10 +1,10 @@
 import java.util.Map;
 
 class SubstrateGrid{
-    float x, y, w, h, cellW, cellH, gridW, gridH, leftHiddenAreaW, leftHiddenAreaH, rightHiddenAreaW, rightHiddenAreaH, bulletVS, bulletHS, normalization;
+    float x, y, w, h, cellW, cellH, gridW, gridH, leftHiddenAreaW, leftHiddenAreaH, rightHiddenAreaW, rightHiddenAreaH, bulletVS, bulletHS, normalization, initMouseX, initMouseY;
     int zoomFactor, xPos, yPos, randomName = 0, randomGroup = 0;
     color darkBG, lightBG, darkRuler, lightRuler, darkBullet, lightBullet;
-    boolean isLightColor, isLeftHidden, isRightHidden, isRulerActive, isBulletActive, isPasting = false;
+    boolean isLightColor, isLeftHidden, isRightHidden, isRulerActive, isBulletActive, isPasting = false, isMoving = false;
     HitBox fullAreaHitbox, leftHidden, rightHidden;
     Scrollbar vScroll, hScroll;
     HashMap<String, Magnet> magnets;
@@ -146,6 +146,14 @@ class SubstrateGrid{
         randomGroup++;
     }
     
+    ArrayList<String> getMagnetsProperties(){
+        ArrayList<String> properties = new ArrayList<String>();
+        for(Magnet mag : magnets.values()){
+            properties.add(mag.name + ";" + mag.magStr);
+        }
+        return properties;
+    }
+    
     String getSelectedStructure(){
         if(selectedMagnets.size() == 0)
             return "";
@@ -284,9 +292,19 @@ class SubstrateGrid{
         hScroll.drawSelf();
     }
     
+    void toggleMoving(){
+        isMoving = !isMoving;
+    }
+    
     void onMouseOverMethod(){
-        if(!fullAreaHitbox.collision(mouseX, mouseY) || (isLeftHidden && leftHidden.collision(mouseX, mouseY)) || (isRightHidden && rightHidden.collision(mouseX, mouseY)))
+        if(!fullAreaHitbox.collision(mouseX, mouseY) || (isLeftHidden && leftHidden.collision(mouseX, mouseY)) || (isRightHidden && rightHidden.collision(mouseX, mouseY))){
+            cursor(ARROW);
             return;
+        }
+        if(isMoving && mousePressed == false)
+            cursor(HAND);
+        else if(isMoving && mousePressed == true)
+            cursor(MOVE);
         if((structurePanel != null && !structurePanel.getSelectedStructure().equals("")) || isPasting){
             float xOrigin = hScroll.getIndex()*cellW, yOrigin = vScroll.getIndex()*cellH;
             String [] magnetsStr;
@@ -316,6 +334,11 @@ class SubstrateGrid{
     }
     
     void mousePressedMethod(){
+        if(isMoving){
+            initMouseX = mouseX;
+            initMouseY = mouseY;
+            return;
+        }
         vScroll.mousePressedMethod();
         hScroll.mousePressedMethod();
         if(isLeftHidden && leftHidden.collision(mouseX, mouseY))
@@ -389,6 +412,21 @@ class SubstrateGrid{
             return;
         if(isRightHidden && rightHidden.collision(mouseX, mouseY))
             return;
+        if(!fullAreaHitbox.collision(mouseX, mouseY))
+            return;
+        if(isMoving){
+            if(mouseX < initMouseX-10){
+                hScroll.incrementIndex();
+            } else if(mouseX > initMouseX+10){
+                hScroll.decreaseIndex();
+            }
+            if(mouseY > initMouseY+10){
+                vScroll.incrementIndex();
+            } else if(mouseY < initMouseY-10){
+                vScroll.decreaseIndex();
+            }
+            return;
+        }
     }
     
     void toggleHideGrid(String side){
@@ -451,7 +489,7 @@ class Magnet{
     boolean isTransparent = false, isSelected = false;
     HitBox hitbox;
     
-    /*MagStr = type;clockZone;magnetization;fixed;w;h;tc;bc;position;zoneColor*/
+    /*MagStr = type;clockZone;magnetization;fixed;w;h;tk;tc;bc;position;zoneColor*/
     
     Magnet(String magStr, String name){
         this.magStr = magStr;

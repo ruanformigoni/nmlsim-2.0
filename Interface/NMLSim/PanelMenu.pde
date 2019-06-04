@@ -66,6 +66,18 @@ class PanelMenu{
         structureLabelHitbox = new HitBox(width/scaleFactor-textWidth("Structures")-33, y, textWidth("Structures")+10, textAscent()+textDescent());
     }
     
+    ArrayList<String> getZoneProperties(){
+        return zonePanel.getZoneProperties();
+    }
+    
+    String getCircuitProperties(){
+        return simPanel.getProperties();
+    }
+    
+    ArrayList<String> getPhaseProperties(){
+        return phasePanel.getPhaseProperties();
+    }
+    
     void enableEditing(){
         magnetPanel.isEditing = true;
         magnetPanel.setEditing(substrateGrid.getSelectedStructure());

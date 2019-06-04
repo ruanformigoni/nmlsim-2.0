@@ -252,6 +252,20 @@ class PhasePanel{
         onMouseOverMethod();
     }
     
+    ArrayList<String> getPhaseProperties(){
+        ArrayList<String> properties = new ArrayList<String>();
+        if(sp.getEngine().equals("LLG")){
+            for(String name : llgPhases.getItems()){
+                properties.add(llgPhaseValues.get(name));
+            }
+        } else{
+            for(String name : behaPhases.getItems()){
+                properties.add(behaPhaseValues.get(name));
+            }
+        }
+        return properties;
+    }
+    
     ArrayList<String> getPhasesNames(){
         if(sp.getEngine().equals("LLG"))
             return llgPhases.getItems();

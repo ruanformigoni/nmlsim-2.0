@@ -220,6 +220,18 @@ class ZonePanel{
         }
     }
     
+    ArrayList <String> getZoneProperties(){
+        ArrayList properties = new ArrayList<String>();
+        if(phasePanel.getEngine().equals("LLG")){
+            for(String name : llgZones.getItems())
+                properties.add(llgZonesValues.get(name));
+        } else{
+            for(String name : behaZones.getItems())
+                properties.add(behaZonesValues.get(name));
+        }
+        return properties;
+    }
+    
     ArrayList <String> getZoneNames(){
         if(phasePanel.getEngine().equals("LLG"))
             return llgZones.getItems();

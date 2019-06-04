@@ -21,10 +21,10 @@ class SimulationPanel{
         engine.addOption("Behaviour");
         
         mode = new DropDownBox("Mode", 0, 0, w-20);
-        mode.addOption("Direct");
-        mode.addOption("Verbose");
-        mode.addOption("Exaustive");
-        mode.addOption("Repetitive");
+        mode.addOption("direct");
+        mode.addOption("verbose");
+        mode.addOption("exaustive");
+        mode.addOption("repetitive");
         
         method = new DropDownBox("Method", 0, 0, w-20);
         method.addOption("RKW2");
@@ -87,6 +87,26 @@ class SimulationPanel{
         
         clearButton = new Button("Clear", "Clear all fields", sprites.smallDeleteIconWhite, x+w-55, y+h-22.5);
         defaultButton = new Button("Defalt", "Set all fields to the default option", sprites.smallDefaultIconWhite, x+w-30, y+h-22.5);
+    }
+    
+    String getProperties(){
+        //engine;mode;method;repetitions;reportStep;alpha;ms;temperature;timeStep;simTime;spinAngle;spinDiff;hmt;neighborhood
+        String properties = "";
+        properties += engine.getSelectedOption() + ";";
+        properties += mode.getSelectedOption() + ";";
+        properties += method.getSelectedOption() + ";";
+        properties += repetitions.getText() + ";";
+        properties += reportStep.getText() + ";";
+        properties += alpha.getText() + ";";
+        properties += ms.getText() + ";";
+        properties += temperature.getText() + ";";
+        properties += timeStep.getText() + ";";
+        properties += simTime.getText() + ";";
+        properties += spinAngle.getText() + ";";
+        properties += spinDifusionLenght.getText() + ";";
+        properties += heavyMaterialThickness.getText() + ";";
+        properties += neighborhoodRadius.getText() + ";";
+        return properties;
     }
     
     public void drawSelf(){
