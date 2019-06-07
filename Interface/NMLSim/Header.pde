@@ -296,6 +296,13 @@ class Header{
             selectOutput("Select a file to save", "saveXML", start);
             return true;
         }
+        //if(buttonLabel.equals("Save")){
+        //    file.deactiveteButton("Save");
+        //    println("HERE");
+        //    try{exec("gnome-terminal", "-e", "/home/lascasas/Desktop/GitHub/NMLSim/nmlsim /home/lascasas/Desktop/GitHub/NMLSim/Files/test.xml /home/lascasas/Desktop/GitHub/NMLSim/Files/vaiQehTua.csv");}catch(Exception e){e.printStackTrace();}
+        //    println("Done");
+        //    return true;
+        //}
         buttonLabel = magnet.mousePressedMethod();
         if(buttonLabel.equals("HeaderLabel")){
             if(magnet.isExpanded){
