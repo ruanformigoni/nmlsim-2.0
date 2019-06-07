@@ -252,6 +252,35 @@ class PhasePanel{
         onMouseOverMethod();
     }
     
+    void reset(){
+        name.setText("");
+        duration.setText("");
+        initialBeha.setText("");
+        endBeha.setText("");
+        initialField.setText("0,0,0");
+        endField.setText("0,0,0");
+        initialCurr.setText("0,0,0");
+        endCurr.setText("0,0,0");
+        llgPhases.clearList();
+        behaPhases.clearList();
+        llgPhaseValues.clear();
+        behaPhaseValues.clear();        
+    }
+    
+    void loadPhaseProperties(ArrayList<String> properties){
+        reset();
+        for(String phase : properties){
+            String name = phase.substring(0, phase.indexOf(";"));
+            if(sp.getEngine().equals("LLG")){
+                llgPhases.addItem(name);
+                llgPhaseValues.put(name, phase);
+            } else{
+                behaPhases.addItem(name);
+                behaPhaseValues.put(name, phase);
+            }
+        }
+    }
+    
     ArrayList<String> getPhaseProperties(){
         ArrayList<String> properties = new ArrayList<String>();
         if(sp.getEngine().equals("LLG")){

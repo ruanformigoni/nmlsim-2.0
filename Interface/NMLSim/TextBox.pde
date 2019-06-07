@@ -102,7 +102,7 @@ public class TextBox{
                 }
             } else if (key == ENTER | key == TAB){
                 unselect();
-            } else {
+            } else if((keyCode > 64 && keyCode < 91) || (keyCode > 95 && keyCode < 106) || keyCode == 107 || keyCode == 109 || (keyCode > 43 && keyCode < 47)){
                 text += key;
             }
             validateText();

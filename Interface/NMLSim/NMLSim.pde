@@ -3,7 +3,6 @@ Header h;
 PanelMenu pm;
 SubstrateGrid sg;
 FileHandler fileSys;
-String fileBaseName = "";
 
 float fontSz = 15;
 float scaleFactor;
@@ -43,6 +42,8 @@ void mousePressed(){
 }
 
 void keyPressed(){
+    //println(key);
+    //println(keyCode);
     pm.keyPressedMethod();
 }
 
@@ -57,10 +58,27 @@ void mouseDragged(){
     sg.mouseDraggedMethod();
 }
 
-void saveXML(File selectedPath){
+void saveAs(File selectedPath){
     if(selectedPath == null)
         return;
-    fileBaseName = selectedPath.getAbsolutePath();
+    String fileBaseName = selectedPath.getAbsolutePath();
     fileSys.setBaseName(fileBaseName);
     fileSys.writeXmlFile();
+    fileSys.writeStructureFile();
+    fileSys.writeConfigFile();
+}
+
+void saveProject(){
+    fileSys.writeXmlFile();
+    fileSys.writeConfigFile();
+    fileSys.writeStructureFile();
+}
+
+void openProject(File selectedPath){
+    if(selectedPath == null)
+        return;
+    String fileBaseName = selectedPath.getAbsolutePath();
+    fileSys.setBaseName(fileBaseName);
+    fileSys.readStructureFile();
+    fileSys.readConfigFile();
 }

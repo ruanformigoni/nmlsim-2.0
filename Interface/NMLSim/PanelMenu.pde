@@ -66,6 +66,15 @@ class PanelMenu{
         structureLabelHitbox = new HitBox(width/scaleFactor-textWidth("Structures")-33, y, textWidth("Structures")+10, textAscent()+textDescent());
     }
     
+    void loadStructures(ArrayList<String> structures){
+        structurePanel.loadStructures(structures);
+    }
+    
+    ArrayList<String> getStructures(){
+        structurePanel.loadStructures(structurePanel.getStructures());
+        return structurePanel.getStructures();
+    }
+    
     ArrayList<String> getZoneProperties(){
         return zonePanel.getZoneProperties();
     }

@@ -124,6 +124,12 @@ public class DropDownBox{
             return options.get(selectedOpt);
     }
     
+    public void setSelectedOption(String opt){
+        for(int i=0; i<options.size(); i++)
+            if(options.get(i).equals(opt))
+                selectedOpt = i;
+    }
+    
     public void resetOption(){
         this.selectedOpt = -1;
     }    

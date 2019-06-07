@@ -98,7 +98,7 @@ class ListContainer{
         if(deleteEnabled)
             delete.add(new Button("Delete", "Deletes this item from the list", sprites.nanoDeleteIconWhite, 0, 0));
         if(editEnabled)
-            edit.add(new Button("Edit", "Load this item from list to edition", sprites.nanoEditIconWhite, 0, 0));
+            edit.add(new Button("Edit", "Load this item from list for editing", sprites.nanoEditIconWhite, 0, 0));
         if(upEnabled)
             up.add(new Button("Up", "Raise this item one position in the list", sprites.nanoArrowUpIconWhite, 0, 0));
         if(downEnabled)

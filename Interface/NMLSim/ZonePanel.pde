@@ -220,6 +220,30 @@ class ZonePanel{
         }
     }
     
+    void reset(){
+        label.setText("");
+        phases.resetOption();
+        myPhases.clearList();
+        llgZones.clearList();
+        behaZones.clearList();
+        llgZonesValues.clear();
+        behaZonesValues.clear();
+    }
+    
+    void loadZoneProperties(ArrayList<String> properties){
+        reset();
+        for(String zone : properties){
+            String name = zone.substring(0, zone.indexOf(";"));
+            if(phasePanel.getEngine().equals("LLG")){
+                llgZones.addItem(name);
+                llgZonesValues.put(name, zone);
+            } else{
+                behaZones.addItem(name);
+                behaZonesValues.put(name, zone);
+            }
+        }
+    }
+    
     ArrayList <String> getZoneProperties(){
         ArrayList properties = new ArrayList<String>();
         if(phasePanel.getEngine().equals("LLG")){

@@ -45,6 +45,16 @@ class SubstrateGrid{
         zoneNames = new ArrayList<String>();
     }
     
+    void reset(){
+        zoomFactor = 10;
+        isLightColor = true;
+        isRulerActive = true;
+        isBulletActive = true;
+        magnets.clear();
+        selectedMagnets.clear();
+        zoneNames.clear();
+    }
+    
     void setZonePanel(ZonePanel z){
         zonePanel = z;
     }
@@ -54,6 +64,8 @@ class SubstrateGrid{
         for(Magnet mag : magnets.values()){
             if(!zoneNames.contains(mag.getZoneName())){
                 mag.changeZone("none",255);
+            } else{
+                mag.changeZone(mag.zone, zonePanel.getZoneColor(mag.zone));
             }
         }
     }
@@ -144,6 +156,15 @@ class SubstrateGrid{
             mag.addToGroup("RandomGroupName_"+randomGroup);
         }
         randomGroup++;
+    }
+    
+    void loadMagnetProperties(ArrayList<String> magnets){
+        reset();
+        for(String magnet : magnets){
+            String name = magnet.substring(0, magnet.indexOf(";"));
+            magnet = magnet.substring(magnet.indexOf(";")+1, magnet.length());
+            addMagnet(name, magnet);
+        }
     }
     
     ArrayList<String> getMagnetsProperties(){

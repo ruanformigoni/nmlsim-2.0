@@ -109,6 +109,63 @@ class SimulationPanel{
         return properties;
     }
     
+    void loadProperties(String simulation, String grid){
+        reset();
+        String parts[] = simulation.split(";");
+        if(!parts[0].equals(""))
+            engine.setSelectedOption(parts[0]);
+        if(!parts[1].equals(""))
+            mode.setSelectedOption(parts[1]);
+        if(!parts[2].equals(""))
+            method.setSelectedOption(parts[2]);
+        if(!parts[3].equals(""))
+            repetitions.setText(parts[3]);
+        if(!parts[4].equals(""))
+            reportStep.setText(parts[4]);
+        if(!parts[5].equals(""))
+            alpha.setText(parts[5]);
+        if(!parts[6].equals(""))
+            ms.setText(parts[6]);
+        if(!parts[7].equals(""))
+            temperature.setText(parts[7]);
+        if(!parts[8].equals(""))
+            timeStep.setText(parts[8]);
+        if(!parts[9].equals(""))
+            simTime.setText(parts[9]);
+        if(!parts[10].equals(""))
+            spinAngle.setText(parts[10]);
+        if(!parts[11].equals(""))
+            spinDifusionLenght.setText(parts[11]);
+        if(!parts[12].equals(""))
+            heavyMaterialThickness.setText(parts[12]);
+        if(!parts[13].equals(""))
+            neighborhoodRadius.setText(parts[13]);
+            
+        parts = grid.split(",");
+        if(!parts[0].equals("") && !parts[1].equals(""))
+            subSize.setText(parts[0]+","+parts[1]);
+        if(!parts[2].equals("") && !parts[3].equals(""))
+            cellSize.setText(parts[2]+","+parts[3]);
+        if(!parts[4].equals("") && !parts[5].equals(""))
+            bulletSpacing.setText(parts[4]+","+parts[5]);
+    }
+    
+    void reset(){
+            reportStep.setText("0.01");
+            alpha.setText("0.05");
+            ms.setText("800000");
+            timeStep.setText("0.0001");
+            spinAngle.setText("0.4");
+            spinDifusionLenght.setText("3.5");
+            heavyMaterialThickness.setText("5");
+            neighborhoodRadius.setText("300");
+            subSize.setText("1000,1000");
+            cellSize.setText("10,10");
+            bulletSpacing.setText("60,125");
+            temperature.setText("300");
+            repetitions.setText("100");
+    }
+    
     public void drawSelf(){
         textSize(fontSz+5);
         fill(panelColor);
@@ -133,11 +190,11 @@ class SimulationPanel{
             method.updatePosition(x+10, auxY);
             auxY += aux+5;
         }
-        if(mode.getSelectedOption().equals("Repetitive")){
+        if(mode.getSelectedOption().equals("repetitive")){
             repetitions.updatePosition(x+10, auxY);
             auxY += aux+5;
         }
-        if(mode.getSelectedOption().equals("Verbose")){
+        if(mode.getSelectedOption().equals("verbose")){
             reportStep.updatePosition(x+10, auxY);
             auxY += aux+5;
         }
@@ -228,14 +285,14 @@ class SimulationPanel{
         else{
             alpha.isActive = false;
         }
-        if(mode.getSelectedOption().equals("Verbose")){
+        if(mode.getSelectedOption().equals("verbose")){
             reportStep.drawSelf();
             reportStep.isActive = true;
         }
         else{
             reportStep.isActive = false;
         }
-        if(mode.getSelectedOption().equals("Repetitive")){
+        if(mode.getSelectedOption().equals("repetitive")){
             repetitions.drawSelf();
             repetitions.isActive = true;
         }

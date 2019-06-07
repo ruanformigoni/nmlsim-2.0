@@ -3,8 +3,8 @@ public class FileHandler{
     Header header;
     PanelMenu panelMenu;
     SubstrateGrid substrateGrid;
-    PrintWriter xmlFileOut, configFileOut, StructureFileOut;
-    BufferedReader xmlFileIn, configFileIn, StructureFileIn;
+    PrintWriter xmlFileOut, configFileOut, structureFileOut;
+    BufferedReader configFileIn, structureFileIn;
     
     FileHandler(String baseName, Header h, PanelMenu pm, SubstrateGrid sg){
         fileBaseName = baseName;
@@ -17,8 +17,100 @@ public class FileHandler{
         fileBaseName = baseName;
     }
     
+    void writeStructureFile(){
+        ArrayList <String> structures = panelMenu.getStructures();
+        structureFileOut = createWriter(fileBaseName + "/structures.str");
+        for(String s : structures)
+            structureFileOut.println(s);
+        structureFileOut.flush();
+        structureFileOut.close();
+        
+    }
+    
+    void readStructureFile(){
+        ArrayList<String> structures = new ArrayList<String>();
+        structureFileIn = createReader(fileBaseName + "/structures.str");
+        try{
+            String line = structureFileIn.readLine();
+            while(line != null && !line.equals("")){
+                structures.add(line);
+                line = structureFileIn.readLine();
+            }
+            panelMenu.loadStructures(structures);
+            structureFileIn.close();
+        } catch(Exception e){}
+    }
+    
+    void readConfigFile(){
+        structureFileIn = createReader(fileBaseName + "/configurations.nmls");
+        try{
+            String circuit = structureFileIn.readLine();
+            String grid = structureFileIn.readLine();
+            panelMenu.simPanel.loadProperties(circuit, grid);
+            
+            String line = structureFileIn.readLine();
+            while(!line.equals("Phases"))
+                line = structureFileIn.readLine();
+            line = structureFileIn.readLine();
+            ArrayList <String> phases = new ArrayList<String>(); 
+            while(!line.equals("Zones")){
+                phases.add(line);
+                line = structureFileIn.readLine();
+            }
+            panelMenu.phasePanel.loadPhaseProperties(phases);
+            
+            line = structureFileIn.readLine();
+            ArrayList <String> zones = new ArrayList<String>(); 
+            while(!line.equals("Magnets")){
+                zones.add(line);
+                line = structureFileIn.readLine();
+            }
+            panelMenu.zonePanel.loadZoneProperties(zones);
+            
+            line = structureFileIn.readLine();
+            substrateGrid.randomName = Integer.parseInt(line);
+            line = structureFileIn.readLine();
+            ArrayList <String> magnets = new ArrayList<String>(); 
+            while(line != null && !line.equals("")){
+                magnets.add(line);
+                line = structureFileIn.readLine();
+            }
+            substrateGrid.loadMagnetProperties(magnets);
+            
+            structureFileIn.close();
+        } catch(Exception e){}
+    }
+    
+    void writeConfigFile(){
+        structureFileOut = createWriter(fileBaseName + "/configurations.nmls");
+        String circuit = panelMenu.getCircuitProperties();
+        String grid = panelMenu.simPanel.getGridProperties();
+        ArrayList<String> phases = pm.getPhaseProperties();
+        ArrayList<String> zones = pm.getZoneProperties();
+        ArrayList<String> magnets = sg.getMagnetsProperties();
+        
+        structureFileOut.println(circuit);
+        structureFileOut.println(grid);
+        structureFileOut.println("Phases");
+        for(String p : phases){
+            structureFileOut.println(p);
+        }
+        structureFileOut.println("Zones");        
+        for(String z : zones){
+            structureFileOut.println(z);
+        }
+        structureFileOut.println("Magnets");
+        structureFileOut.println(substrateGrid.randomName);
+        for(String m : magnets){
+            structureFileOut.println(m);
+        }
+        
+        structureFileOut.flush();
+        structureFileOut.close();
+    }
+    
     void writeXmlFile(){
-        xmlFileOut = createWriter(fileBaseName + ".xml");
+        xmlFileOut = createWriter(fileBaseName + "/simulation.xml");
         //engine;mode;method;repetitions;reportStep;alpha;ms;temperature;timeStep;simTime;spinAngle;spinDiff;hmt;neighborhood
         String [] circuitParts = panelMenu.getCircuitProperties().split(";");
         xmlFileOut.println("<!-- ALL measures of time are in nanoseconds and ALL metric measures are in nanometers -->\n" + 

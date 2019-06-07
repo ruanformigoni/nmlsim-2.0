@@ -290,10 +290,36 @@ class Header{
             }
             return true;
         }
+        if(buttonLabel.equals("Save")){
+            file.deactiveteButton("Save");
+            if(fileSys.fileBaseName.equals("")){
+                File start = new File(sketchPath(""));
+                selectFolder("Select a folder to save the project", "saveAs", start);
+                fileSys.writeStructureFile();
+            } else{
+                saveProject();
+            }
+            return true;
+        }
+        if(buttonLabel.equals("Save As")){
+            file.deactiveteButton("Save As");
+            File start = new File(sketchPath(""));
+            selectFolder("Select a folder to save the project", "saveAs", start);
+            return true;
+        }
+        if(buttonLabel.equals("Open")){
+            file.deactiveteButton("Open");
+            File start = new File(sketchPath(""));
+            selectFolder("Select a folder to open the project", "openProject", start);
+            return true;
+        }
         if(buttonLabel.equals("New")){
             file.deactiveteButton("New");
-            File start = new File(sketchPath("")+"/test");
-            selectOutput("Select a file to save", "saveXML", start);
+            panelMenu.simPanel.reset();
+            panelMenu.phasePanel.reset();
+            panelMenu.zonePanel.reset();
+            substrateGrid.reset();
+            fileSys.setBaseName("");
             return true;
         }
         //if(buttonLabel.equals("Save")){

@@ -112,6 +112,30 @@ class StructurePanel{
         scroll.drawSelf();
     }
     
+    void loadStructures(ArrayList<String> structures){
+        for(String structure : structures){
+            String name = structure.substring(0, structure.indexOf(";"));
+            structure = structure.substring(structure.indexOf(";")+1, structure.length());
+            addStructure(name, structure);
+        }
+    }
+    
+    void reset(){
+        structuresButtons.clear();
+        delete.clear();
+        selectedStructure = -1;
+        randomName = 0;
+        isEditing = false;
+    }
+    
+    ArrayList<String> getStructures(){
+        ArrayList<String> str = new ArrayList<String>();
+        for(TextButton b : structuresButtons){
+            str.add(b.getText() + ";" + b.getButtonContent());
+        }
+        return str;
+    }
+    
     String getSelectedStructure(){
         if(selectedStructure == -1 || isEditing)
             return "";
@@ -141,6 +165,18 @@ class StructurePanel{
         if(saveTemplateButton.mousePressedMethod()){
             saveTemplateButton.deactivate();
             if(!substrateGrid.getSelectedStructure().equals("")){
+                while(true){
+                    String name = "Structure_" + randomName;
+                    Boolean equal = false;
+                    for(TextButton structure : structuresButtons){
+                        if(structure.getText().equals(name))
+                            equal = true;
+                    }
+                    if(!equal)
+                        break;
+                    else
+                        randomName++;
+                }
                 addStructure("Structure_" + randomName, substrateGrid.getSelectedStructure());
                 randomName++;
             }
