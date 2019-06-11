@@ -3,8 +3,9 @@ class SimulationBar{
     int animationSpeed;
     Button forward, backward, play, pause, stop, simulate, charts, export, upSpeed, downSpeed;
     color panelColor, textColor, lineColor;
+    SubstrateGrid substrateGrid;
     
-    SimulationBar(float x, float y, float w, float h){
+    SimulationBar(float x, float y, float w, float h, SubstrateGrid substrateGrid){
         this.x = x;
         this.y = y;
         this.w = w;
@@ -35,6 +36,8 @@ class SimulationBar{
         panelColor = color(45, 80, 22);
         textColor = color(255,255,255);
         lineColor = color(255,255,255);
+        
+        this.substrateGrid = substrateGrid;
     }
     
     void drawSelf(){
@@ -119,6 +122,26 @@ class SimulationBar{
             export.deactivate();
             File start = new File(sketchPath("")+"/sim.xml");
             selectOutput("Select a file to export the simulation", "exportXML", start);
+        }
+        if(simulate.mousePressedMethod() && !fileSys.fileBaseName.equals("")){
+            saveProject();
+            simulate.deactivate();
+            try{
+                exec("gnome-terminal", "-e", sketchPath() + "/../../nmlsim " + fileSys.fileBaseName + "/simulation.xml " +  fileSys.fileBaseName + "/simulation.csv");
+            } catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+        if(charts.mousePressedMethod()){
+            charts.deactivate();
+            String call = substrateGrid.getSelectedMagnetsNames();
+            if(!call.equals("")){
+                try{
+                    exec("gnome-terminal", "-e", "python3 " + sketchPath() + "/../../plotChart.py " + fileSys.fileBaseName + "/simulation.csv " + call);
+                } catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
         }
     }
 }

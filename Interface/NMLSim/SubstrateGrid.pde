@@ -186,6 +186,14 @@ class SubstrateGrid{
         return structure;
     }
     
+    String getSelectedMagnetsNames(){
+        String names = "";
+        for(Magnet mag : selectedMagnets){
+            names += mag.name + " ";
+        }
+        return names;
+    }
+    
     void editSelectedMagnets(String newStrucutres){
         if(selectedMagnets.size() == 0)
             return;

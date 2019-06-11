@@ -295,7 +295,6 @@ class Header{
             if(fileSys.fileBaseName.equals("")){
                 File start = new File(sketchPath(""));
                 selectFolder("Select a folder to save the project", "saveAs", start);
-                fileSys.writeStructureFile();
             } else{
                 saveProject();
             }
@@ -322,13 +321,6 @@ class Header{
             fileSys.setBaseName("");
             return true;
         }
-        //if(buttonLabel.equals("Save")){
-        //    file.deactiveteButton("Save");
-        //    println("HERE");
-        //    try{exec("gnome-terminal", "-e", "/home/lascasas/Desktop/GitHub/NMLSim/nmlsim /home/lascasas/Desktop/GitHub/NMLSim/Files/test.xml /home/lascasas/Desktop/GitHub/NMLSim/Files/vaiQehTua.csv");}catch(Exception e){e.printStackTrace();}
-        //    println("Done");
-        //    return true;
-        //}
         buttonLabel = magnet.mousePressedMethod();
         if(buttonLabel.equals("HeaderLabel")){
             if(magnet.isExpanded){
