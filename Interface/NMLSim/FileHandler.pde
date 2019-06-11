@@ -81,8 +81,11 @@ public class FileHandler{
         } catch(Exception e){}
     }
     
-    void writeConfigFile(){
-        structureFileOut = createWriter(fileBaseName + "/configurations.nmls");
+    void writeConfigFile(String filename){
+        if(filename == null || filename.equals(""))
+            structureFileOut = createWriter(fileBaseName + "/configurations.nmls");
+        else
+            structureFileOut = createWriter(filename);
         String circuit = panelMenu.getCircuitProperties();
         String grid = panelMenu.simPanel.getGridProperties();
         ArrayList<String> phases = pm.getPhaseProperties();
@@ -109,8 +112,11 @@ public class FileHandler{
         structureFileOut.close();
     }
     
-    void writeXmlFile(){
-        xmlFileOut = createWriter(fileBaseName + "/simulation.xml");
+    void writeXmlFile(String filename){
+        if(filename == null || filename.equals(""))
+            xmlFileOut = createWriter(fileBaseName + "/simulation.xml");
+        else
+            xmlFileOut = createWriter(filename);
         //engine;mode;method;repetitions;reportStep;alpha;ms;temperature;timeStep;simTime;spinAngle;spinDiff;hmt;neighborhood
         String [] circuitParts = panelMenu.getCircuitProperties().split(";");
         xmlFileOut.println("<!-- ALL measures of time are in nanoseconds and ALL metric measures are in nanometers -->\n" + 

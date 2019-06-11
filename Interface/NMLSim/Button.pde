@@ -51,7 +51,8 @@ class Button{
                 fill(mouseOverExpandedColor, (isTransparent)?128:255);
                 stroke(mouseOverExpandedColor, (isTransparent)?128:255);
             }
-            rect(x, y, icon.width, icon.height);
+            if(!isTransparent)
+                rect(x, y, icon.width, icon.height);
         }
 
         tint((isTransparent)?128:255);
