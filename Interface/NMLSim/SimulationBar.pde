@@ -137,7 +137,7 @@ class SimulationBar{
             String call = substrateGrid.getSelectedMagnetsNames();
             if(!call.equals("")){
                 try{
-                    exec("gnome-terminal", "-e", "python3 " + sketchPath() + "/../../plotChart.py " + fileSys.fileBaseName + "/simulation.csv " + call);
+                    exec("gnome-terminal", "-e", "python3 " + sketchPath() + "/../../chart.py " + fileSys.fileBaseName + "/simulation.csv " + call);
                 } catch(Exception e){
                     e.printStackTrace();
                 }

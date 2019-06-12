@@ -14,7 +14,7 @@ class MagnetPanel{
     StructurePanel structurePanel;
     SubstrateGrid substrateGrid;
     
-    String editingStructure;
+    String editingStructure, oldName;
 
     public MagnetPanel(float x, float y, float w, float h, ZonePanel zp, StructurePanel sp){
         this.x = x;
@@ -52,9 +52,9 @@ class MagnetPanel{
         magBottomCut.setText("0");        
         
         type = new DropDownBox("Magnet Type", x, y, w-20);
-        type.addOption("Input");
-        type.addOption("Regular");
-        type.addOption("Output");
+        type.addOption("input");
+        type.addOption("regular");
+        type.addOption("output");
         
         clockZone = new DropDownBox("Clock Zone", x, y, w-20);
         
@@ -103,10 +103,8 @@ class MagnetPanel{
         text("Configuration", x+10, auxY+aux);
         auxY += aux+5;
         
-        if(!isEditing){
-            label.setPosition(x+10, auxY);
-            auxY += aux+5;
-        }
+        label.setPosition(x+10, auxY);
+        auxY += aux+5;
         type.updatePosition(x+10, auxY);
         auxY += aux+5;
         clockZone.updatePosition(x+10, auxY);
@@ -154,10 +152,8 @@ class MagnetPanel{
         auxY += aux+5;
         magBottomCut.updatePosition(x+10, auxY);
         auxY += aux+5;
-        if(!isEditing){
-            position.updatePosition(x+10,auxY);
-            auxY += aux+5;
-        }
+        position.updatePosition(x+10,auxY);
+        auxY += aux+5;
         
         strokeWeight(4);
         stroke(color(255,255,255));
@@ -205,7 +201,7 @@ class MagnetPanel{
         }
         
         if(isEditing){
-            saveButton.isTransparent = !((zonePanel.getEngine().equals("LLG")?llgInitMag.validateText():behaInitMag.validateText()) &&
+            saveButton.isTransparent = !((zonePanel.getEngine().equals("LLG")?llgInitMag.validateText():behaInitMag.validateText()) && label.validateText() &&
                                         magBottomCut.validateText() && magHeight.validateText() && magThickness.validateText() && magTopCut.validateText() && magWidth.validateText());
             saveButton.drawSelf();
         }
@@ -223,9 +219,7 @@ class MagnetPanel{
         magThickness.drawSelf();
         magTopCut.drawSelf();
         magBottomCut.drawSelf();
-        if(!isEditing){
-            position.drawSelf();
-        }
+        position.drawSelf();
         fixedMag.drawSelf();
         if(zonePanel.getEngine().equals("LLG"))
             llgInitMag.drawSelf();
@@ -233,8 +227,7 @@ class MagnetPanel{
             behaInitMag.drawSelf();
         clockZone.drawSelf();
         type.drawSelf();
-        if(!isEditing)
-            label.drawSelf();
+        label.drawSelf();
         if(isEditing)
             saveButton.onMouseOverMethod();
         if(!isEditing)
@@ -244,11 +237,15 @@ class MagnetPanel{
             addButton.onMouseOverMethod();
     }
     
-    void setEditing(String structure){
+    void setEditing(String structure, String name){
+        if(structure.contains(":"))
+            return;
         //type;clockZone;magnetization;fixed;w;h;tc;bc;position;zoneColor
         editingStructure = structure;
-        String strParts[] = structure.split(":");
-        String fields[] = strParts[0].split(";");
+        String fields[] = structure.split(";");
+        type.setSelectedOption(fields[0]);
+        clockZone.setSelectedOption(fields[1]);
+        fixedMag.isChecked = fields[3].equals("true");
         if(zonePanel.getEngine().equals("LLG")){
             llgInitMag.setText(fields[2]);
         } else{
@@ -259,6 +256,9 @@ class MagnetPanel{
         magThickness.setText(fields[6]);
         magTopCut.setText(fields[7]);
         magBottomCut.setText(fields[8]);
+        position.setText(fields[9]);
+        label.setText(name);
+        oldName = name;
     }
     
     boolean validateAllFields(){
@@ -367,35 +367,30 @@ class MagnetPanel{
         }
         if(isEditing && saveButton.mousePressedMethod()){
             saveButton.deactivate();
-            String magnets[] = editingStructure.split(":");
-            editingStructure = "";
             //type;clockZone;magnetization;fixed;w;h;tc;bc;position;zoneColor
-            for(String magnet : magnets){
-                String parts[] = magnet.split(";");
-                if(!type.getSelectedOption().equals("")){
-                    parts[0] = type.getSelectedOption();
-                }
-                if(!clockZone.getSelectedOption().equals("")){
-                    parts[1] = clockZone.getSelectedOption();
-                }
-                if(zonePanel.getEngine().equals("LLG")){
-                    parts[2] = llgInitMag.getText();
-                } else{
-                    parts[2] = behaInitMag.getText();
-                }
-                parts[3] = (fixedMag.isChecked)?"true":"false";
-                parts[4] = magWidth.getText();
-                parts[5] = magHeight.getText();
-                parts[6] = magThickness.getText();
-                parts[7] = magTopCut.getText();
-                parts[8] = magBottomCut.getText();
-                parts[10] = zonePanel.getZoneColor(parts[1]).toString();
-                for(int i=0; i<parts.length; i++)
-                    editingStructure += parts[i] + ";";
-                editingStructure += ":";
+            String parts[] = editingStructure.split(";");
+            editingStructure = label.getText() + ";";
+            if(!type.getSelectedOption().equals("")){
+                parts[0] = type.getSelectedOption();
             }
-            editingStructure = editingStructure.substring(0, editingStructure.length()-1);
-            substrateGrid.editSelectedMagnets(editingStructure);
+            if(!clockZone.getSelectedOption().equals("")){
+                parts[1] = clockZone.getSelectedOption();
+            }
+            if(zonePanel.getEngine().equals("LLG")){
+                parts[2] = llgInitMag.getText();
+            } else{
+                parts[2] = behaInitMag.getText();
+            }
+            parts[3] = (fixedMag.isChecked)?"true":"false";
+            parts[4] = magWidth.getText();
+            parts[5] = magHeight.getText();
+            parts[6] = magThickness.getText();
+            parts[7] = magTopCut.getText();
+            parts[8] = magBottomCut.getText();
+            parts[10] = zonePanel.getZoneColor(parts[1]).toString();
+            for(int i=0; i<parts.length; i++)
+                editingStructure += parts[i] + ";";
+            substrateGrid.editSelectedMagnets(editingStructure, oldName);
             isEditing = false;
         }
     }

@@ -47,9 +47,6 @@ class SubstrateGrid{
     
     void reset(){
         zoomFactor = 10;
-        isLightColor = true;
-        isRulerActive = true;
-        isBulletActive = true;
         magnets.clear();
         selectedMagnets.clear();
         zoneNames.clear();
@@ -191,27 +188,20 @@ class SubstrateGrid{
         for(Magnet mag : selectedMagnets){
             names += mag.name + " ";
         }
+        if(!names.equals(""))
+            names = names.substring(0,names.length()-1);
         return names;
     }
     
-    void editSelectedMagnets(String newStrucutres){
-        if(selectedMagnets.size() == 0)
-            return;
-        String[]parts = newStrucutres.split(":");
-        int i=0;
-        for(Magnet mag : selectedMagnets){
-            boolean flag = false;
-            magnets.remove(mag.name);
-            Magnet magAux = new Magnet(parts[i], mag.name);
-            for(Magnet otherMag : magnets.values())
-                if(otherMag.collision(mag))
-                    flag = true;
-            if(flag)
-                magnets.put(mag.name, mag);
-            else
-                magnets.put(magAux.name, magAux);
-            i++;
-        }
+    void unselectMagnets(){
+        selectedMagnets.clear();
+    }
+    
+    void editSelectedMagnets(String newStrucutre, String oldName){
+        magnets.remove(oldName);
+        String name = newStrucutre.substring(0, newStrucutre.indexOf(";"));
+        newStrucutre = newStrucutre.substring(newStrucutre.indexOf(";")+1, newStrucutre.length());
+        addMagnet(name, newStrucutre);
     }
     
     void changeSelectedMagnetsZone(boolean isUP){

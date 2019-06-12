@@ -148,14 +148,14 @@ class Header{
         magnet = new HeaderContainer("Magnet", x, y);
         //magnet.addButton(new Button("Line Add", "Adds a line of magnets", sprites.lineAddWhite, 0, 0));
         magnet.addButton(new Button("Delete", "Delete a magnet or a group of magnets", sprites.deleteIconWhite, 0, 0));
-        //magnet.addButton(new Button("Edit", "Edit a magnet or a group of magnets", sprites.editIconWhite, 0, 0));
+        magnet.addButton(new Button("Edit", "Edit a magnet or a group of magnets", sprites.editIconWhite, 0, 0));
         //magnet.addButton(new Button("Pin", "Pin a magnet to show animated magnetization", sprites.pinIconWhite, 0, 0));
-        magnet.addButton(new Button("Cut", "Cut from grid a magnet or a group of magnets", sprites.cutIconWhite, 0, 0));
         magnet.addButton(new Button("Copy", "Copy a magnet or a group of magnets", sprites.copyIconWhite, 0, 0));
         magnet.addButton(new Button("Paste", "Paste copied magnets", sprites.pasteIconWhite, 0, 0));
+        magnet.addButton(new Button("Cut", "Cut from grid a magnet or a group of magnets", sprites.cutIconWhite, 0, 0));
+        magnet.addButton(new Button("Group", "Makes a group with selected magnets", sprites.groupIconWhite, 0, 0));
         magnet.addButton(new Button("Up Zone", "Change a selected magnet or group to the next zone", sprites.zoneUpIconWhite, 0, 0));
         magnet.addButton(new Button("Down Zone", "Change a selected magnet or group to the previos zone", sprites.zoneDownIconWhite, 0, 0));
-        magnet.addButton(new Button("Group", "Makes a group with selected magnets", sprites.groupIconWhite, 0, 0));
         
         substrate = new HeaderContainer("Substrate", x, y);
         substrate.addButton(new Button("Grid", "Shows the ruler for the minimum cell definition", sprites.gridIconWhite, 0, 0));
@@ -285,8 +285,8 @@ class Header{
         buttonLabel = file.mousePressedMethod();
         if(buttonLabel.equals("HeaderLabel")){
             if(file.isExpanded){
-                magnet.setExpanded(false);
-                substrate.setExpanded(false);
+                //magnet.setExpanded(false);
+                //substrate.setExpanded(false);
             }
             return true;
         }
@@ -324,8 +324,8 @@ class Header{
         buttonLabel = magnet.mousePressedMethod();
         if(buttonLabel.equals("HeaderLabel")){
             if(magnet.isExpanded){
-                file.setExpanded(false);
-                substrate.setExpanded(false);
+                //file.setExpanded(false);
+                //substrate.setExpanded(false);
             }
             return true;
         }
@@ -367,6 +367,7 @@ class Header{
             panelMenu.enableEditing();
             if(!substrateGrid.isLeftHidden)
                 substrateGrid.toggleHideGrid("left");
+            substrateGrid.unselectMagnets();
             return true;
         }
         if(buttonLabel.equals("Cut")){
@@ -378,8 +379,8 @@ class Header{
         buttonLabel = substrate.mousePressedMethod();
         if(buttonLabel.equals("HeaderLabel")){
             if(substrate.isExpanded){
-                file.setExpanded(false);
-                magnet.setExpanded(false);
+                //file.setExpanded(false);
+                //magnet.setExpanded(false);
             }
             return true;
         }

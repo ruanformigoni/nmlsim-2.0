@@ -119,7 +119,7 @@ public class VectorTextBox{
                 selectedIndex++;
                 if(selectedIndex >= fields)
                     unselect();
-            } else {
+            } else if((keyCode > 64 && keyCode < 91) || (keyCode > 95 && keyCode < 106) || keyCode == 107 || keyCode == 109 || (keyCode > 43 && keyCode < 47) || (keyCode > 47 && keyCode < 58)){
                 texts.set(selectedIndex, texts.get(selectedIndex)+key);
             }
             return true;

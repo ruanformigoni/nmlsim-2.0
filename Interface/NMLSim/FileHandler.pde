@@ -66,6 +66,7 @@ public class FileHandler{
                 line = structureFileIn.readLine();
             }
             panelMenu.zonePanel.loadZoneProperties(zones);
+            panelMenu.magnetPanel.updateZones();
             
             line = structureFileIn.readLine();
             substrateGrid.randomName = Integer.parseInt(line);
@@ -191,13 +192,15 @@ public class FileHandler{
             for(int i=1; i<parts.length-1; i++){
                 xmlFileOut.println("\t\t<property phase=\"" + parts[i] + "\">");
             }
-            xmlFileOut.println("\t</item>\n</clockZone>");
+            xmlFileOut.println("\t</item>");
             zoneIndex.put(parts[0],index);
             index++;
         }
+        xmlFileOut.println("</clockZone>");
        
         /*name;type;clockZone;magnetization;fixed;w;h;tk;tc;bc;position;zoneColor*/
         ArrayList<String> magnets = sg.getMagnetsProperties();
+        magnets.sort(String.CASE_INSENSITIVE_ORDER);
         HashMap<String,String> components = new HashMap<String,String>();
         int compName = 0;
         xmlFileOut.println("<!-- This is the components properties -->\n<components>\n\t<!-- List here all different geometries of magnets in the circuit -->" +

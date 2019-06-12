@@ -46,8 +46,6 @@ void mousePressed(){
 }
 
 void keyPressed(){
-    //println(key);
-    //println(keyCode);
     pm.keyPressedMethod();
 }
 
