@@ -710,9 +710,9 @@ class Magnet{
         endShape();
         drawArrow(
             auxX-(auxW/2)*xMag,
-            auxY+(auxH/2)*yMag,
+            auxY+(auxH/2-abs(topCut)/2)*yMag,
             auxX+(auxW/2)*xMag,
-            auxY-(auxH/2)*yMag,
+            auxY-(auxH/2-abs(topCut)/2)*yMag,
             0,((abs(xMag) > abs(yMag))?auxH/10:auxW/10));
         strokeWeight(1);
     }
