@@ -1,16 +1,21 @@
 class SimulationBar{
     float x, y, w, h;
-    int animationSpeed;
-    Button forward, backward, play, pause, stop, simulate, charts, export, upSpeed, downSpeed;
+    int animationSpeed, animationTime, counter = 0;
+    Button forward, backward, play, pause, stop, simulate, charts, export, upSpeed, downSpeed, timeline;
     color panelColor, textColor, lineColor;
     SubstrateGrid substrateGrid;
+    PanelMenu panelMenu;
+    ArrayList <String> labels;
+    ArrayList <ArrayList<Float>> magX, magY;
+    boolean timelineEnabled = false, timelineRunning = false;
     
-    SimulationBar(float x, float y, float w, float h, SubstrateGrid substrateGrid){
+    SimulationBar(float x, float y, float w, float h, SubstrateGrid substrateGrid, PanelMenu panelMenu){
         this.x = x;
         this.y = y;
         this.w = w;
         this.h = h;
         animationSpeed = 50;
+        animationTime = 0;
         textSize(fontSz);
         float auxX = x + textWidth("Timeline") + 10;
         backward = new Button("Backward", "Make one step back in the simulation animation", sprites.backwardIconWhite, auxX, (h-25)/2+y);
@@ -32,12 +37,15 @@ class SimulationBar{
         charts = new Button("Results", "Opens the simulation results panel", sprites.chartIconWhite, auxX, (h-25)/2+y);
         auxX += 30;
         export = new Button("Export", "Exports the XML file for the simulation engine", sprites.medSaveAsIconWhite, auxX, (h-20)/2+y);
+        auxX += 25;
+        timeline = new Button("Timeline", "Enables the timeline animation", sprites.timelineIconWhite, auxX, (h-25)/2+y);
         
         panelColor = color(45, 80, 22);
         textColor = color(255,255,255);
         lineColor = color(255,255,255);
         
         this.substrateGrid = substrateGrid;
+        this.panelMenu = panelMenu;
     }
     
     void drawSelf(){
@@ -53,10 +61,15 @@ class SimulationBar{
         textSize(fontSz);
         text("Timeline", auxX, y+fontSz+5);
         auxX += textWidth("Timeline") + 5;
+        backward.isTransparent = !timelineEnabled;
         backward.drawSelf();
+        pause.isTransparent = !timelineEnabled || !timelineRunning;
         pause.drawSelf();
+        stop.isTransparent = !timelineEnabled || !timelineRunning;
         stop.drawSelf();
+        play.isTransparent = !timelineEnabled || timelineRunning;
         play.drawSelf();
+        forward.isTransparent = !timelineEnabled;
         forward.drawSelf();
         
         strokeWeight(3);
@@ -86,6 +99,21 @@ class SimulationBar{
         charts.drawSelf();
         simulate.drawSelf();
         export.drawSelf();
+        timeline.drawSelf();
+        
+        strokeWeight(3);
+        stroke(lineColor);
+        auxX += 205;
+        line(auxX, y+5, auxX, y+h-5);
+        auxX += 2;
+        noStroke();
+        strokeWeight(1);
+        
+        fill(textColor, 255);
+        if(timelineEnabled)
+            text("Timeline clock (ns): " + animationTime*panelMenu.getReportStep(), auxX+5, y+fontSz+5);
+        else
+            text("Timeline deactivated", auxX+5, y+fontSz+5);
         
         strokeWeight(2);
         stroke(lineColor);
@@ -105,6 +133,72 @@ class SimulationBar{
         pause.onMouseOverMethod();
         stop.onMouseOverMethod();
         backward.onMouseOverMethod();
+        timeline.onMouseOverMethod();
+        
+        if(timelineEnabled && timelineRunning && counter >= (100-animationSpeed)/10){
+            forwardSimulation();
+            counter = 0;
+        } else if(!timelineEnabled){
+            counter = 0;
+        } else if(timelineEnabled && timelineRunning){
+            counter++;
+        }
+    }
+    
+    void loadSimulationResultsFile(){
+        animationTime = 0;
+        labels = new ArrayList<String>();
+        magX = new ArrayList<ArrayList<Float>>();
+        magY = new ArrayList<ArrayList<Float>>();        
+        try{
+            BufferedReader file = createReader(fileSys.fileBaseName + "/simulation.csv");
+            String line = file.readLine();
+            String [] parts = line.split(",");
+            for(int i=1; i<parts.length; i+=3){
+                labels.add(parts[i].substring(0,parts[i].length()-2));
+            }
+            line = file.readLine();
+            parts = line.split(",");
+            for(int i=1; i<parts.length; i+=3){
+                magX.add(new ArrayList<Float>());
+                magX.get(magX.size()-1).add(Float.parseFloat(parts[i]));
+                magY.add(new ArrayList<Float>());
+                magY.get(magY.size()-1).add(Float.parseFloat(parts[i+1]));
+            }
+            while(line != null && !line.equals("")){
+                parts = line.split(",");
+                int index = 0;
+                for(int i=1; i<parts.length; i+=3){
+                    magX.get(index).add(Float.parseFloat(parts[i]));
+                    magY.get(index).add(Float.parseFloat(parts[i+1]));
+                    index++;
+                }
+                line = file.readLine();
+            }
+        } catch(Exception e){
+        }
+    }
+    
+    void forwardSimulation(){
+        animationTime++;
+        if(animationTime >= magX.get(0).size()){
+            animationTime--;
+            return;
+        }
+        for(int i=0; i<labels.size(); i++){
+            substrateGrid.setMagnetMagnetization(labels.get(i),magX.get(i).get(animationTime), magY.get(i).get(animationTime));
+        }
+    }
+    
+    void backwardSimulation(){
+        animationTime--;
+        if(animationTime < 0){
+            animationTime++;
+            return;
+        }
+        for(int i=0; i<labels.size(); i++){
+            substrateGrid.setMagnetMagnetization(labels.get(i),magX.get(i).get(animationTime), magY.get(i).get(animationTime));
+        }
     }
     
     void mousePressedMethod(){
@@ -125,6 +219,16 @@ class SimulationBar{
         }
         if(simulate.mousePressedMethod() && !fileSys.fileBaseName.equals("")){
             saveProject();
+            timelineEnabled = false;
+            timelineRunning = false;
+            timeline.deactivate();
+            play.deactivate();
+            pause.deactivate();
+            stop.deactivate();
+            if(animationTime > 0){
+                animationTime = 1;
+                backwardSimulation();
+            }
             simulate.deactivate();
             try{
                 exec("gnome-terminal", "-e", sketchPath() + "/../../nmlsim " + fileSys.fileBaseName + "/simulation.xml " +  fileSys.fileBaseName + "/simulation.csv");
@@ -142,6 +246,39 @@ class SimulationBar{
                     e.printStackTrace();
                 }
             }
+        }
+        if(timeline.mousePressedMethod() && panelMenu.getSimulationMode().equals("verbose")){
+            if(animationTime > 0){
+                animationTime = 1;
+                backwardSimulation();
+            }
+            loadSimulationResultsFile();
+            timelineEnabled = !timelineEnabled;
+            timelineRunning = false;
+        }
+        if(timelineEnabled && !timelineRunning && play.mousePressedMethod()){
+            play.deactivate();
+            timelineRunning = true;
+        }
+        if(timelineEnabled && timelineRunning && pause.mousePressedMethod()){
+            pause.deactivate();
+            timelineRunning = false;
+        }
+        if(timelineEnabled && timelineRunning && stop.mousePressedMethod()){
+            stop.deactivate();
+            timelineRunning = false;
+            animationTime = 1;
+            backwardSimulation();
+        }
+        if(timelineEnabled && forward.mousePressedMethod()){
+            forward.deactivate();
+            forwardSimulation();
+            timelineRunning = false;
+        }
+        if(timelineEnabled && backward.mousePressedMethod()){
+            backward.deactivate();
+            backwardSimulation();
+            timelineRunning = false;
         }
     }
 }

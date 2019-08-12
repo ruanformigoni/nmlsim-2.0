@@ -83,6 +83,14 @@ class PanelMenu{
         return simPanel.getProperties();
     }
     
+    Float getReportStep(){
+        return Float.parseFloat(simPanel.getReportStep());
+    }
+    
+    String getSimulationMode(){
+        return simPanel.getSimulationMode();
+    }
+    
     ArrayList<String> getPhaseProperties(){
         return phasePanel.getPhaseProperties();
     }

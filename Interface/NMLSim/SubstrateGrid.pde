@@ -155,6 +155,10 @@ class SubstrateGrid{
         randomGroup++;
     }
     
+    void setMagnetMagnetization(String label, float magX, float magY){
+        magnets.get(label).setMagnetization(magX, magY);
+    }
+    
     void loadMagnetProperties(ArrayList<String> magnets){
         reset();
         for(String magnet : magnets){
@@ -559,6 +563,11 @@ class Magnet{
     
     String getZoneName(){
         return zone;
+    }
+    
+    void setMagnetization(float xMag, float yMag){
+        this.xMag = xMag;
+        this.yMag = yMag;
     }
     
     void changeZone(String zName, Integer zColor){

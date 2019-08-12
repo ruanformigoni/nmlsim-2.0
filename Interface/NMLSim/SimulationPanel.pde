@@ -492,6 +492,14 @@ class SimulationPanel{
         return engine.getSelectedOption();
     }
     
+    String getReportStep(){
+        return reportStep.getText();
+    }
+    
+    String getSimulationMode(){
+        return mode.getSelectedOption();
+    }
+    
     String getGridProperties(){
         String gp = "";
         if(bulletSpacing.validateText() && subSize.validateText() && cellSize.validateText()){
