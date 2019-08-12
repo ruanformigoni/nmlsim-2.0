@@ -679,7 +679,7 @@ class Magnet{
         stroke(clockZone, (isTransparent)?128:255);
         if(isSelected){
             fill(255, 255, 255, 255);
-        } else if(xMag > abs(yMag)){
+        } else if(abs(xMag) > abs(yMag)){
             fill(200, 200, 200, (isTransparent)?128:255);
         } else if(yMag > 0){
             fill(#FF5555, (isTransparent)?128:255);
