@@ -64,6 +64,9 @@ public:
 	void normalizeWeights();
 	//Set the current magnetization to the initial magnetization
 	void resetMagnetization();
+	double * getTensorsAverage(double * npx, double * npy, double nt, double vDist, double hDist);
+	vector <Neighbor *> getNeighbors();
+	double ** getDemagTensor(){};
 };
 
 #endif

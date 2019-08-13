@@ -157,7 +157,7 @@ REAL*8 FUNCTION dipolar3D(px_i, py_i, t_i, xyz0_i, px_j, py_j, t_j, xyz0_j,ints)
 	bd_j =  py_j(3) - ad_j*px_j(3)
 
 
-	CALL RANDOM_SEED()
+	!CALL RANDOM_SEED()
 	CALL MC_dipolar(px_i,py_i,t_i,xyz0_i,px_j,py_j,t_j,xyz0_j,w_i,au_i,bu_i,ad_i,bd_i,w_j,au_j,bu_j,ad_j,bd_j,ints)
 	
 	!WRITE(10,99)ints(1)

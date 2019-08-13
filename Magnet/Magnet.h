@@ -21,6 +21,9 @@ public:
 	virtual string getId() = 0;
 	virtual void setMagnetization(double * magnetization) = 0;
 	virtual void resetMagnetization() = 0;
+	virtual double * getTensorsAverage(double * npx, double * npy, double nt, double vDist, double hDist) = 0;
+	virtual vector <Neighbor *> getNeighbors() = 0;
+	virtual double ** getDemagTensor() = 0;
 };
 
 #endif
