@@ -19,33 +19,33 @@ vector<string> ThiagoMagnet::splitString(string str, char separator){
 ThiagoMagnet::ThiagoMagnet(string id, FileReader * fReader){
 	vector<string> vaux;
 	string aux, compId;
+	
+	//Start the magnet build
 	this->id = id;
-	aux = fReader->getItemProperty(DESIGN, id, "myType");
+	//Comp Id saves the component id of the magnet
 	compId = fReader->getItemProperty(DESIGN, id, "component");
+	//Gets the type and replace the string with the enum
+	aux = fReader->getItemProperty(DESIGN, id, "myType");
 	if(aux == "regular")
 		this->myType = REGULAR;
 	else if(aux == "input")
 		this->myType = INPUT;
 	else if(aux == "output")
 		this->myType = OUTPUT;
+	//Gets the fixed magnetization and replace it with a boolean with same value of the text
 	aux = fReader->getItemProperty(DESIGN, id, "fixedMagnetization");
 	this->fixedMagnetization = (aux == "true");
+	//Gets the initial magnetization and sets the current magnetization and future magnetization to equal it
 	this->magnetization = stod(fReader->getItemProperty(DESIGN, id, "magnetization"));
 	this->tempMagnetization = magnetization;
 	this->initialMagnetization = magnetization;
+	//Gets the position, which is a vector and set the variables
 	vaux = splitString(fReader->getItemProperty(DESIGN, id, "position"), ',');
 	this->xPosition = stod(vaux[0]);
 	this->yPosition = stod(vaux[1]);
+	//Set the neighborhood radius
 	ThiagoMagnet::neighborhoodRatio = stod(fReader->getProperty(CIRCUIT, "neighborhoodRatio"));
-
-	// double px[4], py[4], t;
-	// for(int i=0; i<4; i++){
-	// 	vaux = splitString(fReader->getItemProperty(COMPONENTS, compId, "P"+to_string(i)), ',');
-	// 	px[i] = stod(vaux[0]);
-	// 	py[i] = stod(vaux[1]);
-	// }
-	// t = stod(fReader->getItemProperty(COMPONENTS, compId, "thickness"));
-	// this->magnetizationCalculator = new LLGMagnetMagnetization(px, py, t);
+	//Make the magnet geometry
 	double widht, height, thickness, topCut, bottomCut;
 	widht = stod(fReader->getItemProperty(COMPONENTS, compId, "widht"));
 	height = stod(fReader->getItemProperty(COMPONENTS, compId, "height"));
@@ -54,6 +54,7 @@ ThiagoMagnet::ThiagoMagnet(string id, FileReader * fReader){
 	bottomCut = stod(fReader->getItemProperty(COMPONENTS, compId, "bottomCut"));
 	this->magnetizationCalculator = new LLGMagnetMagnetization(widht, height, thickness, topCut, bottomCut);
 
+	//Has to compute demag tensor to proper initialize the LLGMagnetMagnetization class variables, which are needed in the future
 	this->magnetizationCalculator->computeDemag();
 }
 
@@ -67,14 +68,18 @@ void ThiagoMagnet::calculateMagnetization(ClockPhase * phase){
 	normal_distribution<double> distribution (0.0,1.0);
 	double gaussian_value = distribution(generator);
 
+	//If the variable is not an input or fixed...
 	if(this->myType != INPUT && !this->fixedMagnetization){
 		double aux = 0.0;
+		//Compute the influence of the neighbors
 		for(int i=0; i<this->neighbors.size(); i++){
 			aux += *(this->neighbors[i]->getWeight()) * *(this->neighbors[i]->getMagnet()->getMagnetization());
 		}
 
+		//Adds the influence of the clock signal and the current magnetization
 		aux = (aux + this->magnetization) * (1.0 - phase->getSignal()[0]);
 
+		//Check the limits
 		if(aux > 1.0){
 			aux = 1.0;
 		}
@@ -82,8 +87,10 @@ void ThiagoMagnet::calculateMagnetization(ClockPhase * phase){
 			aux = -1.0;
 		}
 
+		//Compute the thermal influence
 		aux += THERMAL_ENERGY * gaussian_value;
 
+		//Check the limits
 		if(aux > 1.0){
 			aux = 1.0;
 		}
@@ -91,6 +98,7 @@ void ThiagoMagnet::calculateMagnetization(ClockPhase * phase){
 			aux = -1.0;
 		}
 
+		//Set the future magnetization
 		this->tempMagnetization = aux;
 	}
 }
@@ -101,10 +109,6 @@ void ThiagoMagnet::updateMagnetization(){
 }
 
 void ThiagoMagnet::dumpValues(ofstream * outFile){
-	// *(outFile) << "Id: " << this->id << " ";
-	// *(outFile) << "type: " << ((this->myType == 0)?"input":(this->myType == 1)?"output":"regular") << " ";
-	// *(outFile) << "fixedMag: " << ((this->fixedMagnetization)?"T":"F") << " ";
-	// *(outFile) << "mag: " << this->magnetization << endl;
 	*outFile << this->magnetization << ",";
 }
 
@@ -117,6 +121,7 @@ void ThiagoMagnet::setMagnetization(double * magnetization){
 }
 
 bool ThiagoMagnet::isNeighbor(ThiagoMagnet * magnet){
+	//This method considers the diference of edges from the two magnets
 	double * mpx = magnet->getPx();
 	double * mpy = magnet->getPy();
 	double xDiff, yDiff;
@@ -127,27 +132,37 @@ bool ThiagoMagnet::isNeighbor(ThiagoMagnet * magnet){
 }
 
 void ThiagoMagnet::addNeighbor(Magnet * neighbor, double * neighborhoodRatio){
+	//If it is a neighbor
 	if(this->isNeighbor(static_cast<ThiagoMagnet *> (neighbor))){
+		//Distances between magnets
 		double vDist = (this->yPosition - (static_cast<ThiagoMagnet *> (neighbor))->getYPosition());
 		double hDist = (this->xPosition - (static_cast<ThiagoMagnet *> (neighbor))->getXPosition());
+		//Neighbor px and py
 		double * npx = (static_cast<ThiagoMagnet *> (neighbor))->getPx();
 		double * npy = (static_cast<ThiagoMagnet *> (neighbor))->getPy();
+		//Neighbor thickness
 		double nt = (static_cast<ThiagoMagnet *> (neighbor))->getThickness();
+		//Get the coupling tensor
 		double * tensor = this->magnetizationCalculator->computeDipolar(npx, npy, nt, vDist, hDist);
+		//Alloc memory for the weight and set to the component yy of the tensor
 		double * aux = (double*)malloc(sizeof(double));
 		*aux = tensor[4];
+		//Create a new neighbor
 		this->neighbors.push_back(new Neighbor(neighbor, aux));
 	}
 }
 
 void ThiagoMagnet::normalizeWeights(){
 	double big = 0;
+	//Find the biggest tensor component
 	for(int i=0; i<neighbors.size(); i++){
 		double aux = *(neighbors[i]->getWeight());
 		if(abs(aux) > big)
 			big = abs(aux);
 	}
+	//Balance to correct the antiferromagnetic coupling
 	big *= -1;
+	//Normalize all tensors to become weights
 	for(int i=0; i<neighbors.size(); i++){
 		double * aux = (double*)malloc(sizeof(double));
 		*aux = *(neighbors[i]->getWeight());
