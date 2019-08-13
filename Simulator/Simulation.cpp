@@ -9,7 +9,8 @@ Simulation::Simulation(string filePath, string outFilePath){
 	this->mySimMode = fReader->getSimMode();
 	this->outFile.open(outFilePath);
 	buildClkCtrl();
-	buildCircuit();
+	// cout << "It's going to build circuit" << endl;
+	buildCircuit(outFilePath);
 }
 
 Simulation::Simulation(string singlePath){
@@ -22,7 +23,7 @@ Simulation::Simulation(string singlePath){
 	this->mySimMode = fReader->getSimMode();
 	this->outFile.open(getFileName(singlePath));
 	buildClkCtrl();
-	buildCircuit();
+	buildCircuit(singlePath);
 }
 
 string Simulation::getFileName(string initial){
@@ -38,6 +39,7 @@ string Simulation::getFileName(string initial){
 
 void Simulation::verboseSimulation(double reportDeltaTime){
 	double auxTimer = 0.0;
+	cout << "Starting \n";
 	outFile << "Time,";
 	this->circuit->makeHeader(&outFile);
 	outFile << endl;
@@ -245,9 +247,10 @@ vector<string> Simulation::splitString(string str, char separator){
 	return parts;
 }
 
-void Simulation::buildCircuit(){
+void Simulation::buildCircuit(string filePath){
 	buildMagnets();
-	buildNeighbors();
+	// cout << "It's going to build neighbors" << endl;
+	buildNeighbors(filePath);
 }
 
 void Simulation::buildMagnets(){
@@ -289,7 +292,25 @@ void Simulation::buildMagnets(){
 	}
 }
 
-void Simulation::buildNeighbors(){
+void Simulation::buildNeighbors(string filePath){
+	int pos = filePath.find(".csv");
+	// cout << pos << endl;
+	static string prefixFilePath = filePath.substr(0, pos);
+	/* cout << "FILE PATH = " << filePath << endl;
+	cout << "PREFIX FILE PATH = " << prefixFilePath << endl; */
+	
+	static string demagFilePath = prefixFilePath + "_demagTensorLog.csv";
+	static string dipolarFilePath = prefixFilePath + "_dipolarTensorsLog.csv";
+	
+	/* cout << "DEMAG FILE NAME = " << demagFilePath << endl;
+	cout << "DIPOLAR FILE NAME = " << dipolarFilePath << endl; */
+	
+	ofstream demagTensorLog;
+	ofstream dipolarTensorsLog;
+
+	demagTensorLog.open(demagFilePath);
+	dipolarTensorsLog.open(dipolarFilePath);
+
 	switch(this->mySimType){
 		case THIAGO:{
 			vector <Magnet *> magnets = this->circuit->getAllMagnets();
@@ -313,7 +334,41 @@ void Simulation::buildNeighbors(){
 					magnets[j]->addNeighbor(magnets[i], &neighborhoodRatio);
 				}
 			}
+
+			// Code to identify and show the Magnetization Tensors and calculate the average
+			// and the outline Tensor
+			for (int y = 0; y < magnets.size(); y++)
+			{	
+				demagTensorLog << magnets[y]->getId() << ":";
+				for (int i = 0; i < 3; i++)
+				{
+					for (int y = 0; y < 3; y++)
+					{
+						demagTensorLog << magnets[y]->getDemagTensor()[i][y] << ",";
+					}
+					
+				}
+				demagTensorLog << endl;
+				static vector <Neighbor *> neighbors = magnets[y]->getNeighbors();
+
+				for (int w = 0; w < neighbors.size(); w++)
+				{
+					dipolarTensorsLog << magnets[y]->getId() << "," << neighbors[w]->getMagnet()->getId() << ":,";
+					for (int z = 0; z < 9; z++)
+					{
+						dipolarTensorsLog << neighbors[w]->getWeight()[z] << ",";
+					}
+					dipolarTensorsLog << endl;
+					
+				}
+				dipolarTensorsLog << endl;
+				
+				// cout << "Tensors average for magnet " << magnets[y]->getId() << " => " << average << endl;
+			}
+			
 		}
 		break;
 	}
+	demagTensorLog.close();
+	dipolarTensorsLog.close();
 }

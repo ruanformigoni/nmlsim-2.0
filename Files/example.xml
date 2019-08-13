@@ -8,7 +8,7 @@
 	<!-- Be mindfull that the RK4 method disconsiders the temperature -->
 	<property method="RK4"/>
 	<!-- There are 4 simulationMode: exaustive, direct, repetitive and verbose -->
-	<property simulationMode="direct"/>
+	<property simulationMode="verbose"/>
 	<!-- The number of simulations to be done in the repetitive mode -->
 	<property repetitions="10"/>
 	<!-- The report time step. Starting at time 0, the program reports at each reportStep. Only used in verbose mode -->
@@ -22,7 +22,7 @@
 	<!-- Discretization of time in nanoseconds. It's highly recommended using very low timeStep -->
 	<property timeStep="0.0001"/>
 	<!-- Simulation Duration in nanoseconds -->
-	<property simTime="20.0"/>
+	<property simTime="35.0"/>
 	<!-- Properties for the heavy material for spin hall effect -->
 	<property spinAngle="0.4"/>
 	<property spinDifusionLenght="3.5"/>
@@ -42,7 +42,7 @@
 	<!-- The value for signal in the Behaviour engine needs to be in the [0,1] interval, where 0 represents no clock and 1 represents 100% force -->
 	<!-- Phases can have different durations, but be mindfull of their sincronization -->
 	<item name="switch">
-		<property initialSignal="0.0,0.0,0.0,25.0,0.0,0.0"/>
+		<property initialSignal="150.0,0.0,0.0,0.0,0.0,0.0"/>
 		<property endSignal="0.0,0.0,0.0,0.0,0.0,0.0"/>
 		<property duration="5.0"/>
 	</item>
@@ -53,12 +53,12 @@
 	</item>
 	<item name="reset">
 		<property initialSignal="0.0,0.0,0.0,0.0,0.0,0.0"/>
-		<property endSignal="0.0,0.0,0.0,25.0,0.0,0.0"/>
+		<property endSignal="150.0,0.0,0.0,0.0,0.0,0.0"/>
 		<property duration="5.0"/>
 	</item>
 	<item name="relax">
-		<property initialSignal="0.0,0.0,0.0,25.0,0.0,0.0"/>
-		<property endSignal="0.0,0.0,0.0,25.0,0.0,0.0"/>
+		<property initialSignal="150.0,0.0,0.0,0.0,0.0,0.0"/>
+		<property endSignal="150.0,0.0,0.0,0.0,0.0,0.0"/>
 		<property duration="5.0"/>
 	</item>
 </clockPhase>
@@ -75,6 +75,24 @@
 		<property phase="relax"/>
 		<property phase="switch"/>
 		<property phase="hold"/>
+	</item>
+	<item name="1">
+		<property phase="hold"/>
+		<property phase="reset"/>
+		<property phase="relax"/>
+		<property phase="switch"/>
+	</item>
+	<item name="2">
+		<property phase="switch"/>
+		<property phase="hold"/>
+		<property phase="reset"/>
+		<property phase="relax"/>
+	</item>
+	<item name="3">
+		<property phase="relax"/>
+		<property phase="switch"/>
+		<property phase="hold"/>
+		<property phase="reset"/>
 	</item>
 </clockZone>
 
@@ -95,9 +113,9 @@
 		<!-- Positive cuts are made on the right side, while negative are made in the left side -->
 		<!-- The cutted side will have the absolute value of the cut reduced from its height, whereas the non-cutted side remains the same -->
 		<!-- The cut in the superior part of the magnet -->
-		<property topCut="10.0"/>
+		<property topCut="0.0"/>
 		<!-- The cut in the inferior part of the magnet -->
-		<property bottomCut="-10.0"/>
+		<property bottomCut="0.0"/>
 	</item>
 	<item name="magIn">
 		<property width="50.0"/>
@@ -124,27 +142,91 @@
 		<!-- fixedMagnetization can be either true or false. true means the magnet is not influenced by clock -->
 		<property fixedMagnetization="true"/>
 		<!-- Position of the center of the magnet -->
-		<property position="-60.0,0.0"/>
+		<property position="0.0,0.0"/>
 		<!-- ALL magnets must be in a clockZone, even if they are fixedMagnetization = true!!!! -->
 		<property clockZone="0"/>
 		<!-- Initial value for the magnetization -->
 		<!-- RKW2 and RK4 engines use 3 values (x,y,z). Behaviour uses only one (y) -->
 		<property magnetization="0.1411,0.99,0.0"/>
 	</item>
-	<item name="i1">
+	<item name="mag1">
 		<property component="magIn"/>
-		<property myType="input"/>
-		<property fixedMagnetization="true"/>
+		<property myType="regular"/>
+		<property fixedMagnetization="false"/>
 		<property position="60.0,0.0"/>
 		<property clockZone="0"/>
-		<property magnetization="0.1411,0.99,0.0"/>
+		<property magnetization="0.99,0.141,0.0"/>
+	</item>
+	<item name="mag2">
+		<property component="magIn"/>
+		<property myType="regular"/>
+		<property fixedMagnetization="false"/>
+		<property position="120.0,0.0"/>
+		<property clockZone="0"/>
+		<property magnetization="0.99,0.141,0.0"/>
+	</item>
+	<item name="mag3">
+		<property component="magIn"/>
+		<property myType="regular"/>
+		<property fixedMagnetization="false"/>
+		<property position="180.0,0.0"/>
+		<property clockZone="0"/>
+		<property magnetization="0.99,0.141,0.0"/>
+	</item>
+	<item name="mag4">
+		<property component="magIn"/>
+		<property myType="regular"/>
+		<property fixedMagnetization="false"/>
+		<property position="240.0,0.0"/>
+		<property clockZone="1"/>
+		<property magnetization="0.99,0.141,0.0"/>
+	</item>
+	<item name="mag5">
+		<property component="magIn"/>
+		<property myType="regular"/>
+		<property fixedMagnetization="false"/>
+		<property position="300.0,0.0"/>
+		<property clockZone="1"/>
+		<property magnetization="0.99,0.141,0.0"/>
+	</item>
+	<item name="mag6">
+		<property component="magIn"/>
+		<property myType="regular"/>
+		<property fixedMagnetization="false"/>
+		<property position="360.0,0.0"/>
+		<property clockZone="1"/>
+		<property magnetization="0.99,0.141,0.0"/>
+	</item>
+	<item name="mag7">
+		<property component="magIn"/>
+		<property myType="regular"/>
+		<property fixedMagnetization="false"/>
+		<property position="420.0,0.0"/>
+		<property clockZone="2"/>
+		<property magnetization="0.99,0.141,0.0"/>
+	</item>
+	<item name="mag8">
+		<property component="magIn"/>
+		<property myType="regular"/>
+		<property fixedMagnetization="false"/>
+		<property position="480.0,0.0"/>
+		<property clockZone="2"/>
+		<property magnetization="0.99,0.141,0.0"/>
+	</item>
+	<item name="mag9">
+		<property component="magIn"/>
+		<property myType="regular"/>
+		<property fixedMagnetization="false"/>
+		<property position="540.0,0.0"/>
+		<property clockZone="2"/>
+		<property magnetization="0.99,0.141,0.0"/>
 	</item>
 	<item name="o0">
 		<property component="magOut"/>
 		<property myType="output"/>
 		<property fixedMagnetization="false"/>
-		<property position="0.0,0.0"/>
-		<property clockZone="0"/>
+		<property position="600.0,0.0"/>
+		<property clockZone="3"/>
 		<property magnetization="0.1411,-0.99,0.0"/>
 	</item>
 </design>

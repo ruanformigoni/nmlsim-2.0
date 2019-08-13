@@ -80,6 +80,8 @@ LLGMagnet::LLGMagnet(string id, FileReader * fReader){
 	this->yPosition = stod(parts[1]);
 
 	//Calculate the demag energy
+	this->demagTensor = (double **) malloc(3*sizeof(double *));
+	this->demagTensor = this->magnetizationCalculator->computeDemag();
 	double ** auxND = this->magnetizationCalculator->computeDemag();
 	for(int i=0; i<3; i++){
 		for(int j=0; j<3; j++){
@@ -295,7 +297,11 @@ void LLGMagnet::addNeighbor(Magnet * neighbor, double * ratio){
 		double * npx = (static_cast<LLGMagnet *> (neighbor))->getPx();
 		double * npy = (static_cast<LLGMagnet *> (neighbor))->getPy();
 		double nt = (static_cast<LLGMagnet *> (neighbor))->getThickness();
+		// cout << "Tensors from he magnet: " << this->getId() << endl;
+		// cout << "Tensors to the magnet: " << static_cast<LLGMagnet *>(neighbor)->getId() << endl;
 		double * tensor = this->magnetizationCalculator->computeDipolar(npx, npy, nt, vDist, hDist);
+		// cout << *tensor << endl;
+		// double * tensor = this->getTensorsAverage(npx, npy, nt, vDist, hDist);
 		this->neighbors.push_back(new Neighbor(neighbor, tensor));
 	}
 }
@@ -342,6 +348,29 @@ double LLGMagnet::getYPosition(){
 	return this->yPosition;
 }
 
+// Function to get the average of the magnet tensors
+double * LLGMagnet::getTensorsAverage(double * npx, double * npy, double nt, double vDist, double hDist){
+	cout << "Inside getTensorsAverage" << endl;
+	double average;
+	double biggestTensor;
+	double * tensor = (double *) malloc(sizeof(double));
+	biggestTensor = -99999.9;
+	cout << "Calculating Tensors" << endl;
+	for (int i = 0; i < 5; i++)
+	{
+		*tensor = *this->magnetizationCalculator->computeDipolar(npx, npy, nt, vDist, hDist);
+		cout << "TENSOR => " << *tensor << endl;
+		*tensor >= biggestTensor ? biggestTensor = *tensor : biggestTensor;
+		average = average + *tensor;
+	}
+	cout << "BIGGEST TENSOR => " << biggestTensor << endl;
+
+	average = average / 5;
+	*tensor = average;
+	cout << "MEAN OF 5 TENSORS => " << average << endl;
+	return tensor;
+}
+
 bool LLGMagnet::isNeighbor(LLGMagnet * magnet, double ratio){
 	double * mpx = magnet->getPx();
 	double * mpy = magnet->getPy();
@@ -356,4 +385,12 @@ void LLGMagnet::makeHeader(ofstream * out){
 	*(out) << this->id << "_x,"
 		<< this->id << "_y,"
 		<< this->id << "_z,";
+}
+
+vector <Neighbor *> LLGMagnet::getNeighbors(){
+	return this->neighbors;
+}
+
+double ** LLGMagnet::getDemagTensor(){
+	return this->demagTensor;
 }

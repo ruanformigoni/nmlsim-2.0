@@ -29,6 +29,8 @@ private:
 	double dW [3];
 	double xPosition, yPosition;
 	double theta_she;
+	double ** demagTensor;
+
 
 	static double alpha;
 	static double alpha_l;
@@ -68,6 +70,9 @@ public:
 	double getYPosition();
 	bool isNeighbor(LLGMagnet * magnet, double ratio);
 	void makeHeader(ofstream * out);
+	double * getTensorsAverage(double * npx, double * npy, double nt, double vDist, double hDist);
+	vector <Neighbor *> getNeighbors();
+	double ** getDemagTensor();
 };
 
 #endif

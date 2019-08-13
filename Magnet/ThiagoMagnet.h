@@ -46,6 +46,9 @@ public:
 	double getYPosition();
 	void normalizeWeights();
 	void resetMagnetization();
+	double * getTensorsAverage(double * npx, double * npy, double nt, double vDist, double hDist);
+	vector <Neighbor *> getNeighbors();
+	double ** getDemagTensor(){};
 };
 
 #endif
