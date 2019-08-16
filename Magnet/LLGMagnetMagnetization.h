@@ -15,10 +15,6 @@ private:
 	double volume;
 	double * px, * py;
 
-	static map<string, double *> dipBib;
-	static map<string, double **> demagBib;
-	static map<string, double> volumeBib;
-
 	double  frand(double, double);
 	double * frand_xz();
 	double * fu(double []);
@@ -26,6 +22,11 @@ private:
 	double * demag(double *);
 
 public:
+	static ofstream demagLog, dipolarLog;
+	static map<string, double *> dipBib;
+	static map<string, double **> demagBib;
+	static map<string, double> volumeBib;
+	
 	LLGMagnetMagnetization(double * px, double * py, double thickness);
 	LLGMagnetMagnetization(double widht, double height, double thickness, double topCut, double bottomCut);
 	double ** computeDemag();
@@ -34,6 +35,7 @@ public:
 	double * getPy();
 	double getThickness();
 	double getVolume();
+	static void verifyTensorsMap();
 };
 
 #endif

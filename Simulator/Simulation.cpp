@@ -22,6 +22,7 @@ Simulation::Simulation(string singlePath){
 	this->mySimType = fReader->getEngine();
 	this->mySimMode = fReader->getSimMode();
 	this->outFile.open(getFileName(singlePath));
+	
 	buildClkCtrl();
 	buildCircuit(singlePath);
 }
