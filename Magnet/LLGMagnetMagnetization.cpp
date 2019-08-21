@@ -336,6 +336,8 @@ double **LLGMagnetMagnetization::computeDemag()
 
     for (int i = 0; i < 4; i++)
         key += "x" + to_string(px[i]) + "y" + to_string(py[i]);
+    
+    key += "t" + to_string(this->t);
 
     if (this->demagBib.find(key) != this->demagBib.end())
     {
