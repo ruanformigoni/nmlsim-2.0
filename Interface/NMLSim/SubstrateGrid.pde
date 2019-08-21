@@ -308,9 +308,11 @@ class SubstrateGrid{
             }
         }
 
-//////////////////////////////////ConcurrentModificationException
-        for(Magnet mag : magnets.values()){
-            mag.drawSelf(xOrigin, yOrigin, normalization, zoomFactor, x, y, w, h, cellW, cellH);
+        try{
+            for(Magnet mag : magnets.values()){
+                mag.drawSelf(xOrigin, yOrigin, normalization, zoomFactor, x, y, w, h, cellW, cellH);
+            }
+        } catch(Exception e){
         }
         
         onMouseOverMethod();

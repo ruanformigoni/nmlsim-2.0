@@ -19,16 +19,19 @@ class SimulationPanel{
         engine = new DropDownBox("Engine", 0, 0, w-20);
         engine.addOption("LLG");
         engine.addOption("Behaviour");
+        engine.setSelectedOption("LLG");
         
         mode = new DropDownBox("Mode", 0, 0, w-20);
         mode.addOption("direct");
         mode.addOption("verbose");
         mode.addOption("exaustive");
         mode.addOption("repetitive");
+        mode.setSelectedOption("verbose");
         
         method = new DropDownBox("Method", 0, 0, w-20);
         method.addOption("RKW2");
         method.addOption("RK4");
+        method.setSelectedOption("RK4");
         
         repetitions = new TextBox("Repetitions", 0, 0, w-20);
         repetitions.setValidationType("IntegerPos");

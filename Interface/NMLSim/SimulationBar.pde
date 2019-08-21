@@ -1,3 +1,7 @@
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.Files;
+
 class SimulationBar{
     float x, y, w, h;
     int animationSpeed, animationTime, counter = 0;
@@ -239,6 +243,11 @@ class SimulationBar{
         }
         if(simulate.mousePressedMethod() && !fileSys.fileBaseName.equals("")){
             saveProject();
+            try{
+                exec("gnome-terminal", "-e", sketchPath() + "/../../nmlsim " + fileSys.fileBaseName + "/simulation.xml " +  fileSys.fileBaseName + "/simulation.csv");
+            } catch(Exception e){
+                e.printStackTrace();
+            }
             timelineEnabled = false;
             timelineRunning = false;
             isRecording = false;
@@ -252,11 +261,6 @@ class SimulationBar{
             }
             simulate.deactivate();
             exportGif.deactivate();
-            try{
-                exec("gnome-terminal", "-e", sketchPath() + "/../../nmlsim " + fileSys.fileBaseName + "/simulation.xml " +  fileSys.fileBaseName + "/simulation.csv");
-            } catch(Exception e){
-                e.printStackTrace();
-            }
         }
         if(charts.mousePressedMethod()){
             charts.deactivate();
@@ -270,6 +274,11 @@ class SimulationBar{
             }
         }
         if(panelMenu.getSimulationMode().equals("verbose") && timeline.mousePressedMethod()){
+            Path p = Paths.get(fileSys.fileBaseName + "/simulation", ".csv");
+            if(!Files.exists(p)){
+                timeline.deactivate();
+                return;
+            }
             if(animationTime > 0){
                 animationTime = 1;
                 backwardSimulation();
