@@ -7,7 +7,7 @@ class MagnetPanel{
     VectorTextBox position, llgInitMag;
     CheckBox fixedMag;
     
-    Button saveButton, saveTemplateButton, clearButton, addButton;
+    Button saveButton, saveTemplateButton, clearButton, addButton, cancelButton;
     
     color panelColor, textColor;
     ZonePanel zonePanel;
@@ -73,6 +73,7 @@ class MagnetPanel{
         isEditing = false;
         
         saveButton = new Button("Save", "Save the changes in the current magnet", sprites.smallSaveIconWhite, x+w-30, y+h-30);
+        cancelButton = new Button("Cancel", "Cancel the changes made in the current magnet", sprites.cancelIconWhite, x+w-80, y+h-30);
         saveTemplateButton = new Button("Save Template", "Save the configuration as a new template", sprites.smallSaveTemplateIconWhite, x+w-30, y+h-30);
         clearButton = new Button("Clear", "Clear all fields", sprites.smallDeleteIconWhite, x+w-55, y+h-30);
         addButton = new Button("Add", "Adds the magnet directly to the grid", sprites.smallNewIconWhite, x+w-80, y+h-30);
@@ -204,6 +205,7 @@ class MagnetPanel{
             saveButton.isTransparent = !((zonePanel.getEngine().equals("LLG")?llgInitMag.validateText():behaInitMag.validateText()) && label.validateText() &&
                                         magBottomCut.validateText() && magHeight.validateText() && magThickness.validateText() && magTopCut.validateText() && magWidth.validateText());
             saveButton.drawSelf();
+            cancelButton.drawSelf();
         }
         if(!isEditing){
             saveTemplateButton.isTransparent = !validateAllFields();
@@ -228,8 +230,10 @@ class MagnetPanel{
         clockZone.drawSelf();
         type.drawSelf();
         label.drawSelf();
-        if(isEditing)
+        if(isEditing){
             saveButton.onMouseOverMethod();
+            cancelButton.onMouseOverMethod();
+        }
         if(!isEditing)
             saveTemplateButton.onMouseOverMethod();
         clearButton.onMouseOverMethod();
@@ -238,8 +242,11 @@ class MagnetPanel{
     }
     
     void setEditing(String structure, String name){
-        if(structure.contains(":"))
+        if(structure.contains(":") || structure.equals("")){
+            isEditing = false;
+            substrateGrid.isEditingMagnet = false;
             return;
+        }
         //type;clockZone;magnetization;fixed;w;h;tc;bc;position;zoneColor
         editingStructure = structure;
         String fields[] = structure.split(";");
@@ -337,6 +344,12 @@ class MagnetPanel{
                 substrateGrid.addMagnet(label.getText(), getValue(true));
             }
         }
+        if(isEditing && cancelButton.mousePressedMethod()){
+            cancelButton.deactivate();
+            isEditing = false;
+            substrateGrid.unselectMagnets();
+            substrateGrid.isEditingMagnet = false;
+        }
         if(clearButton.mousePressedMethod()){
             clearButton.deactivate();
             label.resetText();
@@ -391,6 +404,7 @@ class MagnetPanel{
             for(int i=0; i<parts.length; i++)
                 editingStructure += parts[i] + ";";
             substrateGrid.editSelectedMagnets(editingStructure, oldName);
+            substrateGrid.isEditingMagnet = false;
             isEditing = false;
         }
     }

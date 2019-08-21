@@ -111,7 +111,7 @@ class HeaderContainer{
     }
     
     public void addButton(Button b){
-        if(b.getLabel().equals("Grid") || b.getLabel().equals("Bullet"))
+        if(b.getLabel().equals("Bullet"))
             b.active = true;
         b.setExpanded(isExpanded);
         buttons.add(b);
@@ -129,6 +129,7 @@ class Header{
     HeaderContainer file, magnet, substrate;//, others;
     float x, y, myW;
     SubstrateGrid substrateGrid;
+    SimulationBar simulationBar;
     PanelMenu panelMenu;
     String fileBaseName;
     
@@ -276,6 +277,10 @@ class Header{
         this.panelMenu = panelMenu;
     }
     
+    void setSimulationBar(SimulationBar simulationBar){
+        this.simulationBar = simulationBar;
+    }
+    
     float getHeight(){
         return file.getHeight();
     }
@@ -307,6 +312,7 @@ class Header{
             return true;
         }
         if(buttonLabel.equals("Open")){
+            simulationBar.disableTimeline();
             file.deactiveteButton("Open");
             File start = new File(sketchPath(""));
             selectFolder("Select a folder to open the project", "openProject", start);
@@ -314,6 +320,7 @@ class Header{
         }
         if(buttonLabel.equals("New")){
             file.deactiveteButton("New");
+            simulationBar.disableTimeline();
             panelMenu.simPanel.reset();
             panelMenu.phasePanel.reset();
             panelMenu.zonePanel.reset();
@@ -364,10 +371,11 @@ class Header{
         }
         if(buttonLabel.equals("Edit")){
             magnet.deactiveteButton("Edit");
+            substrateGrid.isEditingMagnet = true;
             panelMenu.enableEditing();
             if(!substrateGrid.isLeftHidden)
                 substrateGrid.toggleHideGrid("left");
-            substrateGrid.unselectMagnets();
+//            substrateGrid.unselectMagnets();
             return true;
         }
         if(buttonLabel.equals("Cut")){

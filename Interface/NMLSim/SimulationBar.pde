@@ -1,13 +1,13 @@
 class SimulationBar{
     float x, y, w, h;
     int animationSpeed, animationTime, counter = 0;
-    Button forward, backward, play, pause, stop, simulate, charts, export, upSpeed, downSpeed, timeline;
+    Button forward, backward, play, pause, stop, simulate, charts, export, upSpeed, downSpeed, timeline, exportGif;
     color panelColor, textColor, lineColor;
     SubstrateGrid substrateGrid;
     PanelMenu panelMenu;
     ArrayList <String> labels;
     ArrayList <ArrayList<Float>> magX, magY;
-    boolean timelineEnabled = false, timelineRunning = false;
+    boolean timelineEnabled = false, timelineRunning = false, isRecording = false;
     
     SimulationBar(float x, float y, float w, float h, SubstrateGrid substrateGrid, PanelMenu panelMenu){
         this.x = x;
@@ -39,6 +39,8 @@ class SimulationBar{
         export = new Button("Export", "Exports the XML file for the simulation engine", sprites.medSaveAsIconWhite, auxX, (h-20)/2+y);
         auxX += 25;
         timeline = new Button("Timeline", "Enables the timeline animation", sprites.timelineIconWhite, auxX, (h-25)/2+y);
+        auxX += 30;
+        exportGif = new Button("Export Gif", "Records and exports the timeline animation as a Gif", sprites.exportGifIconWhite, auxX, (h-25)/2+y);
         
         panelColor = color(45, 80, 22);
         textColor = color(255,255,255);
@@ -100,10 +102,12 @@ class SimulationBar{
         simulate.drawSelf();
         export.drawSelf();
         timeline.drawSelf();
+        exportGif.isTransparent = !timelineEnabled;
+        exportGif.drawSelf();
         
         strokeWeight(3);
         stroke(lineColor);
-        auxX += 205;
+        auxX += 235;
         line(auxX, y+5, auxX, y+h-5);
         auxX += 2;
         noStroke();
@@ -134,9 +138,13 @@ class SimulationBar{
         stop.onMouseOverMethod();
         backward.onMouseOverMethod();
         timeline.onMouseOverMethod();
+        exportGif.onMouseOverMethod();
         
         if(timelineEnabled && timelineRunning && counter >= (100-animationSpeed)/10){
             forwardSimulation();
+            if(isRecording){
+                saveFrame(fileSys.fileBaseName + "/gif/frame" + String.format("%1$15s",Integer.toString(animationTime)).replace(" ", "0") + ".png");
+            }
             counter = 0;
         } else if(!timelineEnabled){
             counter = 0;
@@ -201,6 +209,18 @@ class SimulationBar{
         }
     }
     
+    void disableTimeline(){
+        timelineEnabled = false;
+        timelineRunning = false;
+        isRecording = false;
+        timeline.deactivate();
+        play.deactivate();
+        pause.deactivate();
+        stop.deactivate();
+        simulate.deactivate();
+        exportGif.deactivate();
+    }
+    
     void mousePressedMethod(){
         if(upSpeed.mousePressedMethod()){
             upSpeed.deactivate();
@@ -221,6 +241,7 @@ class SimulationBar{
             saveProject();
             timelineEnabled = false;
             timelineRunning = false;
+            isRecording = false;
             timeline.deactivate();
             play.deactivate();
             pause.deactivate();
@@ -230,6 +251,7 @@ class SimulationBar{
                 backwardSimulation();
             }
             simulate.deactivate();
+            exportGif.deactivate();
             try{
                 exec("gnome-terminal", "-e", sketchPath() + "/../../nmlsim " + fileSys.fileBaseName + "/simulation.xml " +  fileSys.fileBaseName + "/simulation.csv");
             } catch(Exception e){
@@ -247,13 +269,17 @@ class SimulationBar{
                 }
             }
         }
-        if(timeline.mousePressedMethod() && panelMenu.getSimulationMode().equals("verbose")){
+        if(panelMenu.getSimulationMode().equals("verbose") && timeline.mousePressedMethod()){
             if(animationTime > 0){
                 animationTime = 1;
                 backwardSimulation();
             }
             loadSimulationResultsFile();
             timelineEnabled = !timelineEnabled;
+            if(!timelineEnabled){
+                exportGif.deactivate();
+                isRecording = false;
+            }
             timelineRunning = false;
         }
         if(timelineEnabled && !timelineRunning && play.mousePressedMethod()){
@@ -279,6 +305,16 @@ class SimulationBar{
             backward.deactivate();
             backwardSimulation();
             timelineRunning = false;
+        }
+        if(exportGif.mousePressedMethod()){
+            isRecording = !isRecording;
+            if(!isRecording){
+                try{
+                    exec("gnome-terminal", "-e", "sh -c \"convert -delay 10 " + fileSys.fileBaseName + "/gif/*.png +repage -loop 0 -strip -coalesce -layers Optimize " + fileSys.fileBaseName + "/simulationAnimation.gif ; " + "rm -rf " + fileSys.fileBaseName + "/gif\"");
+                } catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
         }
     }
 }

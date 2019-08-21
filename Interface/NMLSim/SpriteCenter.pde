@@ -5,6 +5,7 @@ class SpriteCenter{
     public PImage nanoDeleteIconWhite, nanoEditIconWhite, nanoZoneUpIconWhite, nanoZoneDownIconWhite, smallDeleteIconWhite, nanoArrowUpIconWhite,smallSaveTemplateIconWhite;
     public PImage smallDefaultIconWhite, smallEditIconWhite, orangeArrowLeftIcon, orangeArrowRightIcon, cutIconWhite, forwardIconWhite, backwardIconWhite, playIconWhite;
     public PImage pauseIconWhite, stopIconWhite, chartIconWhite, simulationIconWhite, arrowUpIconWhite, arrowDownIconWhite, medSaveAsIconWhite, timelineIconWhite;
+    public PImage cancelIconWhite, exportGifIconWhite;
     
     public SpriteCenter(){
         nanoArrowUpIconWhite = loadImage("Sprites/arrowUpIconWhite.png");
@@ -17,6 +18,8 @@ class SpriteCenter{
         arrowDownIconWhite.resize(25,25);
         copyIconWhite = loadImage("Sprites/copyIconWhite.png");
         copyIconWhite.resize(35,35);
+        cancelIconWhite = loadImage("Sprites/cancelIconWhite.png");
+        cancelIconWhite.resize(20,20);
         cutIconWhite = loadImage("Sprites/cutIconWhite.png");
         cutIconWhite.resize(35,35);
         openIconWhite = loadImage("Sprites/openIconWhite.png");
@@ -107,5 +110,7 @@ class SpriteCenter{
         simulationIconWhite.resize(25,25);
         chartIconWhite = loadImage("Sprites/chartIconWhite.png");
         chartIconWhite.resize(25,25);
+        exportGifIconWhite = loadImage("Sprites/exportGifIconWhite.png");
+        exportGifIconWhite.resize(25,25);
     }
 }

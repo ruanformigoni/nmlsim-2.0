@@ -4,7 +4,7 @@ class SubstrateGrid{
     float x, y, w, h, cellW, cellH, gridW, gridH, leftHiddenAreaW, leftHiddenAreaH, rightHiddenAreaW, rightHiddenAreaH, bulletVS, bulletHS, normalization, initMouseX, initMouseY;
     int zoomFactor, xPos, yPos, randomName = 0, randomGroup = 0;
     color darkBG, lightBG, darkRuler, lightRuler, darkBullet, lightBullet;
-    boolean isLightColor, isLeftHidden, isRightHidden, isRulerActive, isBulletActive, isPasting = false, isMoving = false;
+    boolean isLightColor, isLeftHidden, isRightHidden, isRulerActive, isBulletActive, isPasting = false, isMoving = false, isEditingMagnet = false;
     HitBox fullAreaHitbox, leftHidden, rightHidden;
     Scrollbar vScroll, hScroll;
     HashMap<String, Magnet> magnets;
@@ -37,7 +37,7 @@ class SubstrateGrid{
         
         isLeftHidden = false;
         isRightHidden = false;
-        isRulerActive = true;
+        isRulerActive = false;
         isBulletActive = true;
         
         magnets = new HashMap<String, Magnet>();
@@ -198,6 +198,9 @@ class SubstrateGrid{
     }
     
     void unselectMagnets(){
+        for(Magnet mag : selectedMagnets){
+            mag.isSelected = false;
+        }
         selectedMagnets.clear();
     }
     
@@ -305,6 +308,7 @@ class SubstrateGrid{
             }
         }
 
+//////////////////////////////////ConcurrentModificationException
         for(Magnet mag : magnets.values()){
             mag.drawSelf(xOrigin, yOrigin, normalization, zoomFactor, x, y, w, h, cellW, cellH);
         }
@@ -368,7 +372,7 @@ class SubstrateGrid{
             return;
         if(isRightHidden && rightHidden.collision(mouseX, mouseY))
             return;
-        if(!fullAreaHitbox.collision(mouseX, mouseY))
+        if(!fullAreaHitbox.collision(mouseX, mouseY) || isEditingMagnet)
             return;
         if((structurePanel != null && !structurePanel.getSelectedStructure().equals("")) || isPasting){
             for(Magnet mag : selectedMagnets)

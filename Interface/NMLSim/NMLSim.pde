@@ -27,6 +27,7 @@ void setup(){
     h.setPanelMenu(pm);
     fileSys = new FileHandler("", h, pm, sg);
     sb = new SimulationBar(0, 690, 1280, 30, sg, pm);
+    h.setSimulationBar(sb);
 }
 
 void draw(){
