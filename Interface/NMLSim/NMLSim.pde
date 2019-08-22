@@ -81,6 +81,14 @@ void openProject(File selectedPath){
     if(selectedPath == null)
         return;
     String fileBaseName = selectedPath.getAbsolutePath();
+    Path p = Paths.get(fileBaseName + "/structures.str");
+    if(!Files.exists(p)){
+        return;
+    }
+    p = Paths.get(fileBaseName + "/configurations.nmls");
+    if(!Files.exists(p)){
+        return;
+    }
     fileSys.setBaseName(fileBaseName);
     fileSys.readStructureFile();
     fileSys.readConfigFile();

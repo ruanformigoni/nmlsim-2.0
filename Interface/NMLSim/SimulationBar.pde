@@ -38,7 +38,7 @@ class SimulationBar{
         auxX += 20 + textWidth("Simulation") + 20;
         simulate = new Button("Simulate", "Performes the engine simulation", sprites.simulationIconWhite, auxX, (h-25)/2+y);
         auxX += 30;
-        charts = new Button("Results", "Opens the simulation results panel", sprites.chartIconWhite, auxX, (h-25)/2+y);
+        charts = new Button("Chart", "Plot the magnetization chart for the selected magnets", sprites.chartIconWhite, auxX, (h-25)/2+y);
         auxX += 30;
         export = new Button("Export", "Exports the XML file for the simulation engine", sprites.medSaveAsIconWhite, auxX, (h-20)/2+y);
         auxX += 25;
@@ -274,7 +274,7 @@ class SimulationBar{
             }
         }
         if(panelMenu.getSimulationMode().equals("verbose") && timeline.mousePressedMethod()){
-            Path p = Paths.get(fileSys.fileBaseName + "/simulation", ".csv");
+            Path p = Paths.get(fileSys.fileBaseName + "/simulation.csv");
             if(!Files.exists(p)){
                 timeline.deactivate();
                 return;

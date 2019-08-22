@@ -479,12 +479,16 @@ class SubstrateGrid{
         zoomFactor += 10;
         if(zoomFactor > 500)
             zoomFactor = 500;
+        vScroll.redefine(x+w, y, 20, h, int(h/(normalization*zoomFactor/10)));
+        toggleHideGrid("none");
     }
     
     void zoomOut(){
         zoomFactor -= 10;
         if(zoomFactor < 10)
             zoomFactor = 10;
+        vScroll.redefine(x+w, y, 20, h, int(h/(normalization*zoomFactor/10)));
+        toggleHideGrid("none");
     }
 
     void mouseWheelMethod(float v){
@@ -494,16 +498,10 @@ class SubstrateGrid{
             return;
         if(fullAreaHitbox.collision(mouseX,mouseY) && keyPressed == true && keyCode == 17){
             if(v<0){
-                zoomFactor += 10;
-                if(zoomFactor > 500)
-                    zoomFactor = 500;
+                zoomIn();
             } else{
-                zoomFactor -= 10;
-                if(zoomFactor < 10)
-                    zoomFactor = 10;
+                zoomOut();
             }
-            vScroll.redefine(x+w, y, 20, h, int(h/(normalization*zoomFactor/10)));
-            toggleHideGrid("none");
             return;
         }
         vScroll.mouseWheelMethod(v);
@@ -678,6 +676,8 @@ class Magnet{
         float auxY = (((yOrigin-y)/cellH)*normalization)*zoomFactor/10 + gy + gh;
         float auxW = (w/cellW*normalization)*zoomFactor/10;
         float auxH = (h/cellH*normalization)*zoomFactor/10;
+        float auxTC = (topCut/cellH*normalization)*zoomFactor/10;
+        float auxBC = (bottomCut/cellH*normalization)*zoomFactor/10;
         hitbox.updateBox(auxX-auxW/2,auxY-auxH/2,auxW,auxH);
         if(auxX-auxW > gx+gw || auxX+auxW < gx || auxY-auxH > gy+gh || auxY+auxH < gy)
             return;
@@ -716,9 +716,9 @@ class Magnet{
         endShape();
         drawArrow(
             auxX-(auxW/2)*xMag,
-            auxY+(auxH/2-abs(topCut)/2)*yMag,
+            auxY+(auxH/2-abs(auxTC))*yMag,
             auxX+(auxW/2)*xMag,
-            auxY-(auxH/2-abs(topCut)/2)*yMag,
+            auxY-(auxH/2-abs(auxBC))*yMag,
             0,((abs(xMag) > abs(yMag))?auxH/10:auxW/10));
         strokeWeight(1);
     }
