@@ -4,7 +4,7 @@ class SubstrateGrid{
     float x, y, w, h, cellW, cellH, gridW, gridH, leftHiddenAreaW, leftHiddenAreaH, rightHiddenAreaW, rightHiddenAreaH, bulletVS, bulletHS, normalization, initMouseX, initMouseY;
     int zoomFactor, xPos, yPos, randomName = 0, randomGroup = 0;
     color darkBG, lightBG, darkRuler, lightRuler, darkBullet, lightBullet;
-    boolean isLightColor, isLeftHidden, isRightHidden, isRulerActive, isBulletActive, isPasting = false, isMoving = false, isEditingMagnet = false;
+    boolean isLightColor, isLeftHidden, isRightHidden, isRulerActive, isBulletActive, isPasting = false, isMoving = false, isEditingMagnet = false, zoneViewMode = false;
     HitBox fullAreaHitbox, leftHidden, rightHidden;
     Scrollbar vScroll, hScroll;
     HashMap<String, Magnet> magnets;
@@ -231,6 +231,31 @@ class SubstrateGrid{
                     i = zoneNames.size()-1;
             }
             mag.changeZone(zoneNames.get(i),zonePanel.getZoneColor(zoneNames.get(i)));
+        }
+    }
+    
+    void changeSelectedMagnetsMagnetization(){
+        for(Magnet mag : selectedMagnets){
+            float xMag = mag.getXMag(), yMag = mag.getYMag();
+            if(abs(xMag) > abs(yMag)){
+                if(xMag > 0){
+                    mag.setMagnetizationInStructure(0.141,-0.99);
+                } else{
+                    mag.setMagnetizationInStructure(0.141,0.99);
+                }
+            } else{
+                if(yMag > 0){
+                    mag.setMagnetizationInStructure(0.99,0.141);
+                } else{
+                    mag.setMagnetizationInStructure(-0.99,0.141);
+                }
+            }
+        }
+    }
+    
+    void toggleZoneViewMode(){
+        for(Magnet mag : selectedMagnets){
+            mag.zoneViewMode = !mag.zoneViewMode;
         }
     }
     
@@ -513,7 +538,7 @@ class Magnet{
     float w, h, bottomCut, topCut, xMag, yMag, x, y;
     String magStr, name, groupName, zone;
     color clockZone;
-    boolean isTransparent = false, isSelected = false;
+    boolean isTransparent = false, isSelected = false, zoneViewMode = true;
     HitBox hitbox;
     
     /*MagStr = type;clockZone;magnetization;fixed;w;h;tk;tc;bc;position;zoneColor*/
@@ -569,9 +594,29 @@ class Magnet{
         return zone;
     }
     
+    float getXMag(){
+        return this.xMag;
+    }
+    
+    float getYMag(){
+        return this.yMag;
+    }
+    
     void setMagnetization(float xMag, float yMag){
         this.xMag = xMag;
         this.yMag = yMag;
+    }
+    
+    void setMagnetizationInStructure(float xMag, float yMag){
+        this.xMag = xMag;
+        this.yMag = yMag;
+        String [] parts = magStr.split(";");
+        if(parts[2].contains(",")){
+            parts[2] = xMag + "," + yMag + ",0";
+            magStr = "";
+            for(int i=0; i<parts.length; i++)
+                magStr += parts[i] + ";";
+        }
     }
     
     void changeZone(String zName, Integer zColor){
@@ -644,8 +689,9 @@ class Magnet{
         float coeff = 1.5;
 
         strokeCap(SQUARE);
-        fill(0, (isTransparent)?128:255);
-        stroke(0, (isTransparent)?128:255);
+        
+        fill((zoneViewMode && !isSelected)?255:0, (isTransparent)?128:255);
+        stroke((zoneViewMode && !isSelected)?255:0, (isTransparent)?128:255);
         
         line(x0+d.x*beginHeadSize*coeff/1.0f, 
             y0+d.y*beginHeadSize*coeff/1.0f, 
@@ -685,7 +731,9 @@ class Magnet{
         stroke(clockZone, (isTransparent)?128:255);
         if(isSelected){
             fill(255, 255, 255, 255);
-        } else if(abs(xMag) > abs(yMag)){
+        } else if(zoneViewMode){
+            fill(clockZone, (isTransparent)?128:255);
+        }else if(abs(xMag) > abs(yMag)){
             fill(200, 200, 200, (isTransparent)?128:255);
         } else if(yMag > 0){
             fill(#FF5555, (isTransparent)?128:255);

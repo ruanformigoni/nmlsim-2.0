@@ -157,6 +157,8 @@ class Header{
         magnet.addButton(new Button("Group", "Makes a group with selected magnets", sprites.groupIconWhite, 0, 0));
         magnet.addButton(new Button("Up Zone", "Change a selected magnet or group to the next zone", sprites.zoneUpIconWhite, 0, 0));
         magnet.addButton(new Button("Down Zone", "Change a selected magnet or group to the previos zone", sprites.zoneDownIconWhite, 0, 0));
+        magnet.addButton(new Button("Magnetization", "Change the magnet intial magnetization clockwise", sprites.magnetIconWhite, 0, 0));
+        magnet.addButton(new Button("Zone View", "Toggles zone visibility with magnetization visibility", sprites.zoneViewIconWhite, 0, 0));
         
         substrate = new HeaderContainer("Substrate", x, y);
         substrate.addButton(new Button("Grid", "Shows the ruler for the minimum cell definition", sprites.gridIconWhite, 0, 0));
@@ -382,6 +384,16 @@ class Header{
             magnet.deactiveteButton("Cut");
             substrateGrid.copySelectedMagnetsToClipBoard();
             substrateGrid.deleteSelectedMagnets();
+            return true;
+        }
+        if(buttonLabel.equals("Magnetization")){
+            magnet.deactiveteButton("Magnetization");
+            substrateGrid.changeSelectedMagnetsMagnetization();
+            return true;
+        }
+        if(buttonLabel.equals("Zone View")){
+            magnet.deactiveteButton("Zone View");
+            substrateGrid.toggleZoneViewMode();
             return true;
         }
         buttonLabel = substrate.mousePressedMethod();
