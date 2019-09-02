@@ -4,7 +4,7 @@ class SubstrateGrid{
     float x, y, w, h, cellW, cellH, gridW, gridH, leftHiddenAreaW, leftHiddenAreaH, rightHiddenAreaW, rightHiddenAreaH, bulletVS, bulletHS, normalization, initMouseX, initMouseY;
     int zoomFactor, xPos, yPos, randomName = 0, randomGroup = 0;
     color darkBG, lightBG, darkRuler, lightRuler, darkBullet, lightBullet;
-    boolean isLightColor, isLeftHidden, isRightHidden, isRulerActive, isBulletActive, isPasting = false, isMoving = false, isEditingMagnet = false, zoneViewMode = false;
+    boolean isLightColor, isLeftHidden, isRightHidden, isRulerActive, isBulletActive, isPasting = false, isMoving = false, isEditingMagnet = false, zoneViewMode = true;
     HitBox fullAreaHitbox, leftHidden, rightHidden;
     Scrollbar vScroll, hScroll;
     HashMap<String, Magnet> magnets;
@@ -82,7 +82,7 @@ class SubstrateGrid{
             String [] parts = structure.split(":");
             int index = 0;
             for(String str : parts){
-                Magnet aux = new Magnet(str, label + "_" + index);
+                Magnet aux = new Magnet(str, label + "_" + index, zoneViewMode);
                 index++;
                 for(Magnet mag : magnets.values())
                     if(aux.collision(mag))
@@ -95,7 +95,7 @@ class SubstrateGrid{
                 index++;
             }
         } else{
-            Magnet aux =  new Magnet(structure, label);
+            Magnet aux =  new Magnet(structure, label, zoneViewMode);
             for(Magnet mag : magnets.values())
                 if(aux.collision(mag))
                     return;
@@ -254,8 +254,9 @@ class SubstrateGrid{
     }
     
     void toggleZoneViewMode(){
-        for(Magnet mag : selectedMagnets){
-            mag.zoneViewMode = !mag.zoneViewMode;
+        zoneViewMode = !zoneViewMode;
+        for(Magnet mag : magnets.values()){
+            mag.zoneViewMode = zoneViewMode;
         }
     }
     
@@ -380,7 +381,7 @@ class SubstrateGrid{
                 for(int i=0; i<parts.length; i++){
                     structure += parts[i] + ";";
                 }
-                Magnet magAux = new Magnet(structure, "Magnet_Aux");
+                Magnet magAux = new Magnet(structure, "Magnet_Aux", zoneViewMode);
                 magAux.isTransparent = true;
                 magAux.drawSelf(xOrigin, yOrigin, normalization, zoomFactor, x, y, w, h, cellW, cellH);
             }
@@ -543,8 +544,9 @@ class Magnet{
     
     /*MagStr = type;clockZone;magnetization;fixed;w;h;tk;tc;bc;position;zoneColor*/
     
-    Magnet(String magStr, String name){
+    Magnet(String magStr, String name, boolean viewMode){
         this.magStr = magStr;
+        this.zoneViewMode = viewMode;
         this.groupName = "";
         this.name = name;
         String parts[] = magStr.split(";");

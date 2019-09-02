@@ -392,7 +392,6 @@ class Header{
             return true;
         }
         if(buttonLabel.equals("Zone View")){
-            magnet.deactiveteButton("Zone View");
             substrateGrid.toggleZoneViewMode();
             return true;
         }
