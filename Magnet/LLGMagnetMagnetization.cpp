@@ -42,19 +42,17 @@
 */
 
 #include "LLGMagnetMagnetization.h"
+#include "../Simulator/Simulation.h"
 
-map<string, double *> LLGMagnetMagnetization::dipBib;
-map<string, double **> LLGMagnetMagnetization::demagBib;
-map<string, double> LLGMagnetMagnetization::volumeBib;
+map<string, double *> Simulation::dipBib;
+map<string, double **> Simulation::demagBib;
+map<string, double> Simulation::volumeBib;
 
-ofstream LLGMagnetMagnetization::demagLog;
-ofstream LLGMagnetMagnetization::dipolarLog;
+ofstream Simulation::demagLog;
+ofstream Simulation::dipolarLog;
 
 LLGMagnetMagnetization::LLGMagnetMagnetization(double *px, double *py, double thickness)
 {
-	dipBib.clear();
-	demagBib.clear();
-	volumeBib.clear();
     this->px = (double *)malloc(4 * sizeof(double));
     this->py = (double *)malloc(4 * sizeof(double));
     for (int i = 0; i < 4; i++)
@@ -67,9 +65,6 @@ LLGMagnetMagnetization::LLGMagnetMagnetization(double *px, double *py, double th
 
 LLGMagnetMagnetization::LLGMagnetMagnetization(double widht, double height, double thickness, double topCut, double bottomCut)
 {
-    dipBib.clear();
-	demagBib.clear();
-	volumeBib.clear();
     this->px = (double *)malloc(4 * sizeof(double));
     this->py = (double *)malloc(4 * sizeof(double));
     this->t = thickness;
@@ -215,121 +210,9 @@ double *LLGMagnetMagnetization::demag(double *py)
     return abc_out;
 }
 
-void LLGMagnetMagnetization::verifyTensorsMap(){
-    ifstream demagContent;
-    demagContent.open("Files/DemagTensors.log");
-    
-    ifstream dipolarContent;
-    dipolarContent.open("Files/DipolarTensors.log");
-    // cout << "Abriu os arquivos" << endl;
-    
-    if (demagContent.is_open()){
-        string line;
-        while(getline(demagContent, line)){
-           int colonIndex = line.find(":");
-           string key = line.substr(0,colonIndex);
-            // cout << key << endl;
-            string volAndTensors = line.substr(colonIndex+1,line.size());
-           colonIndex = volAndTensors.find(":");
-            double vol = std::stod(volAndTensors.substr(0,colonIndex));
-            string tensors = volAndTensors.substr(colonIndex+1,volAndTensors.size());
-            // cout << value << endl;
-            if (demagBib.find(key) != demagBib.end())
-            {   
-                cout << "Ta no hash "<< endl;
-                // volume = volumeBib[key];
-            }else{
-                double **retValues = (double **)malloc(3 * sizeof(double *));
-                for (int i = 0; i < 3; i++)
-                    retValues[i] = (double *)malloc(3 * sizeof(double));
-                    
-                vector<double> values;
-                int commaIndex = tensors.find(",");
-                int begin = 0;
-                string novo = tensors;
-                while(commaIndex > 0){
-                    // cout << "VLW" << endl;
-                    // cout << novo << endl;
-                    // cout << novo.substr(begin, commaIndex) << endl;
-                    values.push_back(std::stod(novo.substr(begin, commaIndex)));
-                    novo = novo.substr(commaIndex + 1, novo.size());
-                    // cout << novo << endl;
-                    commaIndex = novo.find(",");
-                    // cout << commaIndex << endl;
-                }
-                
-                for (int i = 0; i < 3; i++)
-                {
-                    for (int y = 0; y < 3; y++)
-                    {
-                        retValues[i][y] = values[i * 3 + y];
-                    }
-                    
-                }
-                
-                volumeBib[key] = vol;
-                demagBib[key] = retValues;
-            }
-        }
-    }else{
-        throw "Unable to open the demag file!";
-    }
-
-
-    // if (dipolarContent.is_open()){
-    //     string line;
-    //     while(getline(dipolarContent, line)){
-    //        int colonIndex = line.find(":");
-    //        string key = line.substr(0,colonIndex);
-    //         // cout << key << endl;
-    //         string value = line.substr(colonIndex+1,line.size());
-    //         // cout << value << endl;
-    //         if (dipBib.find(key) != dipBib.end())
-    //         {   
-    //             cout << "Ta no hash "<< endl;
-    //             // volume = volumeBib[key];
-    //         }else{
-    //             cout << "Não está no hash" << endl;
-    //             vector<double> values;
-    //             int commaIndex = value.find(",");
-    //             int begin = 0;
-    //             string novo = value;
-    //             while(commaIndex > 0){
-    //                 // cout << "VLW" << endl;
-    //                 // cout << novo << endl;
-    //                 // cout << novo.substr(begin, commaIndex) << endl;
-    //                 values.push_back(std::stod(novo.substr(begin, commaIndex)));
-    //                 novo = novo.substr(commaIndex + 1, novo.size());
-    //                 // cout << novo << endl;
-    //                 commaIndex = novo.find(",");
-    //                 // cout << commaIndex << endl;
-    //             }
-                
-    //             double *tensor;
-    //             tensor = (double *)malloc(9 * sizeof(double));
-    //             for (int i = 0; i < 9; i++)
-    //             {
-    //                 tensor[i] = values[i];
-                    
-    //             }
-                
-
-    //             dipBib[key] = tensor;
-    //         }
-    //     }
-    // }else{
-    //     throw "Unable to open the dipolar file!";
-    // }
-    
-    demagContent.close();
-    // dipolarContent.close();
-}
 
 double **LLGMagnetMagnetization::computeDemag()
 {
-    this->demagLog.open("Files/DemagTensors.log", ios::app);
-    
-
     string key;
     int repetitions = 10;
     double tensors[repetitions][9];
@@ -339,10 +222,17 @@ double **LLGMagnetMagnetization::computeDemag()
     
     key += "t" + to_string(this->t);
 
-    if (this->demagBib.find(key) != this->demagBib.end())
+    // cout << "Demag to " << key << endl;
+
+    if (Simulation::demagBib.find(key) != Simulation::demagBib.end())
     {
-        this->volume = volumeBib[key];
-        return this->demagBib[key];
+        // cout << "Achou no hash" << endl;
+        // cout << "Volume Bib => " << Simulation::volumeBib[key] << endl;
+        for (int i =0; i < 3; i++)
+            for (int y =0; y < 3; y++)
+            // cout << "Demag Bib => " << Simulation::demagBib[key][i][y] << endl;
+        this->volume = Simulation::volumeBib[key];
+        return Simulation::demagBib[key];
     }
 
     double *ptr, vol;
@@ -401,23 +291,29 @@ double **LLGMagnetMagnetization::computeDemag()
     }
 
     this->volume = 0.5 * (py[0] - py[3] + py[1] - py[2]) * w * t;
-
+    // cout << "DEMAG ##################" << endl;
+    // cout << "Volume => " << this->volume << endl;
     for (int i = 0; i < 3; i++)
-        for (int j = 0; j < 3; j++)
+        for (int j = 0; j < 3; j++){
+            // cout << "D => " << d[i * 3 + j] << endl;
+            // cout << "V => " << (4.0 * PI * this->volume) << endl;
             returnValue[i][j] = d[i * 3 + j] / (4.0 * PI * this->volume);
+            // cout << "Return Value => " << returnValue[i][j] << endl;
+        }
 
-    this->demagLog << key << ":" << this->volume << ":";
+    Simulation::demagLog.open("Files/DemagTensors.log", ios::app);
+    // cout << "Vai salvar no arquivo " << key << ":" << this->volume << ":" << endl;
+    Simulation::demagLog << key << ":" << this->volume << ":";
 
     for(int i=0; i<3; i++)
 		for(int j=0; j<3; j++){
-				this->demagLog << returnValue[i][j] << ",";
+				Simulation::demagLog << returnValue[i][j] << ",";
 		}
     
-    this->demagLog << endl;
-
-    demagBib[key] = returnValue;
-    volumeBib[key] = this->volume;
-    this->demagLog.close();
+    Simulation::demagLog << endl;
+    Simulation::demagLog.close();
+    Simulation::demagBib[key] = returnValue;
+    Simulation::volumeBib[key] = this->volume;
     return returnValue;
 }
 
@@ -466,9 +362,9 @@ double *LLGMagnetMagnetization::computeDipolar(double *p2x, double *p2y, double 
     for (int i = 0; i < 4; i++)
         key += "x" + to_string(p2x[i]) + "y" + to_string(p2y[i]);
     key += "t1" + to_string(this->t) + "t2" + to_string(thickness);
-    if (this->dipBib.find(key) != this->dipBib.end())
+    if (Simulation::dipBib.find(key) != Simulation::dipBib.end())
     {
-        return this->dipBib[key];
+        return Simulation::dipBib[key];
     }
 
     double p1center[3], p2center[3]; //, p2xMod[4], p2yMod[4];
@@ -509,7 +405,7 @@ double *LLGMagnetMagnetization::computeDipolar(double *p2x, double *p2y, double 
 
 	// this->dipolarLog << endl;
 
-    this->dipBib[key] = tensor;
+    Simulation::dipBib[key] = tensor;
 
     // this->dipolarLog.close();
 

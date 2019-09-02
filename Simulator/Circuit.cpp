@@ -26,7 +26,7 @@ void Circuit::nextTimeStep(){
 	this->clockCtrl->nextTimeStep();
 }
 
-Magnet * Circuit::getMagnet(string inOrOut, string id){
+Magnet* Circuit::getMagnet(string inOrOut, string id){
 	if(inOrOut == "input"){
 		for(int i=0; i<this->inputMagnets.size(); i++)
 			if(this->inputMagnets[i]->getId() == id)

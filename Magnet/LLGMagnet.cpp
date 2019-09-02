@@ -72,7 +72,9 @@ LLGMagnet::LLGMagnet(string id, FileReader * fReader){
 	thickness = stod(fReader->getItemProperty(COMPONENTS, compName, "thickness"));
 	topCut = stod(fReader->getItemProperty(COMPONENTS, compName, "topCut"));
 	bottomCut = stod(fReader->getItemProperty(COMPONENTS, compName, "bottomCut"));
+	// cout << "Before LLGMagnetMagnetization" << endl;
 	this->magnetizationCalculator = new LLGMagnetMagnetization(width, height, thickness, topCut, bottomCut);
+	// cout << "Before LLGMagnetMagnetization" << endl;
 
 	//Position
 	parts = splitString(fReader->getItemProperty(DESIGN, id, "position"), ',');
@@ -83,8 +85,10 @@ LLGMagnet::LLGMagnet(string id, FileReader * fReader){
 	this->demagTensor = (double **) malloc(3*sizeof(double *));
 	this->demagTensor = this->magnetizationCalculator->computeDemag();
 	double ** auxND = this->magnetizationCalculator->computeDemag();
+	// cout << "INSIDE LLGMAGNET \n" << endl;
 	for(int i=0; i<3; i++){
 		for(int j=0; j<3; j++){
+			// cout << "auxND => " << auxND[i][j] << endl;
 			nd[i][j] = auxND[i][j];
 		}
 	}
@@ -99,6 +103,7 @@ LLGMagnet::LLGMagnet(string id, FileReader * fReader){
 void LLGMagnet::initializeConstants(){
 	this->alpha_l = 1.0/(1+pow(this->alpha, 2.0));
 	this->dt = this->timeStep*gammamu0*this->Ms;
+	// cout << "\nDT => " << this->dt <<  endl;
 	for(int i=0; i<3; i++){
 		this->v[i] = sqrt((2.0*this->alpha*kb*this->temperature) / (mu0*this->Ms*this->Ms*(this->volume * pow(10.0, -27.0))));
 	}
@@ -116,18 +121,25 @@ void LLGMagnet::calculateMagnetization(ClockPhase * phase){
 	double i_s[3];
 	double u[3], u_plus[3], u_minus[3], a_u[3], b_uplus[3], b_uminus[3];
 
-	for(int i=0; i<3; i++)
+		// cout << "HDS \n" << endl;
+	for(int i=0; i<3; i++){
 		hd[i] = 
 			(this->magnetization[0]*nd[0][i] + 
 			this->magnetization[1]*nd[1][i] + 
 			this->magnetization[2]*nd[2][i])*-1.0;
+		// cout << "HD[" << i << "] => " << hd[i] << endl;
+		
+	}
 
 	for(int j=0; j<this->neighbors.size(); j++){
-		for(int i=0; i<3; i++)
+		// cout << "HCS \n" << endl;
+		for(int i=0; i<3; i++){
 			hc[i] += 
 				(neighbors[j]->getMagnet()->getMagnetization()[0]*(this->neighbors[j]->getWeight()[i]) + 
 				neighbors[j]->getMagnet()->getMagnetization()[1]*(this->neighbors[j]->getWeight()[i+3]) + 
 				neighbors[j]->getMagnet()->getMagnetization()[2]*(this->neighbors[j]->getWeight()[i+6]))*-1.0;
+			// cout << "HC[" << i << "] => " << hc[i] << endl;
+		}
 	}
 
 	if(LLGMagnet::rk4Method){
@@ -146,6 +158,7 @@ void LLGMagnet::calculateMagnetization(ClockPhase * phase){
 				half_is[i] = ((-1)*hbar*this->theta_she*((phase->getSignal()[i+3] + auxVar[i]/2)*pow(10,12)))/(2*q*this->getThickness()*pow(10,(-9))*Ms);
 				next_is[i] = ((-1)*hbar*this->theta_she*((phase->getSignal()[i+3] + auxVar[i])*pow(10,12)))/(2*q*this->getThickness()*pow(10,(-9))*Ms);
 			}
+			// cout << "I_S[" << i << "] => " << i_s[i] << endl;
 		}
 
 		f_term(this->magnetization, auxSig, hd, hc, i_s, k1);
@@ -154,8 +167,12 @@ void LLGMagnet::calculateMagnetization(ClockPhase * phase){
 		
 		for(int i=0; i<3; i++)
 			auxSig[i] += auxVar[i]/2;
-		for(int i=0; i<3; i++)
+		for(int i=0; i<3; i++){
 			auxMag[i] = this->magnetization[i] + k1[i]/2;
+			// cout << "K1 : " << k1[i] << endl;
+			// cout << "Mag : " << this->magnetization[i] << endl;
+		}
+
 		f_term(auxMag, auxSig, hd, hc, half_is, k2);
 		for(int i=0; i<3; i++)
 			k2[i] *= this->dt;
@@ -173,9 +190,16 @@ void LLGMagnet::calculateMagnetization(ClockPhase * phase){
 		f_term(this->magnetization, auxSig, hd, hc, next_is, k4);
 		for(int i=0; i<3; i++)
 			k4[i] *= this->dt;
-
-		for(int i=0; i<3; i++)
+		// cout << "PONTO \n" << endl;
+		for(int i=0; i<3; i++){
+			// cout << "Magnetization[" << i << "] => " << this->magnetization[i] << endl;
+			// cout << "K1 => " << k1[i] << endl;
+			// cout << "K2 => " << k2[i] << endl;
+			// cout << "K3 => " << k3[i] << endl;
+			// cout << "K4 => " << k4[i] << endl;
 			this->newMagnetization[i] = this->magnetization[i] + (k1[i] + 2*k2[i] + 2*k3[i] + k4[i])/6;
+			// cout << "New Magnetization[" << i << "] => " << this->newMagnetization[i] << endl;
+		}
 	} else{
 		for(int i=0; i<3; i++){
 			if(this->fixedMagnetization)
@@ -218,6 +242,7 @@ void LLGMagnet::calculateMagnetization(ClockPhase * phase){
 			this->newMagnetization[i] = this->magnetization[i] + 0.5*(a_u[i] + a[i])*dt + 
 										0.25*(b_uplus[i] + b_uminus[i] + 2*b[i])*this->dW[i] +
 										0.25*(b_uplus[i] - b_uminus[i]) * (this->dW[i]*this->dW[i] - dt)/sqrt(dt);
+			// cout << "New Magnetization[" << i << "] => " << this->newMagnetization[i] << endl;
 		}
 	}
 }
@@ -284,7 +309,12 @@ double * LLGMagnet::getMagnetization(){
 }
 
 void LLGMagnet::updateMagnetization(){
+	// cout << "Update Magnetization \n" << endl;
 	double module = sqrt(pow(this->newMagnetization[0], 2.0) + pow(this->newMagnetization[1], 2.0) + pow(this->newMagnetization[2], 2.0));
+	// cout << "Module => " << module << endl;
+	// cout << "Magnetization 0 => " << this->newMagnetization[0] << endl;
+	// cout << "Magnetization 1 => " << this->newMagnetization[1] << endl;
+	// cout << "Magnetization 2 => " << this->newMagnetization[2] << endl;
 	this->magnetization[0] = this->newMagnetization[0]/module;
 	this->magnetization[1] = this->newMagnetization[1]/module;
 	this->magnetization[2] = this->newMagnetization[2]/module;
@@ -307,6 +337,9 @@ void LLGMagnet::addNeighbor(Magnet * neighbor, double * ratio){
 }
 
 void LLGMagnet::dumpValues(ofstream * out){
+	// cout << "Magnetization 0 => \n" << this->magnetization[0] << endl;
+	// cout << "Magnetization 1 => \n" << this->magnetization[1] << endl;
+	// cout << "Magnetization 2 => \n" << this->magnetization[2] << endl;
 	*(out) << this->magnetization[0] << ",";
 	*(out) << this->magnetization[1] << ",";
 	*(out) << this->magnetization[2] << ",";

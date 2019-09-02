@@ -125,6 +125,7 @@ void Simulation::simulate(){
 		}
 		break;
 		case EXAUSTIVE:{
+			// cout << "Going to a Exaustive Simulation!" << endl;
 			exaustiveSimulation();
 		}
 		break;
@@ -276,7 +277,9 @@ void Simulation::buildMagnets(){
 		case LLG:{
 			vector<string> magnetsIds = fReader->getItems(DESIGN);
 			for(int i=0; i<magnetsIds.size(); i++){
+				// cout << "Time " << i << endl;
 				Magnet * magnet = (Magnet *) new LLGMagnet(magnetsIds[i], fReader);
+				// cout << "After new LLGMagnet" << endl;
 				string magType = fReader->getItemProperty(DESIGN, magnetsIds[i], "myType");
 				if(magType == "input"){
 					this->circuit->addInputMagnet(magnet);
@@ -294,14 +297,14 @@ void Simulation::buildMagnets(){
 }
 
 void Simulation::buildNeighbors(string filePath){
-	int pos = filePath.find(".csv");
+	// int pos = filePath.find(".csv");
 	// cout << pos << endl;
-	static string prefixFilePath = filePath.substr(0, pos);
+	// static string prefixFilePath = filePath.substr(0, pos);
 	/* cout << "FILE PATH = " << filePath << endl;
 	cout << "PREFIX FILE PATH = " << prefixFilePath << endl; */
 	
-	static string demagFilePath = prefixFilePath + "_demagTensorLog.csv";
-	static string dipolarFilePath = prefixFilePath + "_dipolarTensorsLog.csv";
+	// static string demagFilePath = prefixFilePath + "_demagTensorLog.csv";
+	// static string dipolarFilePath = prefixFilePath + "_dipolarTensorsLog.csv";
 	
 	/* cout << "DEMAG FILE NAME = " << demagFilePath << endl;
 	cout << "DIPOLAR FILE NAME = " << dipolarFilePath << endl; */
@@ -309,8 +312,8 @@ void Simulation::buildNeighbors(string filePath){
 	ofstream demagTensorLog;
 	ofstream dipolarTensorsLog;
 
-	demagTensorLog.open(demagFilePath);
-	dipolarTensorsLog.open(dipolarFilePath);
+	// demagTensorLog.open(demagFilePath);
+	// dipolarTensorsLog.open(dipolarFilePath);
 
 	switch(this->mySimType){
 		case THIAGO:{
@@ -338,7 +341,7 @@ void Simulation::buildNeighbors(string filePath){
 
 			// Code to identify and show the Magnetization Tensors and calculate the average
 			// and the outline Tensor
-			for (int y = 0; y < magnets.size(); y++)
+			/* for (int y = 0; y < magnets.size(); y++)
 			{	
 				demagTensorLog << magnets[y]->getId() << ":";
 				for (int i = 0; i < 3; i++)
@@ -365,11 +368,121 @@ void Simulation::buildNeighbors(string filePath){
 				dipolarTensorsLog << endl;
 				
 				// cout << "Tensors average for magnet " << magnets[y]->getId() << " => " << average << endl;
-			}
+			} */
 			
 		}
 		break;
 	}
 	demagTensorLog.close();
 	dipolarTensorsLog.close();
+}
+
+void Simulation::verifyTensorsMap(){
+    ifstream demagContent;
+    demagContent.open("Files/DemagTensors.log");
+    
+    ifstream dipolarContent;
+    dipolarContent.open("Files/DipolarTensors.log");
+    // cout << "Abriu os arquivos" << endl;
+    
+    if (demagContent.is_open()){
+        string line;
+        while(getline(demagContent, line)){
+           int colonIndex = line.find(":");
+           string key = line.substr(0,colonIndex);
+            // cout << key << endl;
+            string volAndTensors = line.substr(colonIndex+1,line.size());
+           colonIndex = volAndTensors.find(":");
+            double vol = std::stod(volAndTensors.substr(0,colonIndex));
+            string tensors = volAndTensors.substr(colonIndex+1,volAndTensors.size());
+            // cout << value << endl;
+            if (demagBib.find(key) != demagBib.end())
+            {   
+                cout << "Ta no hash "<< endl;
+                // volume = volumeBib[key];
+            }else{
+                double **retValues = (double **)malloc(3 * sizeof(double *));
+                for (int i = 0; i < 3; i++)
+                    retValues[i] = (double *)malloc(3 * sizeof(double));
+                    
+                vector<double> values;
+                int commaIndex = tensors.find(",");
+                int begin = 0;
+                string novo = tensors;
+                while(commaIndex > 0){
+                    // cout << "VLW" << endl;
+                    // cout << novo << endl;
+                    // cout << novo.substr(begin, commaIndex) << endl;
+                    values.push_back(std::stod(novo.substr(begin, commaIndex)));
+                    novo = novo.substr(commaIndex + 1, novo.size());
+                    // cout << novo << endl;
+                    commaIndex = novo.find(",");
+                    // cout << commaIndex << endl;
+                }
+                
+                for (int i = 0; i < 3; i++)
+                {
+                    for (int y = 0; y < 3; y++)
+                    {
+                        retValues[i][y] = values[i * 3 + y];
+                    }
+                    
+                }
+                
+                volumeBib[key] = vol;
+                demagBib[key] = retValues;
+            }
+        }
+    }else{
+        throw "Unable to open the demag file!";
+    }
+
+
+    // if (dipolarContent.is_open()){
+    //     string line;
+    //     while(getline(dipolarContent, line)){
+    //        int colonIndex = line.find(":");
+    //        string key = line.substr(0,colonIndex);
+    //         // cout << key << endl;
+    //         string value = line.substr(colonIndex+1,line.size());
+    //         // cout << value << endl;
+    //         if (dipBib.find(key) != dipBib.end())
+    //         {   
+    //             cout << "Ta no hash "<< endl;
+    //             // volume = volumeBib[key];
+    //         }else{
+    //             cout << "Não está no hash" << endl;
+    //             vector<double> values;
+    //             int commaIndex = value.find(",");
+    //             int begin = 0;
+    //             string novo = value;
+    //             while(commaIndex > 0){
+    //                 // cout << "VLW" << endl;
+    //                 // cout << novo << endl;
+    //                 // cout << novo.substr(begin, commaIndex) << endl;
+    //                 values.push_back(std::stod(novo.substr(begin, commaIndex)));
+    //                 novo = novo.substr(commaIndex + 1, novo.size());
+    //                 // cout << novo << endl;
+    //                 commaIndex = novo.find(",");
+    //                 // cout << commaIndex << endl;
+    //             }
+                
+    //             double *tensor;
+    //             tensor = (double *)malloc(9 * sizeof(double));
+    //             for (int i = 0; i < 9; i++)
+    //             {
+    //                 tensor[i] = values[i];
+                    
+    //             }
+                
+
+    //             dipBib[key] = tensor;
+    //         }
+    //     }
+    // }else{
+    //     throw "Unable to open the dipolar file!";
+    // }
+    
+    demagContent.close();
+    // dipolarContent.close();
 }

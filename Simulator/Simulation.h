@@ -35,11 +35,16 @@ private:
 	vector<string> splitString(string str, char separator);
 
 public:
+	static ofstream demagLog, dipolarLog;
+	static map<string, double *> dipBib;
+	static map<string, double **> demagBib;
+	static map<string, double> volumeBib;
+
 	Simulation(string filePath, string outFilePath);
 	Simulation(string singlePath);
 	string getFileName(string initial);
 	void simulate();
-
+	static void verifyTensorsMap();
 };
 
 #endif

@@ -50,9 +50,13 @@ int getPhysicalValue(){ //Note: this value is in KB!
 
 int main(int argc, char const *argv[]) {
 	Simulation * simulation;
+    // Simulation::demagLog.open("Files/DemagTensors.log", ios::app);
+    Simulation::dipBib.clear();
+	Simulation::demagBib.clear();
+	Simulation::volumeBib.clear();
 
     auto begin = chrono::high_resolution_clock::now();    
-    LLGMagnetMagnetization::verifyTensorsMap();
+    Simulation::verifyTensorsMap();
     auto end = chrono::high_resolution_clock::now();    
     auto dur = end - begin;
     auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
@@ -61,10 +65,13 @@ int main(int argc, char const *argv[]) {
     if(string(argv[2]) == "SingleFileMode")
         simulation = new Simulation(argv[1]);
     else
+        // cout << "Vai simular com 2 argumentos!" << endl;
     	simulation = new Simulation(argv[1], argv[2]);
+    
 
 	simulation->simulate();
 
+    // Simulation::demagLog.close();
 	cout << "Memory Used: " << getPhysicalValue() + getVirtualValue() << " KB" << endl;
 	return 0;
 }
