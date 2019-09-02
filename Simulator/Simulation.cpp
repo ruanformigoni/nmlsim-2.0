@@ -7,24 +7,23 @@ Simulation::Simulation(string filePath, string outFilePath){
 	this->simulationDuration = stod(fReader->getProperty(CIRCUIT, "simTime"));
 	this->mySimType = fReader->getEngine();
 	this->mySimMode = fReader->getSimMode();
-	this->outFile.open(outFilePath);
+	this->outFile.open(outFilePath.c_str());
 	buildClkCtrl();
-	// cout << "It's going to build circuit" << endl;
-	buildCircuit(outFilePath);
+	buildCircuit();
 }
 
 Simulation::Simulation(string singlePath){
-	singlePath = splitString(singlePath, '.')[0];
+	singlePath = singlePath.substr(0,singlePath.length()-4);
 	this->fReader = new FileReader(singlePath + ".xml");
 	this->currentTime = 0.0;
 	this->deltaTime = stod(fReader->getProperty(CIRCUIT, "timeStep"));
 	this->simulationDuration = stod(fReader->getProperty(CIRCUIT, "simTime"));
 	this->mySimType = fReader->getEngine();
 	this->mySimMode = fReader->getSimMode();
-	this->outFile.open(getFileName(singlePath));
+	this->outFile.open(getFileName(singlePath).c_str());
 	
 	buildClkCtrl();
-	buildCircuit(singlePath);
+	buildCircuit();
 }
 
 string Simulation::getFileName(string initial){
@@ -249,10 +248,10 @@ vector<string> Simulation::splitString(string str, char separator){
 	return parts;
 }
 
-void Simulation::buildCircuit(string filePath){
+void Simulation::buildCircuit(){
 	buildMagnets();
 	// cout << "It's going to build neighbors" << endl;
-	buildNeighbors(filePath);
+	buildNeighbors();
 }
 
 void Simulation::buildMagnets(){
@@ -296,7 +295,7 @@ void Simulation::buildMagnets(){
 	}
 }
 
-void Simulation::buildNeighbors(string filePath){
+void Simulation::buildNeighbors(){
 	// int pos = filePath.find(".csv");
 	// cout << pos << endl;
 	// static string prefixFilePath = filePath.substr(0, pos);
@@ -378,9 +377,8 @@ void Simulation::buildNeighbors(string filePath){
 }
 
 void Simulation::verifyTensorsMap(){
-    ifstream demagContent;
-    demagContent.open("Files/DemagTensors.log");
-    
+    ifstream demagContent("Files/DemagTensors.log");
+
     ifstream dipolarContent;
     // dipolarContent.open("Files/DipolarTensors.log");
     // cout << "Abriu os arquivos" << endl;
@@ -393,7 +391,7 @@ void Simulation::verifyTensorsMap(){
             // cout << key << endl;
             string volAndTensors = line.substr(colonIndex+1,line.size());
            colonIndex = volAndTensors.find(":");
-            double vol = std::stod(volAndTensors.substr(0,colonIndex));
+            double vol = stod(volAndTensors.substr(0,colonIndex));
             string tensors = volAndTensors.substr(colonIndex+1,volAndTensors.size());
             // cout << value << endl;
             if (demagBib.find(key) != demagBib.end())
@@ -413,7 +411,7 @@ void Simulation::verifyTensorsMap(){
                     // cout << "VLW" << endl;
                     // cout << novo << endl;
                     // cout << novo.substr(begin, commaIndex) << endl;
-                    values.push_back(std::stod(novo.substr(begin, commaIndex)));
+                    values.push_back(stod(novo.substr(begin, commaIndex)));
                     novo = novo.substr(commaIndex + 1, novo.size());
                     // cout << novo << endl;
                     commaIndex = novo.find(",");

@@ -25,9 +25,9 @@ private:
 	ofstream outFile;
 
 	void buildClkCtrl();
-	void buildCircuit(string filePath);
+	void buildCircuit();
 	void buildMagnets();
-	void buildNeighbors(string filePath);
+	void buildNeighbors();
 	void verboseSimulation(double reportDeltaTime);
 	void exaustiveSimulation();
 	void directSimulation();
