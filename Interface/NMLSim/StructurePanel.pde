@@ -6,7 +6,7 @@ class StructurePanel{
     Scrollbar scroll;
     int selectedStructure, randomName;
     color panelColor, textColor;
-    Button editButton, saveTemplateButton, saveButton;
+    Button editButton, saveTemplateButton, saveButton, importStructures;
     boolean isEditing;
     SubstrateGrid substrateGrid;
     
@@ -31,8 +31,10 @@ class StructurePanel{
         saveButton = new Button("Save", "Disables the structure editing, saving all changes", sprites.smallSaveIconWhite, x+w-30, y+h-20);
         saveButton.isValid = false;
         saveButton.explanationOnRight = false;
-        saveTemplateButton = new Button("Save Template", "Saves the selected magnets as a new structure", sprites.smallSaveTemplateIconWhite, x+w-60, y+h-20);
+        saveTemplateButton = new Button("Save Template", "Saves the selected magnets as a new structure", sprites.smallSaveTemplateIconWhite, x+w-55, y+h-20);
         saveTemplateButton.explanationOnRight = false;
+        importStructures = new Button("Import Structures", "Import the structures from the selected file", sprites.smallOpenIconWhite, x+w-80, y+h-20);
+        importStructures.explanationOnRight = false;
     }
     
     void addStructure(String label, String structure){
@@ -96,6 +98,8 @@ class StructurePanel{
             }
         }
         saveTemplateButton.drawSelf();
+        importStructures.drawSelf();
+        importStructures.onMouseOverMethod();
         saveTemplateButton.onMouseOverMethod();
         if(isEditing){
             saveButton.drawSelf();
@@ -113,6 +117,11 @@ class StructurePanel{
     }
     
     void loadStructures(ArrayList<String> structures){
+        reset();
+        importStructures(structures);
+    }    
+    
+    void importStructures(ArrayList<String> structures){
         for(String structure : structures){
             String name = structure.substring(0, structure.indexOf(";"));
             structure = structure.substring(structure.indexOf(";")+1, structure.length());
@@ -162,6 +171,12 @@ class StructurePanel{
     
     void mousePressedMethod(){
         scroll.mousePressedMethod();
+        if(importStructures.mousePressedMethod()){
+            importStructures.deactivate();
+            File start = new File(sketchPath(""));
+            selectFolder("Select a folder to import the project's structures", "importStructures", start);
+            return;
+        }
         if(saveTemplateButton.mousePressedMethod()){
             saveTemplateButton.deactivate();
             if(!substrateGrid.getSelectedStructure().equals("")){

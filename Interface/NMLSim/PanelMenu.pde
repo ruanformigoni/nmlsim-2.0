@@ -69,6 +69,10 @@ class PanelMenu{
     void loadStructures(ArrayList<String> structures){
         structurePanel.loadStructures(structures);
     }
+
+    void importStructureFile(ArrayList<String> structures){
+        structurePanel.importStructures(structures);
+    }
     
     ArrayList<String> getStructures(){
         structurePanel.loadStructures(structurePanel.getStructures());

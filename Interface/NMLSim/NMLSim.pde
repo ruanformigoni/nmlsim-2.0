@@ -94,6 +94,14 @@ void openProject(File selectedPath){
     fileSys.readConfigFile();
 }
 
+void importStructures(File selectedPath){
+    Path p = Paths.get(selectedPath.getAbsolutePath() + "/structures.str");
+    if(!Files.exists(p)){
+        return;
+    }
+    fileSys.importStructureFile(selectedPath.getAbsolutePath() + "/structures.str");
+}
+
 void exportXML(File selectedPath){
     if(selectedPath == null)
         return;

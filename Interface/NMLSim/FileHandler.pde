@@ -41,6 +41,20 @@ public class FileHandler{
         } catch(Exception e){}
     }
     
+    void importStructureFile(String path){
+        ArrayList<String> structures = new ArrayList<String>();
+        structureFileIn = createReader(path);
+        try{
+            String line = structureFileIn.readLine();
+            while(line != null && !line.equals("")){
+                structures.add(line);
+                line = structureFileIn.readLine();
+            }
+            panelMenu.importStructureFile(structures);
+            structureFileIn.close();
+        } catch(Exception e){}
+    }
+    
     void readConfigFile(){
         structureFileIn = createReader(fileBaseName + "/configurations.nmls");
         try{
