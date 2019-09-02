@@ -382,7 +382,7 @@ void Simulation::verifyTensorsMap(){
     demagContent.open("Files/DemagTensors.log");
     
     ifstream dipolarContent;
-    dipolarContent.open("Files/DipolarTensors.log");
+    // dipolarContent.open("Files/DipolarTensors.log");
     // cout << "Abriu os arquivos" << endl;
     
     if (demagContent.is_open()){
