@@ -31,6 +31,7 @@ public:
 	double * getPy();
 	double getThickness();
 	double getVolume();
+	double ** computeBestTensor(double **tensors[10], int repetitions, int size);
 };
 
 #endif

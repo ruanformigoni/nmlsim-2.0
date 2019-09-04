@@ -25,9 +25,9 @@ private:
 	ofstream outFile;
 
 	void buildClkCtrl();
-	void buildCircuit(string filePath);
+	void buildCircuit();
 	void buildMagnets();
-	void buildNeighbors(string filePath);
+	void buildNeighbors();
 	void verboseSimulation(double reportDeltaTime);
 	void exaustiveSimulation();
 	void directSimulation();
@@ -35,7 +35,7 @@ private:
 	vector<string> splitString(string str, char separator);
 
 public:
-	static ofstream demagLog, dipolarLog;
+	static ofstream demagLog;
 	static map<string, double *> dipBib;
 	static map<string, double **> demagBib;
 	static map<string, double> volumeBib;
@@ -44,7 +44,7 @@ public:
 	Simulation(string singlePath);
 	string getFileName(string initial);
 	void simulate();
-	static void verifyTensorsMap();
+	static void verifyTensorsMap(string logPath);
 };
 
 #endif

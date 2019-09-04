@@ -1,0 +1,260 @@
+<!-- ALL measures of time are in nanoseconds and ALL metric measures are in nanometers -->
+<!-- This is the main circuit properties, such as technology, engine and others -->
+<!-- Each engine had different properties to be setted in this field -->
+<circuit>
+	<!-- There are 2 engines: LLG and Behaviour. There is only iNML technology for now -->
+	<property technology="iNML" engine="LLG"/>
+	<!-- There are two possible different methods for the LLG engine, the RK4 and the RKW2 - Runge Kutta 4th order and Runge Kutta Weak 2nd order -->
+	<!-- Be mindfull that the RK4 method disconsiders the temperature -->
+	<property method="RK4"/>
+	<!-- There are 4 simulationMode: exaustive, direct, repetitive and verbose -->
+	<property simulationMode="verbose"/>
+	<!-- The number of simulations to be done in the repetitive mode -->
+	<property repetitions="100"/>
+	<!-- The report time step. Starting at time 0, the program reports at each reportStep. Only used in verbose mode -->
+	<property reportStep="0.1"/>
+	<!-- Gilbert damping factor -->
+	<property alpha="0.05"/>
+	<!-- Saturation Magnetization in A/m -->
+	<property Ms="800000"/>
+	<!-- Temperature in K. Be mindfull that the RK-Weak order 2.0 (RKW2) is used for T > 0 and the RK of fourth order (RK4) for T == 0 -->
+	<property temperature="300"/>
+	<!-- Discretization of time in nanoseconds. It's highly recommended using very low timeStep -->
+	<property timeStep="0.0001"/>
+	<!-- Simulation Duration in nanoseconds -->
+	<property simTime="30"/>
+	<!-- Properties for the heavy material for spin hall effect -->
+	<property spinAngle="0.4"/>
+	<property spinDifusionLenght="3.5"/>
+	<!-- Thickness in nanometers -->
+	<property heavyMaterialThickness="5"/>
+	<!-- Radius of the considered neighborhood. We recomend using values of 300 for more efficciency. -->
+	<property neighborhoodRatio="300"/>
+</circuit>
+
+<!-- This is the clock phases properties -->
+<clockPhase>
+	<!-- Each clock phase must be an item -->
+	<!-- Each clock phase must have a different name, which can be whatever name -->
+	<!-- The format for RKW2 uses a clock signal with 6 values. The 3 first are external field (x,y,z) and the 3 last are current field (x,y,z) -->
+	<!-- Users can use both an external field and a current field with LLG. In order to not use one of them, just leave its fields as 0 -->
+	<!-- The format for the Behaviour engine uses only one value for clock signal. The value corresponds to a field applied on x direction -->
+	<!-- The value for signal in the Behaviour engine needs to be in the [0,1] interval, where 0 represents no clock and 1 represents 100% force -->
+	<!-- Phases can have different durations, but be mindfull of their sincronization -->
+	<item name="reset">
+		<property initialSignal="0,0,0,0,0,0,"/>
+		<property endSignal="200,0,0,0,0,0,"/>
+		<property duration="5"/>
+	</item>
+	<item name="relax">
+		<property initialSignal="200,0,0,0,0,0,"/>
+		<property endSignal="200,0,0,0,0,0,"/>
+		<property duration="5"/>
+	</item>
+	<item name="switch">
+		<property initialSignal="200,0,0,0,0,0,"/>
+		<property endSignal="0,0,0,0,0,0,"/>
+		<property duration="5"/>
+	</item>
+	<item name="hold">
+		<property initialSignal="0,0,0,0,0,0,"/>
+		<property endSignal="0,0,0,0,0,0,"/>
+		<property duration="5"/>
+	</item>
+	<item name="hold2">
+		<property initialSignal="0,0,0,0,0,0,"/>
+		<property endSignal="0,0,0,0,0,0,"/>
+		<property duration="5"/>
+	</item>
+	<item name="hold3">
+		<property initialSignal="0,0,0,0,0,0,"/>
+		<property endSignal="0,0,0,0,0,0,"/>
+		<property duration="5"/>
+	</item>
+</clockPhase>
+
+<!-- This is the clock zone properties -->
+<clockZone>
+	<!-- Each clock zone must be an item -->
+	<!-- Each clock zone must have an integer numerical name, starting in 0 and following growing sequence (0,1,2,3,etc) -->
+	<!-- All phases that a zone percieve must be listed -->
+	<!-- The order of the phases matter a lot, since the zone will start with the first phase and follow the order from top to bottom -->
+	<!-- The order of the phases are ciclycal, which means the first phase start again after the end of the last one -->
+	<item name="0">
+		<property phase="reset">
+		<property phase="relax">
+		<property phase="switch">
+		<property phase="hold">
+	</item>
+	<item name="1">
+		<property phase="hold">
+		<property phase="reset">
+		<property phase="relax">
+		<property phase="switch">
+	</item>
+	<item name="2">
+		<property phase="switch">
+		<property phase="hold">
+		<property phase="reset">
+		<property phase="relax">
+	</item>
+	<item name="3">
+		<property phase="reset">
+		<property phase="relax">
+		<property phase="switch">
+		<property phase="hold">
+		<property phase="hold2">
+		<property phase="hold3">
+	</item>
+</clockZone>
+<!-- This is the components properties -->
+<components>
+	<!-- List here all different geometries of magnets in the circuit -->	<!-- This part also is used to determine if a magnet is fixed or not -->
+	<!-- Each different geometry must be an item -->
+	<!-- Each geometry must have a unique name, which can be whatever -->
+	<item name="component_0">
+		<property width="50"/>
+		<property height="150"/>
+		<property thickness="15"/>
+		<property topCut="0"/>
+		<property bottomCut="0"/>
+	</item>
+	<item name="component_1">
+		<property width="50"/>
+		<property height="125"/>
+		<property thickness="15"/>
+		<property topCut="0"/>
+		<property bottomCut="0"/>
+	</item>
+	<item name="component_2">
+		<property width="50"/>
+		<property height="100"/>
+		<property thickness="15"/>
+		<property topCut="0"/>
+		<property bottomCut="0"/>
+	</item>
+	<item name="component_3">
+		<property width="50"/>
+		<property height="150"/>
+		<property thickness="15"/>
+		<property topCut="-35"/>
+		<property bottomCut="-35"/>
+	</item>
+	<item name="component_4">
+		<property width="50"/>
+		<property height="150"/>
+		<property thickness="15"/>
+		<property topCut="25"/>
+		<property bottomCut="25"/>
+	</item>
+</components>
+<!-- This is the design properties -->
+<design>
+	<!-- List here all magnets of the circuit. Note that the geometry section does not insert any magnet in the circuit! -->
+	<!-- Each magnet must be an item -->
+	<!-- Each magnet must have a unique name, which can be whatever -->
+	<item name="Magnet_72_0">
+		<property component="component_0"/>
+		<property myType="input"/>
+		<property fixedMagnetization="true"/>
+		<property position="985.0,778.0"/>
+		<property clockZone="0"/>
+		<property magnetization="0.141,0.99,0"/>
+	</item>
+	<item name="Magnet_72_10">
+		<property component="component_0"/>
+		<property myType="regular"/>
+		<property fixedMagnetization="false"/>
+		<property position="1225.0,430.0"/>
+		<property clockZone="2"/>
+		<property magnetization="0.99,0.141,0"/>
+	</item>
+	<item name="Magnet_72_11">
+		<property component="component_1"/>
+		<property myType="regular"/>
+		<property fixedMagnetization="false"/>
+		<property position="1285.0,430.0"/>
+		<property clockZone="2"/>
+		<property magnetization="0.99,0.141,0"/>
+	</item>
+	<item name="Magnet_72_12">
+		<property component="component_2"/>
+		<property myType="regular"/>
+		<property fixedMagnetization="false"/>
+		<property position="1345.0,430.0"/>
+		<property clockZone="2"/>
+		<property magnetization="0.99,0.141,0"/>
+	</item>
+	<item name="Magnet_72_1">
+		<property component="component_3"/>
+		<property myType="regular"/>
+		<property fixedMagnetization="false"/>
+		<property position="985.0,604.0"/>
+		<property clockZone="0"/>
+		<property magnetization="0.99,0.141,0"/>
+	</item>
+	<item name="Magnet_72_2">
+		<property component="component_4"/>
+		<property myType="regular"/>
+		<property fixedMagnetization="false"/>
+		<property position="985.0,430.0"/>
+		<property clockZone="0"/>
+		<property magnetization="0.99,0.141,0"/>
+	</item>
+	<item name="Magnet_72_3">
+		<property component="component_2"/>
+		<property myType="regular"/>
+		<property fixedMagnetization="false"/>
+		<property position="925.0,430.0"/>
+		<property clockZone="0"/>
+		<property magnetization="0.99,0.141,0"/>
+	</item>
+	<item name="Magnet_72_4">
+		<property component="component_0"/>
+		<property myType="input"/>
+		<property fixedMagnetization="true"/>
+		<property position="865.0,430.0"/>
+		<property clockZone="0"/>
+		<property magnetization="0.141,0.99,0"/>
+	</item>
+	<item name="Magnet_72_5">
+		<property component="component_3"/>
+		<property myType="regular"/>
+		<property fixedMagnetization="false"/>
+		<property position="985.0,256.0"/>
+		<property clockZone="0"/>
+		<property magnetization="0.99,0.141,0"/>
+	</item>
+	<item name="Magnet_72_6">
+		<property component="component_0"/>
+		<property myType="input"/>
+		<property fixedMagnetization="true"/>
+		<property position="985.0,82.0"/>
+		<property clockZone="0"/>
+		<property magnetization="0.141,-0.99,0"/>
+	</item>
+	<item name="Magnet_72_7">
+		<property component="component_3"/>
+		<property myType="regular"/>
+		<property fixedMagnetization="false"/>
+		<property position="1045.0,430.0"/>
+		<property clockZone="1"/>
+		<property magnetization="0.99,0.141,0"/>
+	</item>
+	<item name="Magnet_72_8">
+		<property component="component_1"/>
+		<property myType="regular"/>
+		<property fixedMagnetization="false"/>
+		<property position="1105.0,430.0"/>
+		<property clockZone="1"/>
+		<property magnetization="0.99,0.141,0"/>
+	</item>
+	<item name="Magnet_72_9">
+		<property component="component_2"/>
+		<property myType="regular"/>
+		<property fixedMagnetization="false"/>
+		<property position="1165.0,430.0"/>
+		<property clockZone="1"/>
+		<property magnetization="0.99,0.141,0"/>
+	</item>
+</design>

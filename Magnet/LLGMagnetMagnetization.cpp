@@ -49,7 +49,6 @@ map<string, double **> Simulation::demagBib;
 map<string, double> Simulation::volumeBib;
 
 ofstream Simulation::demagLog;
-ofstream Simulation::dipolarLog;
 
 LLGMagnetMagnetization::LLGMagnetMagnetization(double *px, double *py, double thickness)
 {
@@ -210,12 +209,65 @@ double *LLGMagnetMagnetization::demag(double *py)
     return abc_out;
 }
 
+bool sortbysec(const pair<int,int> &a, 
+              const pair<int,int> &b) 
+{ 
+    return (a.second < b.second); 
+}
+
+double **LLGMagnetMagnetization::computeBestTensor(double **tensors[10], int repetitions, int size){
+    vector<pair<int, double>> x0;
+    vector<pair<int, double>> x1;
+    vector<pair<int, double>> y0;
+    vector<pair<int, double>> y1;
+    vector<pair<int, double>> z2;
+    // cout << "Compute Best Tensor\n" << endl;
+    pair<int, double> t;
+    for(int i=0; i < repetitions; i++){
+        // cout << "Tensor " << i << " =>\n" << endl;
+        for(int y=0; y < (size/3); y++)
+            for(int z=0; z < (size/3); z++){
+                t = make_pair(i,tensors[i][y][z]);
+                if(y == 0 && z == 0)
+                    x0.push_back(t);
+                if(y == 0 && z == 1)
+                    x1.push_back(t);
+                if(y == 1 && z == 0)
+                    y0.push_back(t);
+                if(y == 1 && z == 1)
+                    y1.push_back(t);
+                if(y == 2 && z == 2)
+                    z2.push_back(t);
+                // cout << "tensors[" << i << "][" << y << "][" << z << "] = " << tensors[i][y][z] << endl;
+            }
+    }
+    sort(x0.begin(), x0.end(), sortbysec);
+    sort(x1.begin(), x1.end(), sortbysec);
+    sort(y0.begin(), y0.end(), sortbysec);
+    sort(y1.begin(), y1.end(), sortbysec);
+    sort(z2.begin(), z2.end(), sortbysec);
+
+    // for(int i = 0; i < x0.size(); i++)
+    //     cout << "X0[" << i << "] = " << x0[i].first << " - " << x0[i].second << endl;
+    int ind = x0[(repetitions/2)-1].first;
+    double s = x0[(repetitions/2)-1].second;
+
+    // cout << "\nFIRST => " << ind << " - " << s << endl;
+
+    return tensors[ind];
+}
 
 double **LLGMagnetMagnetization::computeDemag()
 {
     string key;
     int repetitions = 10;
-    double tensors[repetitions][9];
+    // double tensors[repetitions][9];
+    double **tensors[repetitions];
+    for(int y = 0; y < repetitions; y++){
+        tensors[y] = (double **) malloc(3 * sizeof(double *));
+        for(int i = 0; i < 3; i++)
+            tensors[y][i] = (double *)malloc(3 * sizeof(double));
+    }
 
     for (int i = 0; i < 4; i++)
         key += "x" + to_string(px[i]) + "y" + to_string(py[i]);
@@ -226,14 +278,16 @@ double **LLGMagnetMagnetization::computeDemag()
 
     if (Simulation::demagBib.find(key) != Simulation::demagBib.end())
     {
-        // cout << "Achou no hash" << endl;
+        cout << "Achou no hash" << endl;
         // cout << "Volume Bib => " << Simulation::volumeBib[key] << endl;
-        for (int i =0; i < 3; i++)
-            for (int y =0; y < 3; y++)
+        // for (int i =0; i < 3; i++)
+            // for (int y =0; y < 3; y++)
             // cout << "Demag Bib => " << Simulation::demagBib[key][i][y] << endl;
         this->volume = Simulation::volumeBib[key];
         return Simulation::demagBib[key];
     }
+
+    // cout << "Passou" << endl;
 
     double *ptr, vol;
     double alfa2, beta2, alfa5, beta5, d[9];
@@ -263,32 +317,20 @@ double **LLGMagnetMagnetization::computeDemag()
     for (int i = 0; i < repetitions; i++)
     {
         ptr = demag(py);
+        tensors[i][0][0] = ptr[0] + alfa2 * ptr[1] - ptr[3] + alfa5 * ptr[4];
+        tensors[i][0][1] = beta2 * ptr[1] + beta5 * ptr[4];
+        tensors[i][0][2] = 0;
 
-        tensors[i][0] = ptr[0] + alfa2 * ptr[1] - ptr[3] + alfa5 * ptr[4];
-        tensors[i][1] = beta2 * ptr[1] + beta5 * ptr[4];
-        tensors[i][2] = 0;
+        tensors[i][1][0] = ptr[6] + alfa2 * ptr[7] - ptr[9] + alfa5 * ptr[10];
+        tensors[i][1][1] = beta2 * ptr[7] + beta5 * ptr[10];
+        tensors[i][1][2] = 0;
 
-        tensors[i][3] = ptr[6] + alfa2 * ptr[7] - ptr[9] + alfa5 * ptr[10];
-        tensors[i][4] = beta2 * ptr[7] + beta5 * ptr[10];
-        tensors[i][5] = 0;
-
-        tensors[i][6] = 0;
-        tensors[i][7] = 0;
-        tensors[i][8] = ptr[14] - ptr[17];
+        tensors[i][2][0] = 0;
+        tensors[i][2][1] = 0;
+        tensors[i][2][2] = ptr[14] - ptr[17];
     }
 
-    for (int i = 0; i < repetitions; i++)
-    {
-        for (int y = 0; y < 9; y++)
-        {
-            d[y] += tensors[i][y];
-        }
-    }
-
-    for (int y = 0; y < 9; y++)
-    {
-        d[y] = d[y]/repetitions;
-    }
+    double **tensorSelected = this->computeBestTensor(tensors, repetitions, 9);
 
     this->volume = 0.5 * (py[0] - py[3] + py[1] - py[2]) * w * t;
     // cout << "DEMAG ##################" << endl;
@@ -297,11 +339,13 @@ double **LLGMagnetMagnetization::computeDemag()
         for (int j = 0; j < 3; j++){
             // cout << "D => " << d[i * 3 + j] << endl;
             // cout << "V => " << (4.0 * PI * this->volume) << endl;
-            returnValue[i][j] = d[i * 3 + j] / (4.0 * PI * this->volume);
+            // returnValue[i][j] = d[i * 3 + j] / (4.0 * PI * this->volume);
+            // cout << "TensorsSelected[" << i << "][" << j << "] = " << tensorSelected[i][j] << endl;
+            returnValue[i][j] = tensorSelected[i][j] / (4.0 * PI * this->volume);
             // cout << "Return Value => " << returnValue[i][j] << endl;
         }
 
-    Simulation::demagLog.open("Files/DemagTensors.log", ios::app);
+    // Simulation::demagLog.open("Files/DemagTensors.log", ios::app);
     // cout << "Vai salvar no arquivo " << key << ":" << this->volume << ":" << endl;
     Simulation::demagLog << key << ":" << this->volume << ":";
 
@@ -311,7 +355,7 @@ double **LLGMagnetMagnetization::computeDemag()
 		}
     
     Simulation::demagLog << endl;
-    Simulation::demagLog.close();
+    // Simulation::demagLog.close();
     Simulation::demagBib[key] = returnValue;
     Simulation::volumeBib[key] = this->volume;
     return returnValue;
@@ -352,6 +396,7 @@ extern "C"
         double *ddo_k,
         double *pc);
 }
+
 
 double *LLGMagnetMagnetization::computeDipolar(double *p2x, double *p2y, double thickness, double verticalDistance, double horizontalDistance)
 {
