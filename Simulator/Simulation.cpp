@@ -39,7 +39,7 @@ string Simulation::getFileName(string initial){
 
 void Simulation::verboseSimulation(double reportDeltaTime){
 	double auxTimer = 0.0;
-	cout << "Starting \n";
+	cout << "Starting verbose simulation...\n";
 	outFile << "Time,";
 	this->circuit->makeHeader(&outFile);
 	outFile << endl;
@@ -141,6 +141,7 @@ void Simulation::simulate(){
 }
 
 void Simulation::buildClkCtrl(){
+	cout << "Starting building clock controller...\n";
 	switch(this->mySimType){
 		case THIAGO:{
 			//Variables for creating zones and phases
@@ -232,6 +233,7 @@ void Simulation::buildClkCtrl(){
 		}
 		break;
 	}
+	cout << "Finished building clock controller!\n";
 }
 
 vector<string> Simulation::splitString(string str, char separator){
@@ -249,9 +251,11 @@ vector<string> Simulation::splitString(string str, char separator){
 }
 
 void Simulation::buildCircuit(){
+	cout << "Computing the demag tensors...\n";
 	buildMagnets();
-	// cout << "It's going to build neighbors" << endl;
+	cout << "Demag tensors done!\nComputing dipolar tensors...\n";
 	buildNeighbors();
+	cout << "Dipolar tensors done!\n";
 }
 
 void Simulation::buildMagnets(){

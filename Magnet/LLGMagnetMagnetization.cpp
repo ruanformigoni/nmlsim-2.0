@@ -278,7 +278,7 @@ double **LLGMagnetMagnetization::computeDemag()
 
     if (Simulation::demagBib.find(key) != Simulation::demagBib.end())
     {
-        cout << "Achou no hash" << endl;
+        // cout << "Achou no hash" << endl;
         // cout << "Volume Bib => " << Simulation::volumeBib[key] << endl;
         // for (int i =0; i < 3; i++)
             // for (int y =0; y < 3; y++)

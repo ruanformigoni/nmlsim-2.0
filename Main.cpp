@@ -7,80 +7,82 @@
 #include "string.h"
 #include <chrono>
 
-int parseLine(char *line)
-{
-    // This assumes that a digit will be found and the line ends in " Kb".
-    int i = strlen(line);
-    const char *p = line;
-    while (*p < '0' || *p > '9')
-        p++;
-    line[i - 3] = '\0';
-    i = atoi(p);
-    return i;
+int parseLine(char *line){
+	// This assumes that a digit will be found and the line ends in " Kb".
+	int i = strlen(line);
+	const char *p = line;
+	while (*p < '0' || *p > '9')
+		p++;
+	line[i - 3] = '\0';
+	i = atoi(p);
+	return i;
 }
 
-int getVirtualValue()
-{ //Note: this value is in KB!
-    FILE *file = fopen("/proc/self/status", "r");
-    int result = -1;
-    char line[128];
+int getVirtualValue(){ //Note: this value is in KB!
+	FILE *file = fopen("/proc/self/status", "r");
+	int result = -1;
+	char line[128];
 
-    while (fgets(line, 128, file) != NULL)
-    {
-        if (strncmp(line, "VmSize:", 7) == 0)
-        {
-            result = parseLine(line);
-            break;
-        }
-    }
-    fclose(file);
-    return result;
+	while (fgets(line, 128, file) != NULL)
+	{
+		if (strncmp(line, "VmSize:", 7) == 0)
+		{
+			result = parseLine(line);
+			break;
+		}
+	}
+	fclose(file);
+	return result;
 }
 
-int getPhysicalValue()
-{ //Note: this value is in KB!
-    FILE *file = fopen("/proc/self/status", "r");
-    int result = -1;
-    char line[128];
+int getPhysicalValue(){ //Note: this value is in KB!
+	FILE *file = fopen("/proc/self/status", "r");
+	int result = -1;
+	char line[128];
 
-    while (fgets(line, 128, file) != NULL)
-    {
-        if (strncmp(line, "VmRSS:", 6) == 0)
-        {
-            result = parseLine(line);
-            break;
-        }
-    }
-    fclose(file);
-    return result;
+	while (fgets(line, 128, file) != NULL)
+	{
+		if (strncmp(line, "VmRSS:", 6) == 0)
+		{
+			result = parseLine(line);
+			break;
+		}
+	}
+	fclose(file);
+	return result;
 }
 
-int main(int argc, char const *argv[])
-{
-    Simulation *simulation;
-    // Simulation::demagLog.open("Files/DemagTensors.log", ios::app);
-    Simulation::dipBib.clear();
-    Simulation::demagBib.clear();
-    Simulation::volumeBib.clear();
-    auto begin = chrono::high_resolution_clock::now();
-    string logPath = argv[2];
-    logPath = logPath.substr(0, logPath.length() - 4);
-    logPath += ".log";
-    Simulation::verifyTensorsMap(logPath);
-    auto end = chrono::high_resolution_clock::now();
-    auto dur = end - begin;
-    auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
-    cout << "Tensors loading time: " << ms << endl;
+int main(int argc, char const *argv[]){
+	auto begin = chrono::high_resolution_clock::now();
+	Simulation *simulation;
 
-    if (string(argv[2]) == "SingleFileMode")
-        simulation = new Simulation(argv[1]);
-    else
-        // cout << "Vai simular com 2 argumentos!" << endl;
-        simulation = new Simulation(argv[1], argv[2]);
+	Simulation::dipBib.clear();
+	Simulation::demagBib.clear();
+	Simulation::volumeBib.clear();
+	
+	string logPath = argv[2];
+	logPath = logPath.substr(0, logPath.length() - 4);
+	logPath += ".log";
+	Simulation::verifyTensorsMap(logPath);
+	auto end = chrono::high_resolution_clock::now();
+	auto dur = end - begin;
+	auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
+	
+	cout << "Demag tensors loading time: " << ms << " milliseconds" << endl;
 
-    simulation->simulate();
+	if (string(argv[2]) == "SingleFileMode")
+		simulation = new Simulation(argv[1]);
+	else
+		// cout << "Vai simular com 2 argumentos!" << endl;
+		simulation = new Simulation(argv[1], argv[2]);
 
-    Simulation::demagLog.close();
-    cout << "Memory Used: " << getPhysicalValue() + getVirtualValue() << " KB" << endl;
-    return 0;
+	simulation->simulate();
+
+	Simulation::demagLog.close();
+
+	auto simEnd = chrono::high_resolution_clock::now();
+	auto simDur = simEnd - begin;
+	auto simMs = chrono::duration_cast<chrono::milliseconds>(simDur).count();
+	cout << "All done!\nMemory Used: " << getPhysicalValue() + getVirtualValue() << " KB" << endl << "Simulation time: " << simMs << " milliseconds" << endl;
+	return 0;
 }
