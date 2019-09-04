@@ -95,6 +95,8 @@ void openProject(File selectedPath){
 }
 
 void importStructures(File selectedPath){
+    if(selectedPath == null)
+        return;
     Path p = Paths.get(selectedPath.getAbsolutePath() + "/structures.str");
     if(!Files.exists(p)){
         return;
