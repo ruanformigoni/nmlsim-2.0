@@ -356,10 +356,14 @@ class SubstrateGrid{
             cursor(ARROW);
             return;
         }
+        
         if(isMoving && mousePressed == false)
             cursor(HAND);
         else if(isMoving && mousePressed == true)
             cursor(MOVE);
+        else
+            cursor(ARROW);
+            
         if((structurePanel != null && !structurePanel.getSelectedStructure().equals("")) || isPasting){
             float xOrigin = hScroll.getIndex()*cellW, yOrigin = vScroll.getIndex()*cellH;
             String [] magnetsStr;

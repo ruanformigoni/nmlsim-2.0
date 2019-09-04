@@ -47,7 +47,11 @@ void mousePressed(){
 }
 
 void keyPressed(){
+    if(key == ESC) key=0;
+    println(int(key));
+    h.keyPressedMethod();
     pm.keyPressedMethod();
+    sb.keyPressedMethod();
 }
 
 void mouseWheel(MouseEvent e){

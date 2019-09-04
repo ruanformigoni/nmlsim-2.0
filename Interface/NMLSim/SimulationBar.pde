@@ -225,6 +225,94 @@ class SimulationBar{
         exportGif.deactivate();
     }
     
+    void keyPressedMethod(){
+        if(int(key) == 115 && !fileSys.fileBaseName.equals("")){ //Simulate
+            saveProject();
+            try{
+                exec("gnome-terminal", "-e", sketchPath() + "/../../nmlsim " + fileSys.fileBaseName + "/simulation.xml " +  fileSys.fileBaseName + "/simulation.csv");
+            } catch(Exception e){
+                e.printStackTrace();
+            }
+            timelineEnabled = false;
+            timelineRunning = false;
+            isRecording = false;
+            timeline.deactivate();
+            play.deactivate();
+            pause.deactivate();
+            stop.deactivate();
+            if(animationTime > 0){
+                animationTime = 1;
+                backwardSimulation();
+            }
+            simulate.deactivate();
+            exportGif.deactivate();
+        }
+        if(int(key) == 99){ //Chart
+            String call = substrateGrid.getSelectedMagnetsNames();
+            if(!call.equals("")){
+                try{
+                    exec("gnome-terminal", "-e", "python3 " + sketchPath() + "/../../chart.py " + fileSys.fileBaseName + "/simulation.csv " + call);
+                } catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        if(int(key) == 101){ //Export XML
+            File start = new File(sketchPath("")+"/sim.xml");
+            selectOutput("Select a file to export the simulation", "exportXML", start);
+        }
+        if(int(key) == 116 && panelMenu.getSimulationMode().equals("verbose")){ //Activate timeline
+            Path p = Paths.get(fileSys.fileBaseName + "/simulation.csv");
+            if(!Files.exists(p)){
+                timeline.deactivate();
+                return;
+            }
+            if(animationTime > 0){
+                animationTime = 1;
+                backwardSimulation();
+            }
+            loadSimulationResultsFile();
+            timelineEnabled = !timelineEnabled;
+            if(!timelineEnabled){
+                exportGif.deactivate();
+                isRecording = false;
+            }
+            timelineRunning = false;
+            timeline.active = timelineEnabled;
+        }
+        if(int(key) == 114){ //Record Gif
+            isRecording = !isRecording;
+            if(!isRecording){
+                try{
+                    exec("gnome-terminal", "-e", "sh -c \"convert -delay 10 " + fileSys.fileBaseName + "/gif/*.png +repage -loop 0 -strip -coalesce -layers Optimize " + fileSys.fileBaseName + "/simulationAnimation.gif ; " + "rm -rf " + fileSys.fileBaseName + "/gif\"");
+                } catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+            exportGif.active = isRecording;
+        }
+        if(int(key) == 112){ //Play and Pause
+            if(timelineEnabled){
+                timelineRunning = !timelineRunning;
+            }
+        }
+        if(int(key) == 80){ //Stop
+            if(timelineEnabled){
+                timelineRunning = false;
+                animationTime = 1;
+                backwardSimulation();
+            }
+        }
+        if(keyCode == LEFT){ //Backward
+            backwardSimulation();
+            timelineRunning = false;
+        }
+        if(keyCode == RIGHT){ //Forward
+            forwardSimulation();
+            timelineRunning = false;
+        }
+    }
+    
     void mousePressedMethod(){
         if(upSpeed.mousePressedMethod()){
             upSpeed.deactivate();

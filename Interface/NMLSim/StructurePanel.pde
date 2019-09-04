@@ -152,6 +152,24 @@ class StructurePanel{
     }
     
     void keyPressedMethod(){
+        if(int(key) == 20){
+            if(!substrateGrid.getSelectedStructure().equals("")){
+                while(true){
+                    String name = "Structure_" + randomName;
+                    Boolean equal = false;
+                    for(TextButton structure : structuresButtons){
+                        if(structure.getText().equals(name))
+                            equal = true;
+                    }
+                    if(!equal)
+                        break;
+                    else
+                        randomName++;
+                }
+                addStructure("Structure_" + randomName, substrateGrid.getSelectedStructure());
+                randomName++;
+            }
+        }
         if(isEditing){
             for(int i=0; i<structuresButtons.size(); i++){
                 if(structuresButtons.get(i).keyPressedMethod()){

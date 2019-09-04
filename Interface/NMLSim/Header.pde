@@ -123,6 +123,21 @@ class HeaderContainer{
                 buttons.get(i).deactivate();
         }
     }
+    
+    public void activeteButton(String label){
+        for(int i=0; i<buttons.size(); i++){
+            if(buttons.get(i).getLabel().equals(label))
+                buttons.get(i).active = true;
+        }
+    }
+    
+    public boolean isActive(String label){
+        for(int i=0; i<buttons.size(); i++){
+            if(buttons.get(i).getLabel().equals(label))
+                return buttons.get(i).active;
+        }
+        return false;
+    }
 }
 
 class Header{
@@ -147,10 +162,8 @@ class Header{
         file.addButton(new Button("Open", "Opens a NML circuit file", sprites.openIconWhite, 0, 0));
         
         magnet = new HeaderContainer("Magnet", x, y);
-        //magnet.addButton(new Button("Line Add", "Adds a line of magnets", sprites.lineAddWhite, 0, 0));
         magnet.addButton(new Button("Delete", "Delete a magnet or a group of magnets", sprites.deleteIconWhite, 0, 0));
         magnet.addButton(new Button("Edit", "Edit a magnet or a group of magnets", sprites.editIconWhite, 0, 0));
-        //magnet.addButton(new Button("Pin", "Pin a magnet to show animated magnetization", sprites.pinIconWhite, 0, 0));
         magnet.addButton(new Button("Copy", "Copy a magnet or a group of magnets", sprites.copyIconWhite, 0, 0));
         magnet.addButton(new Button("Paste", "Paste copied magnets", sprites.pasteIconWhite, 0, 0));
         magnet.addButton(new Button("Cut", "Cut from grid a magnet or a group of magnets", sprites.cutIconWhite, 0, 0));
@@ -167,11 +180,6 @@ class Header{
         substrate.addButton(new Button("Zoom Out", "Zooms out of the substract", sprites.zoomOutIconWhite, 0, 0));
         substrate.addButton(new Button("Light", "Toggles the light scheme on the substract", sprites.lightIconWhite, 0, 0));
         substrate.addButton(new Button("Move", "Enables cursor to move the substract", sprites.moveIconWhite, 0, 0));
-
-/*        others = new HeaderContainer("Others", x, y);
-        others.isExpanded = true;
-        others.addButton(new Button("Undo", "Undo last action", sprites.undoIconWhite, 0, 0));
-        others.addButton(new Button("Redo", "Redo last undone action", sprites.redoIconWhite, 0, 0));*/
     }
     
     public void drawSelf(){
@@ -252,27 +260,10 @@ class Header{
             stroke(45, 80, 22);
             rect(tempX-10, y, 5, h);
         }
-        //if(others.isExpanded){
-        //    fill(83, 108, 83);
-        //    stroke(83, 108, 83);
-        //    rect(tempX-5, y, 5, h);
-        //} else{
-        //    fill(45, 80, 22);
-        //    stroke(45, 80, 22);
-        //    rect(tempX-5, y, 5, h);
-        //}
-        //others.setPosition(tempX,y);
-        //others.drawSelf();
-        //strokeWeight(4);
-        //fill(255,255,255);
-        //stroke(255,255,255);
-        //line(tempX-5, y+15, tempX-5, y + h - 15);
-        //strokeWeight(1);
         
         file.onMouseOverMethod();
         magnet.onMouseOverMethod();
         substrate.onMouseOverMethod();
-        //others.onMouseOverMethod();
     }
     
     void setPanelMenu(PanelMenu panelMenu){
@@ -286,15 +277,128 @@ class Header{
     float getHeight(){
         return file.getHeight();
     }
+    
+    public boolean keyPressedMethod(){
+        //File
+        if(int(key) == 15){ //Open
+            simulationBar.disableTimeline();
+            File start = new File(sketchPath(""));
+            selectFolder("Select a folder to open the project", "openProject", start);
+            return true;
+        }
+        if(int(key) == 14){ //New
+            simulationBar.disableTimeline();
+            panelMenu.simPanel.reset();
+            panelMenu.phasePanel.reset();
+            panelMenu.zonePanel.reset();
+            substrateGrid.reset();
+            fileSys.setBaseName("");
+        }
+        if(int(key) == 19){ //Save
+            if(fileSys.fileBaseName.equals("")){
+                File start = new File(sketchPath(""));
+                selectFolder("Select a folder to save the project", "saveAs", start);
+            } else{
+                saveProject();
+            }
+            return true;
+        }
         
+        //Magnet
+        if(int(key) == 127){ //Delete
+            substrateGrid.deleteSelectedMagnets();
+            return true;
+        }
+        if(int(key) == 5){ //Edit
+            substrateGrid.isEditingMagnet = true;
+            panelMenu.enableEditing();
+            if(!substrateGrid.isLeftHidden)
+                substrateGrid.toggleHideGrid("left");
+            return true;
+        }
+        if(int(key) == 3){ //Copy
+            substrateGrid.copySelectedMagnetsToClipBoard();
+            return true;
+        }
+        if(int(key) == 22){ //Paste
+            if(substrateGrid.toPasteStructure.equals("")){
+                return true;
+            } else{
+                if(magnet.isActive("Paste"))
+                    magnet.deactiveteButton("Paste");
+                else
+                    magnet.activeteButton("Paste");
+                substrateGrid.togglePasteState();
+            }
+            return true;
+        }
+        if(int(key) == 24){ //Cut
+            substrateGrid.copySelectedMagnetsToClipBoard();
+            substrateGrid.deleteSelectedMagnets();
+            return true;
+        }
+        if(int(key) == 7){ //Group
+            substrateGrid.groupSelectedMagnets();
+            return true;
+        }
+        if(int(key) == 43){ //Zone Up
+            substrateGrid.changeSelectedMagnetsZone(true);
+            return true;
+        }
+        if(int(key) == 45){ // Zone Down
+            substrateGrid.changeSelectedMagnetsZone(false);
+            return true;
+        }
+        if(int(key) == 109){ //Magnetization
+            substrateGrid.changeSelectedMagnetsMagnetization();
+            return true;
+        }
+        if(int(key) == 118){ //Zone view
+            substrateGrid.toggleZoneViewMode();
+            if(magnet.isActive("Zone View"))
+                magnet.deactiveteButton("Zone View");
+            else
+                magnet.activeteButton("Zone View");
+            return true;
+        }
+        
+        //Substrate
+        if(int(key) == 18){ //Ruler
+            substrateGrid.isRulerActive = !substrateGrid.isRulerActive;
+            if(substrateGrid.isRulerActive)
+                substrate.activeteButton("Grid");
+            else
+                substrate.deactiveteButton("Grid");
+        }
+        if(int(key) == 2){ //Bullets
+            substrateGrid.toggleBullet();
+            if(substrate.isActive("Bullet"))
+                substrate.deactiveteButton("Bullet");
+            else
+                substrate.activeteButton("Bullet");
+        }
+        if(int(key) == 12){ //Lights
+            substrateGrid.isLightColor = !substrateGrid.isLightColor;
+            if(!substrateGrid.isLightColor)
+                substrate.activeteButton("Light");
+            else
+                substrate.deactiveteButton("Light");
+        }
+        if(int(key) == 13){ //Move
+            substrateGrid.toggleMoving();
+            if(substrate.isActive("Move"))
+                substrate.deactiveteButton("Move");
+            else
+                substrate.activeteButton("Move");
+        }
+        
+        return false;
+    }
+    
     public boolean mousePressedMethod(){
         String buttonLabel;
         buttonLabel = file.mousePressedMethod();
         if(buttonLabel.equals("HeaderLabel")){
-            if(file.isExpanded){
-                //magnet.setExpanded(false);
-                //substrate.setExpanded(false);
-            }
             return true;
         }
         if(buttonLabel.equals("Save")){
@@ -332,10 +436,6 @@ class Header{
         }
         buttonLabel = magnet.mousePressedMethod();
         if(buttonLabel.equals("HeaderLabel")){
-            if(magnet.isExpanded){
-                //file.setExpanded(false);
-                //substrate.setExpanded(false);
-            }
             return true;
         }
         if(buttonLabel.equals("Delete")){
@@ -377,7 +477,6 @@ class Header{
             panelMenu.enableEditing();
             if(!substrateGrid.isLeftHidden)
                 substrateGrid.toggleHideGrid("left");
-//            substrateGrid.unselectMagnets();
             return true;
         }
         if(buttonLabel.equals("Cut")){
@@ -397,10 +496,6 @@ class Header{
         }
         buttonLabel = substrate.mousePressedMethod();
         if(buttonLabel.equals("HeaderLabel")){
-            if(substrate.isExpanded){
-                //file.setExpanded(false);
-                //magnet.setExpanded(false);
-            }
             return true;
         }
         if(buttonLabel.equals("Grid")){
@@ -429,9 +524,6 @@ class Header{
             substrateGrid.toggleMoving();
             return true;
         }
-        //buttonLabel = others.mousePressedMethod();
-        //if(buttonLabel.equals("HeaderLabel"))
-        //    return true;
         return false;
     }
 }
