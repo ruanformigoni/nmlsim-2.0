@@ -280,13 +280,19 @@ class Header{
     
     public boolean keyPressedMethod(){
         //File
-        if(int(key) == 15){ //Open
+        if(ctrlPressed && int(key) == 15){ //Open
+            int dialogResult = showConfirmDialog (null, "There might be unsaved changes in the current project...\n   Are you sure you want to discard unsaved changes?", "Warning!", YES_NO_OPTION);
+            if(dialogResult != YES_OPTION)
+                return false;
             simulationBar.disableTimeline();
             File start = new File(sketchPath(""));
             selectFolder("Select a folder to open the project", "openProject", start);
             return true;
         }
-        if(int(key) == 14){ //New
+        if(ctrlPressed && int(key) == 14){ //New
+            int dialogResult = showConfirmDialog (null, "There might be unsaved changes in the current project...\n   Are you sure you want to discard unsaved changes?", "Warning!", YES_NO_OPTION);
+            if(dialogResult != YES_OPTION)
+                return false;
             simulationBar.disableTimeline();
             panelMenu.simPanel.reset();
             panelMenu.phasePanel.reset();
@@ -294,7 +300,7 @@ class Header{
             substrateGrid.reset();
             fileSys.setBaseName("");
         }
-        if(int(key) == 19){ //Save
+        if(ctrlPressed && int(key) == 19){ //Save
             if(fileSys.fileBaseName.equals("")){
                 File start = new File(sketchPath(""));
                 selectFolder("Select a folder to save the project", "saveAs", start);
@@ -309,18 +315,18 @@ class Header{
             substrateGrid.deleteSelectedMagnets();
             return true;
         }
-        if(int(key) == 5){ //Edit
+        if(ctrlPressed && int(key) == 5){ //Edit
             substrateGrid.isEditingMagnet = true;
             panelMenu.enableEditing();
             if(!substrateGrid.isLeftHidden)
                 substrateGrid.toggleHideGrid("left");
             return true;
         }
-        if(int(key) == 3){ //Copy
+        if(ctrlPressed && int(key) == 3){ //Copy
             substrateGrid.copySelectedMagnetsToClipBoard();
             return true;
         }
-        if(int(key) == 22){ //Paste
+        if(ctrlPressed && int(key) == 22){ //Paste
             if(substrateGrid.toPasteStructure.equals("")){
                 return true;
             } else{
@@ -332,28 +338,28 @@ class Header{
             }
             return true;
         }
-        if(int(key) == 24){ //Cut
+        if(ctrlPressed && int(key) == 24){ //Cut
             substrateGrid.copySelectedMagnetsToClipBoard();
             substrateGrid.deleteSelectedMagnets();
             return true;
         }
-        if(int(key) == 7){ //Group
+        if(ctrlPressed && int(key) == 7){ //Group
             substrateGrid.groupSelectedMagnets();
             return true;
         }
-        if(int(key) == 43){ //Zone Up
+        if(ctrlPressed && int(key) == 43){ //Zone Up
             substrateGrid.changeSelectedMagnetsZone(true);
             return true;
         }
-        if(int(key) == 45){ // Zone Down
+        if(ctrlPressed && int(key) == 45){ // Zone Down
             substrateGrid.changeSelectedMagnetsZone(false);
             return true;
         }
-        if(int(key) == 109){ //Magnetization
+        if(altPressed && int(key) == 109){ //Magnetization
             substrateGrid.changeSelectedMagnetsMagnetization();
             return true;
         }
-        if(int(key) == 118){ //Zone view
+        if(altPressed && int(key) == 118){ //Zone view
             substrateGrid.toggleZoneViewMode();
             if(magnet.isActive("Zone View"))
                 magnet.deactiveteButton("Zone View");
@@ -363,28 +369,28 @@ class Header{
         }
         
         //Substrate
-        if(int(key) == 18){ //Ruler
+        if(ctrlPressed && int(key) == 18){ //Ruler
             substrateGrid.isRulerActive = !substrateGrid.isRulerActive;
             if(substrateGrid.isRulerActive)
                 substrate.activeteButton("Grid");
             else
                 substrate.deactiveteButton("Grid");
         }
-        if(int(key) == 2){ //Bullets
+        if(ctrlPressed && int(key) == 2){ //Bullets
             substrateGrid.toggleBullet();
             if(substrate.isActive("Bullet"))
                 substrate.deactiveteButton("Bullet");
             else
                 substrate.activeteButton("Bullet");
         }
-        if(int(key) == 12){ //Lights
+        if(ctrlPressed && int(key) == 12){ //Lights
             substrateGrid.isLightColor = !substrateGrid.isLightColor;
             if(!substrateGrid.isLightColor)
                 substrate.activeteButton("Light");
             else
                 substrate.deactiveteButton("Light");
         }
-        if(int(key) == 13){ //Move
+        if(ctrlPressed && int(key) == 13){ //Move
             substrateGrid.toggleMoving();
             if(substrate.isActive("Move"))
                 substrate.deactiveteButton("Move");
@@ -418,6 +424,9 @@ class Header{
             return true;
         }
         if(buttonLabel.equals("Open")){
+            int dialogResult = showConfirmDialog (null, "There might be unsaved changes in the current project...\n   Are you sure you want to discard unsaved changes?", "Warning!", YES_NO_OPTION);
+            if(dialogResult != YES_OPTION)
+                return false;
             simulationBar.disableTimeline();
             file.deactiveteButton("Open");
             File start = new File(sketchPath(""));
@@ -425,6 +434,9 @@ class Header{
             return true;
         }
         if(buttonLabel.equals("New")){
+            int dialogResult = showConfirmDialog (null, "There might be unsaved changes in the current project...\n   Are you sure you want to discard unsaved changes?", "Warning!", YES_NO_OPTION);
+            if(dialogResult != YES_OPTION)
+                return false;
             file.deactiveteButton("New");
             simulationBar.disableTimeline();
             panelMenu.simPanel.reset();

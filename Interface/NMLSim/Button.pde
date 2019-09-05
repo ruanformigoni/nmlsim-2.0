@@ -133,7 +133,7 @@ class TextButton{
     private String label, content = "";
     private float x, y, w;
     private color labelColor, selectedColor, mouseOverColor, buttonColor;
-    private Boolean isSelected, isValid, isTyping;
+    private Boolean isSelected, isValid, isTyping, isCentered;
     private HitBox hitbox;
     
     TextButton(String label, float x, float y, float w){
@@ -147,6 +147,7 @@ class TextButton{
         isSelected = false;
         isValid = true;
         isTyping = false;
+        isCentered = false;
         textSize(fontSz);
         hitbox = new HitBox(x, y, w, textAscent()+textDescent());
     }
@@ -173,7 +174,11 @@ class TextButton{
                 aux = aux.substring(1, aux.length());
             else
                 aux = aux.substring(0, aux.length()-1);
-        text(aux, x+5, y+fontSz);
+        if(isCentered){
+            text(aux, x+5+(w-textWidth(aux)-10)/2, y+fontSz);
+        } else{
+            text(aux, x+5, y+fontSz);
+        }
     }
 
     public Boolean mousePressedMethod(){
@@ -183,6 +188,10 @@ class TextButton{
         if(collided)
             isSelected = !isSelected;
         return collided;
+    }
+    
+    public void center(){
+        isCentered = true;
     }
     
     public void unselect(){

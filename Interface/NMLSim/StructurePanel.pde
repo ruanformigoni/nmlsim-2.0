@@ -152,7 +152,7 @@ class StructurePanel{
     }
     
     void keyPressedMethod(){
-        if(int(key) == 20){
+        if(ctrlPressed && int(key) == 20){
             if(!substrateGrid.getSelectedStructure().equals("")){
                 while(true){
                     String name = "Structure_" + randomName;

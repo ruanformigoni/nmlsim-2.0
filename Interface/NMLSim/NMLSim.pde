@@ -1,12 +1,20 @@
+import static javax.swing.JOptionPane.*;
+import javax.swing.UIManager;
+import java.awt.Color;
+
+
 SpriteCenter sprites;
 Header h;
 PanelMenu pm;
 SubstrateGrid sg;
 FileHandler fileSys;
 SimulationBar sb;
+PopUpCenter popCenter;
 
 float fontSz = 15;
 float scaleFactor;
+
+boolean ctrlPressed = false, altPressed = false;
 
 void setup(){
     size(1280, 720);
@@ -27,7 +35,12 @@ void setup(){
     h.setPanelMenu(pm);
     fileSys = new FileHandler("", h, pm, sg);
     sb = new SimulationBar(0, 690, 1280, 30, sg, pm);
-    h.setSimulationBar(sb);
+    h.setSimulationBar(sb); 
+    
+    popCenter = new PopUpCenter();
+    UIManager UI=new UIManager();
+    UI.put("OptionPane.background", new Color(116, 163, 117));
+    UI.put("Panel.background", new Color(116, 163, 117));
 }
 
 void draw(){
@@ -37,9 +50,12 @@ void draw(){
     pm.drawSelf();
     h.drawSelf();
     sb.drawSelf();
+    popCenter.drawSelf();
 }
 
 void mousePressed(){
+    if(popCenter.isActive())
+        return;
     h.mousePressedMethod();
     pm.mousePressedMethod();
     sg.mousePressedMethod();
@@ -48,18 +64,32 @@ void mousePressed(){
 
 void keyPressed(){
     if(key == ESC) key=0;
+    if(popCenter.isActive())
+        return;
+    if(keyCode == CONTROL)
+        ctrlPressed = true;
+    if(keyCode == ALT)
+        altPressed = true;
     h.keyPressedMethod();
     pm.keyPressedMethod();
-    sb.keyPressedMethod();
+    //sb.keyPressedMethod();
+}
+
+void keyReleased(){
+    ctrlPressed = altPressed = false;
 }
 
 void mouseWheel(MouseEvent e){
+    if(popCenter.isActive())
+        return;
     float v = e.getCount();
     pm.mouseWheelMethod(v);
     sg.mouseWheelMethod(v);
 }
 
 void mouseDragged(){
+    if(popCenter.isActive())
+        return;
     pm.mouseDraggedMethod();
     sg.mouseDraggedMethod();
 }
@@ -78,6 +108,10 @@ void saveProject(){
     fileSys.writeXmlFile(null);
     fileSys.writeConfigFile(null);
     fileSys.writeStructureFile();
+    PopUp p = new PopUp((width-200)/2, (height-100)/2,200,100,"Chages saved!");
+    p.activate();
+    p.setAsTimer(20);
+    popCenter.setPopUp(p);
 }
 
 void openProject(File selectedPath){

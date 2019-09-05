@@ -226,7 +226,7 @@ class SimulationBar{
     }
     
     void keyPressedMethod(){
-        if(int(key) == 115 && !fileSys.fileBaseName.equals("")){ //Simulate
+        if(altPressed && int(key) == 115 && !fileSys.fileBaseName.equals("")){ //Simulate
             saveProject();
             try{
                 exec("gnome-terminal", "-e", sketchPath() + "/../../nmlsim " + fileSys.fileBaseName + "/simulation.xml " +  fileSys.fileBaseName + "/simulation.csv");
@@ -247,7 +247,7 @@ class SimulationBar{
             simulate.deactivate();
             exportGif.deactivate();
         }
-        if(int(key) == 99){ //Chart
+        if(altPressed && int(key) == 99){ //Chart
             String call = substrateGrid.getSelectedMagnetsNames();
             if(!call.equals("")){
                 try{
@@ -257,11 +257,11 @@ class SimulationBar{
                 }
             }
         }
-        if(int(key) == 101){ //Export XML
+        if(altPressed && int(key) == 101){ //Export XML
             File start = new File(sketchPath("")+"/sim.xml");
             selectOutput("Select a file to export the simulation", "exportXML", start);
         }
-        if(int(key) == 116 && panelMenu.getSimulationMode().equals("verbose")){ //Activate timeline
+        if(altPressed && int(key) == 116 && panelMenu.getSimulationMode().equals("verbose")){ //Activate timeline
             Path p = Paths.get(fileSys.fileBaseName + "/simulation.csv");
             if(!Files.exists(p)){
                 timeline.deactivate();
@@ -280,7 +280,7 @@ class SimulationBar{
             timelineRunning = false;
             timeline.active = timelineEnabled;
         }
-        if(int(key) == 114){ //Record Gif
+        if(altPressed && int(key) == 114){ //Record Gif
             isRecording = !isRecording;
             if(!isRecording){
                 try{
@@ -291,12 +291,12 @@ class SimulationBar{
             }
             exportGif.active = isRecording;
         }
-        if(int(key) == 112){ //Play and Pause
+        if(altPressed && int(key) == 112){ //Play and Pause
             if(timelineEnabled){
                 timelineRunning = !timelineRunning;
             }
         }
-        if(int(key) == 80){ //Stop
+        if(altPressed && int(key) == 80){ //Stop
             if(timelineEnabled){
                 timelineRunning = false;
                 animationTime = 1;
@@ -359,12 +359,21 @@ class SimulationBar{
                 } catch(Exception e){
                     e.printStackTrace();
                 }
+            } else{
+                PopUp pop = new PopUp((width-250)/2, (height-100)/2, 250, 100, "Select at least one magnet!");
+                pop.activate();
+                pop.setAsTimer(60);
+                popCenter.setPopUp(pop);
             }
         }
         if(panelMenu.getSimulationMode().equals("verbose") && timeline.mousePressedMethod()){
             Path p = Paths.get(fileSys.fileBaseName + "/simulation.csv");
             if(!Files.exists(p)){
                 timeline.deactivate();
+                PopUp pop = new PopUp((width-400)/2, (height-100)/2, 400, 100, "Please perform a verbose simulation first!");
+                pop.activate();
+                pop.setAsTimer(80);
+                popCenter.setPopUp(pop);
                 return;
             }
             if(animationTime > 0){
@@ -378,6 +387,12 @@ class SimulationBar{
                 isRecording = false;
             }
             timelineRunning = false;
+        }
+        if(!panelMenu.getSimulationMode().equals("verbose") && timeline.mousePressedMethod()){
+            PopUp pop = new PopUp((width-400)/2, (height-100)/2, 400, 100, "Please perform a verbose simulation first!");
+            pop.activate();
+            pop.setAsTimer(80);
+            popCenter.setPopUp(pop);
         }
         if(timelineEnabled && !timelineRunning && play.mousePressedMethod()){
             play.deactivate();
