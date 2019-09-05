@@ -72,7 +72,7 @@ void keyPressed(){
         altPressed = true;
     h.keyPressedMethod();
     pm.keyPressedMethod();
-    //sb.keyPressedMethod();
+    sb.keyPressedMethod();
 }
 
 void keyReleased(){
@@ -102,6 +102,10 @@ void saveAs(File selectedPath){
     fileSys.writeXmlFile(null);
     fileSys.writeStructureFile();
     fileSys.writeConfigFile(null);
+    PopUp p = new PopUp((width-200)/2, (height-100)/2,200,100,"Chages saved!");
+    p.activate();
+    p.setAsTimer(20);
+    popCenter.setPopUp(p);
 }
 
 void saveProject(){

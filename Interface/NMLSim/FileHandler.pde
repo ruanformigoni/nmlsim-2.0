@@ -93,6 +93,9 @@ public class FileHandler{
             substrateGrid.loadMagnetProperties(magnets);
             
             structureFileIn.close();
+            
+            panelMenu.zonePanel.updatePhases();
+            panelMenu.magnetPanel.updateZones();
         } catch(Exception e){}
     }
     
