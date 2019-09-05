@@ -327,6 +327,9 @@ class SimulationPanel{
         boolean hit = false;
         if(clearButton.mousePressedMethod()){
             clearButton.deactivate();
+            int dialogResult = showConfirmDialog (null, "Are you sure you want to clear ALL fields in this panel?", "Warning!", YES_NO_OPTION);
+            if(dialogResult != YES_OPTION)
+                return false;
             reportStep.resetText();
             repetitions.resetText();
             temperature.resetText();
@@ -347,6 +350,9 @@ class SimulationPanel{
         }
         if(defaultButton.mousePressedMethod()){
             defaultButton.deactivate();
+            int dialogResult = showConfirmDialog (null, "     Are you sure you want to set ALL\nfields in this panel to the default value?", "Warning!", YES_NO_OPTION);
+            if(dialogResult != YES_OPTION)
+                return false;
             reportStep.setText("0.01");
             alpha.setText("0.05");
             ms.setText("800000");

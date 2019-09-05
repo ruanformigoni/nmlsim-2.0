@@ -352,6 +352,9 @@ class MagnetPanel{
         }
         if(clearButton.mousePressedMethod()){
             clearButton.deactivate();
+            int dialogResult = showConfirmDialog (null, "Are you sure you want to clear ALL fields in this panel?", "Warning!", YES_NO_OPTION);
+            if(dialogResult != YES_OPTION)
+                return;
             label.resetText();
             label.validateText();
             type.resetOption();
@@ -406,6 +409,11 @@ class MagnetPanel{
             substrateGrid.editSelectedMagnets(editingStructure, oldName);
             substrateGrid.isEditingMagnet = false;
             isEditing = false;
+            
+            PopUp pop = new PopUp((width-250)/2, (height-50)/2, 250, 50, "Magnet modifications saved!");
+            pop.activate();
+            pop.setAsTimer(60);
+            popCenter.setPopUp(pop);
         }
     }
     

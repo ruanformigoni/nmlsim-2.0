@@ -344,6 +344,10 @@ class ZonePanel{
                     behaZones.addItem(label.getText());
                 }
             }
+            PopUp pop = new PopUp((width-150)/2,(height-50)/2, 150, 50, "Zone added!");
+            pop.activate();
+            pop.setAsTimer(50);
+            popCenter.setPopUp(pop);
         }
         if(saveButton.mousePressedMethod()){
             saveButton.deactivate();
@@ -360,6 +364,10 @@ class ZonePanel{
                     behaZonesValues.put(label.getText(), strAux);
                 }
             }
+            PopUp pop = new PopUp((width-150)/2,(height-50)/2, 150, 50, "Zone saved!");
+            pop.activate();
+            pop.setAsTimer(50);
+            popCenter.setPopUp(pop);
         }
         if(phasePanel.getEngine().equals("LLG")){
             if(llgZones.mousePressedMethod()){

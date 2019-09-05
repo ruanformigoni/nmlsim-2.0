@@ -397,6 +397,10 @@ class PhasePanel{
                         behaPhases.addItem(name.getText());
                 }
             }
+            PopUp pop = new PopUp((width-150)/2,(height-50)/2, 150, 50, "Phase added!");
+            pop.activate();
+            pop.setAsTimer(50);
+            popCenter.setPopUp(pop);
             return true;
         }
         if(saveButton.mousePressedMethod()){
@@ -429,6 +433,10 @@ class PhasePanel{
                     behaPhaseValues.put(name.getText(), value);
                 }
             }
+            PopUp pop = new PopUp((width-150)/2,(height-50)/2, 150, 50, "Phase saved!");
+            pop.activate();
+            pop.setAsTimer(50);
+            popCenter.setPopUp(pop);
             return true;
         }
         boolean boolPhasesAux;

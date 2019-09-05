@@ -424,20 +424,20 @@ class Header{
             return true;
         }
         if(buttonLabel.equals("Open")){
+            file.deactiveteButton("Open");
             int dialogResult = showConfirmDialog (null, "There might be unsaved changes in the current project...\n   Are you sure you want to discard unsaved changes?", "Warning!", YES_NO_OPTION);
             if(dialogResult != YES_OPTION)
                 return false;
             simulationBar.disableTimeline();
-            file.deactiveteButton("Open");
             File start = new File(sketchPath(""));
             selectFolder("Select a folder to open the project", "openProject", start);
             return true;
         }
         if(buttonLabel.equals("New")){
+            file.deactiveteButton("New");
             int dialogResult = showConfirmDialog (null, "There might be unsaved changes in the current project...\n   Are you sure you want to discard unsaved changes?", "Warning!", YES_NO_OPTION);
             if(dialogResult != YES_OPTION)
                 return false;
-            file.deactiveteButton("New");
             simulationBar.disableTimeline();
             panelMenu.simPanel.reset();
             panelMenu.phasePanel.reset();
