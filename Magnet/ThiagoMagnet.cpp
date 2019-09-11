@@ -2,14 +2,20 @@
 
 double ThiagoMagnet::neighborhoodRatio;
 
+//This method splits a string into a vector of strings given a separator character
+//This method exists because c++ string class has a lot of issues
 vector<string> ThiagoMagnet::splitString(string str, char separator){
-	vector<string> parts;
-	int startIndex = 0;
+	vector<string> parts;	//Return parts
+	int startIndex = 0;	//Start index of the substrings
 	for(int i=0; i<str.size(); i++){
+		//If a separator character is found or the index reach the end of the string
 		if(str[i] == separator || i == str.size()-1){
+			//If the index is not the end of the string, skip the separator character
 			if(i == str.size()-1)
 				i++;
+			//Add the new part to the vector
 			parts.push_back(str.substr(startIndex, i-startIndex));
+			//Update the start index
 			startIndex = i+1;
 		}
 	}
@@ -197,29 +203,6 @@ void ThiagoMagnet::resetMagnetization(){
 
 void ThiagoMagnet::makeHeader(ofstream * outFile){
 	*(outFile) << this->id << "_y,";
-}
-
-// Function to get the average of the magnet tensors
-double * ThiagoMagnet::getTensorsAverage(double * npx, double * npy, double nt, double vDist, double hDist){
-	cout << "Inside getTensorsAverage" << endl;
-	double average;
-	double biggestTensor;
-	double * tensor = (double *) malloc(sizeof(double));
-	biggestTensor = -99999.9;
-	cout << "Calculating Tensors" << endl;
-	for (int i = 0; i < 5; i++)
-	{
-		*tensor = *this->magnetizationCalculator->computeDipolar(npx, npy, nt, vDist, hDist);
-		cout << "TENSOR => " << *tensor << endl;
-		*tensor >= biggestTensor ? biggestTensor = *tensor : biggestTensor;
-		average = average + *tensor;
-	}
-	cout << "BIGGEST TENSOR => " << biggestTensor << endl;
-
-	average = average / 5;
-	*tensor = average;
-	cout << "MEAN OF 5 TENSORS => " << average << endl;
-	return tensor;
 }
 
 vector <Neighbor *> ThiagoMagnet::getNeighbors(){
