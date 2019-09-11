@@ -19,9 +19,11 @@ void ClockZone::addMagnet(Magnet * magnet){
 }
 
 void ClockZone::updateMagnets(){
+	//Compute future magnetizations
 	for(int i=0; i<this->magnets.size(); i++){
 		this->magnets[i]->calculateMagnetization(this->myPhase);
 	}
+	//Update the values
 	for(int i=0; i<this->magnets.size(); i++){
 		this->magnets[i]->updateMagnetization();
 	}
@@ -48,7 +50,6 @@ vector<string> ClockZone::getPhases(){
 }
 
 void ClockZone::updatePhase(ClockPhase * newPhase){
-//cout << "From " << myPhase->getPhaseName() << " to " << newPhase->getPhaseName() << endl;
 	this->myPhase = newPhase;
 	resetTimeInPhase();
 }
@@ -57,11 +58,6 @@ void ClockZone::dumpMagnetsValues(ofstream * outFile){
 	for(int i=0; i<magnets.size(); i++){
 		magnets[i]->dumpValues(outFile);
 	}
-// 	if(magnets.size() > 0){
-// 		this->myPhase->dumpValues(outFile);
-// //		double * aux = this->myPhase->getSignal();
-// //		*(outFile) << aux[0] << "," << aux[1] << "," << aux[2] << ",";
-// 	}
 }
 
 void ClockZone::makeHeader(ofstream * outFile){
@@ -74,6 +70,7 @@ void ClockZone::dumpPhaseValues(ofstream * outFile){
 	this->myPhase->dumpValues(outFile);
 }
 
+//Returns the magnet of NULL in case it doesn't exists
 Magnet * ClockZone::getMagnet(string magnetId){
 	for(int i=0; i< magnets.size(); i++)
 		if(magnets[i]->getId() == magnetId)

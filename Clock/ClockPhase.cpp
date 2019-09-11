@@ -26,15 +26,20 @@ void ClockPhase::restartPhase(){
 }
 
 void ClockPhase::nextTimeStep(double deltaTime){
+	//updates the timer
 	this->myTimer += deltaTime;
+	//If phase ended, restart it
 	if(myTimer > duration){
 		restartPhase();
 	}
 	else{
 		for(int i=0; i<vLenght; i++){
+			//Update the signal value
 			this->currentSignal[i] += this->variation[i];
+			//Check if it is above the max value for positive phase
 			if(this->variation[i] > 0 && this->currentSignal[i] > endPhaseSignal[i])
 				this->currentSignal[i] = endPhaseSignal[i];
+			//Check if it is above the max value for negative phase
 			if(this->variation[i] < 0 && this->currentSignal[i] < endPhaseSignal[i])
 				this->currentSignal[i] = endPhaseSignal[i];
 		}
