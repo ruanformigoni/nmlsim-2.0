@@ -28,16 +28,21 @@ void Circuit::nextTimeStep(){
 
 Magnet* Circuit::getMagnet(string inOrOut, string id){
 	if(inOrOut == "input"){
+		//Check for an input
 		for(int i=0; i<this->inputMagnets.size(); i++)
 			if(this->inputMagnets[i]->getId() == id)
 				return this->inputMagnets[i];
 	} else if(inOrOut == "output"){
+		//Check for an output
 		for(int i=0; i<this->outputMagnets.size(); i++)
 			if(this->outputMagnets[i]->getId() == id)
 				return this->outputMagnets[i];
 	} else{
+		//Return NULL in case it is not an input or output
 		return NULL;
 	}
+	//Return NULL if it doesn't find anything
+	return NULL;
 }
 
 Magnet * Circuit::getMagnet(int zoneId, string id){
@@ -57,22 +62,27 @@ void Circuit::makeHeader(ofstream * outFile){
 }
 
 void Circuit::dumpInOutValues(ofstream * outFile){
-//	this->clockCtrl->dumpMagnetsValues(outFile);
 	*(outFile) << "input" << endl;
 	for(int i=0; i<this->inputMagnets.size(); i++)
 		this->inputMagnets[i]->dumpValues(outFile);
+
 	*(outFile) << "\noutput" << endl;
 	for(int i=0; i<this->outputMagnets.size(); i++)
 		this->outputMagnets[i]->dumpValues(outFile);
 }
 
 void Circuit::setInputs(int mask, simulationType type){
+	//For each input magnet
 	for(int i=0; i<inputMagnets.size(); i++){
+		//Find the corresponding bit in the mask
 		int bitMask = 1 << i;
 		int maskedBit = mask & bitMask;
 		int bit = maskedBit >> i;
+
+		//Each engine has a different type of magnetization
 		switch(type){
 			case THIAGO:{
+				//If the bit is 0, points down. If not, points up
 				double aux;
 				if(bit == 0){
 					aux = -1.0;
@@ -83,6 +93,7 @@ void Circuit::setInputs(int mask, simulationType type){
 			}
 			break;
 			case LLG:{
+				//If the bit is 0, points down. If not, points up
 				double aux[3];
 				if(bit == 0){
 					aux[0] = 0.1411;
@@ -105,13 +116,18 @@ int Circuit::getInputsSize(){
 
 vector <Magnet *> Circuit::getAllMagnets(){
 	vector <Magnet *> magnets;
+
+	//Magnets from zones
 	magnets = clockCtrl->getMagnetsFromAllZones();
+
+	//Input magnets
 	for(int i=0; i<inputMagnets.size(); i++){
 		if(find(magnets.begin(), magnets.end(), inputMagnets[i]) == magnets.end()){
 			magnets.push_back(inputMagnets[i]);
 		}
 	}
 
+	//Output magnets
 	for(int i=0; i<outputMagnets.size(); i++){
 		if(find(magnets.begin(), magnets.end(), outputMagnets[i]) == magnets.end()){
 			magnets.push_back(outputMagnets[i]);
