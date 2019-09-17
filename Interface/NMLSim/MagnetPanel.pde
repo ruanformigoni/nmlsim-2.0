@@ -403,6 +403,7 @@ class MagnetPanel{
             parts[6] = magThickness.getText();
             parts[7] = magTopCut.getText();
             parts[8] = magBottomCut.getText();
+            parts[9] = position.getText();
             parts[10] = zonePanel.getZoneColor(parts[1]).toString();
             for(int i=0; i<parts.length; i++)
                 editingStructure += parts[i] + ";";

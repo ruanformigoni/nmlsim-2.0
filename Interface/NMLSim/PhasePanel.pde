@@ -272,8 +272,10 @@ class PhasePanel{
         for(String phase : properties){
             String name = phase.substring(0, phase.indexOf(";"));
             if(sp.getEngine().equals("LLG")){
-                llgPhases.addItem(name);
-                llgPhaseValues.put(name, phase);
+                if(!llgPhases.isIn(name)){
+                    llgPhases.addItem(name);
+                    llgPhaseValues.put(name, phase);
+                }
             } else{
                 behaPhases.addItem(name);
                 behaPhaseValues.put(name, phase);

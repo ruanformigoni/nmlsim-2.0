@@ -282,8 +282,9 @@ class ZonePanel{
         zoneColor.resetColor();
         phases.removeAllOptions();
         ArrayList<String> phasesNames = phasePanel.getPhasesNames();
-        for(int i=0; i<phasesNames.size(); i++)
+        for(int i=0; i<phasesNames.size(); i++){
             phases.addOption(phasesNames.get(i));
+        }
         ArrayList<String> zoneNames;
         if(phasePanel.getEngine().equals("LLG")){
             zoneNames = new ArrayList<String>(llgZones.getItems());

@@ -49,7 +49,7 @@ class SubstrateGrid{
         zoomFactor = 10;
         magnets.clear();
         selectedMagnets.clear();
-        zoneNames.clear();
+        zoneNames = null;
     }
     
     void setZonePanel(ZonePanel z){
@@ -156,6 +156,8 @@ class SubstrateGrid{
     }
     
     void setMagnetMagnetization(String label, float magX, float magY){
+        if(magnets.get(label) == null)
+            return;
         magnets.get(label).setMagnetization(magX, magY);
     }
     
@@ -506,7 +508,7 @@ class SubstrateGrid{
     }
     
     void zoomIn(){
-        zoomFactor += 10;
+        zoomFactor += 2;
         if(zoomFactor > 500)
             zoomFactor = 500;
         vScroll.redefine(x+w, y, 20, h, int(h/(normalization*zoomFactor/10)));
@@ -514,7 +516,7 @@ class SubstrateGrid{
     }
     
     void zoomOut(){
-        zoomFactor -= 10;
+        zoomFactor -= 2;
         if(zoomFactor < 10)
             zoomFactor = 10;
         vScroll.redefine(x+w, y, 20, h, int(h/(normalization*zoomFactor/10)));

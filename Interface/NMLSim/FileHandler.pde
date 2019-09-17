@@ -80,7 +80,6 @@ public class FileHandler{
                 line = structureFileIn.readLine();
             }
             panelMenu.zonePanel.loadZoneProperties(zones);
-            panelMenu.magnetPanel.updateZones();
             
             line = structureFileIn.readLine();
             substrateGrid.randomName = Integer.parseInt(line);
@@ -92,10 +91,11 @@ public class FileHandler{
             }
             substrateGrid.loadMagnetProperties(magnets);
             
-            structureFileIn.close();
-            
             panelMenu.zonePanel.updatePhases();
             panelMenu.magnetPanel.updateZones();
+
+            structureFileIn.close();
+            
         } catch(Exception e){}
     }
     
