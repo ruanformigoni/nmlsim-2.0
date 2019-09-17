@@ -31,6 +31,8 @@ public:
 	Magnet* getMagnet(string inOrOut, string id);
 	//Returns a regular magnet
 	Magnet* getMagnet(int zoneId, string id);
+	//Returns a magnet with only the id -- slow method...
+	Magnet * getMagnet(string id);
 	//Dump zone values in the file
 	void dumpZonesValues(ofstream * outFile);
 	//Dump magnets values in the file

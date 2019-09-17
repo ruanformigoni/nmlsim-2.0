@@ -47,7 +47,7 @@ clean:
 eraseCSV:
 	@rm -f Files/*.csv
 
-input:="Files/example"
+input:="Files/example.xml"
 output:="SingleFileMode"
 
 run:

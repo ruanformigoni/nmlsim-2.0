@@ -16,7 +16,7 @@
 #define q 1.60217662*pow(10,(-19)) // carga do eletron C
 
 //Class for the LLG magnet engine
-class LLGMagnet : protected Magnet{
+class LLGMagnet : public Magnet{
 private:
 	string id;	//ID
 	double magnetization[3];	//Magnetization vector [M_x, M_y, M_z]
@@ -31,6 +31,8 @@ private:
 	double xPosition, yPosition;	//Position
 	double theta_she;	//Used for the spin hall effect
 	double ** demagTensor;	//Demag tensor
+	Magnet * mimic = NULL;	//Mimic this magnet magnetization
+	bool isMimicing = false;	//Controll flag
 
 
 	static double alpha;	//Gilbert's damping constant
@@ -95,6 +97,8 @@ public:
 	void makeHeader(ofstream * out);
 	//Returns the neighbors
 	vector <Neighbor *> getNeighbors();
+	//Set the mimic magnet
+	void setMimic(Magnet * mimic);
 };
 
 #endif

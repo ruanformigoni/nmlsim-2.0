@@ -161,72 +161,9 @@
 		<property component="magIn"/>
 		<property myType="regular"/>
 		<property fixedMagnetization="false"/>
-		<property position="120.0,0.0"/>
+		<property position="500.0,500.0"/>
 		<property clockZone="0"/>
 		<property magnetization="0.99,0.141,0.0"/>
-	</item>
-	<item name="mag3">
-		<property component="magIn"/>
-		<property myType="regular"/>
-		<property fixedMagnetization="false"/>
-		<property position="180.0,0.0"/>
-		<property clockZone="0"/>
-		<property magnetization="0.99,0.141,0.0"/>
-	</item>
-	<item name="mag4">
-		<property component="magIn"/>
-		<property myType="regular"/>
-		<property fixedMagnetization="false"/>
-		<property position="240.0,0.0"/>
-		<property clockZone="1"/>
-		<property magnetization="0.99,0.141,0.0"/>
-	</item>
-	<item name="mag5">
-		<property component="magIn"/>
-		<property myType="regular"/>
-		<property fixedMagnetization="false"/>
-		<property position="300.0,0.0"/>
-		<property clockZone="1"/>
-		<property magnetization="0.99,0.141,0.0"/>
-	</item>
-	<item name="mag6">
-		<property component="magIn"/>
-		<property myType="regular"/>
-		<property fixedMagnetization="false"/>
-		<property position="360.0,0.0"/>
-		<property clockZone="1"/>
-		<property magnetization="0.99,0.141,0.0"/>
-	</item>
-	<item name="mag7">
-		<property component="magIn"/>
-		<property myType="regular"/>
-		<property fixedMagnetization="false"/>
-		<property position="420.0,0.0"/>
-		<property clockZone="2"/>
-		<property magnetization="0.99,0.141,0.0"/>
-	</item>
-	<item name="mag8">
-		<property component="magIn"/>
-		<property myType="regular"/>
-		<property fixedMagnetization="false"/>
-		<property position="480.0,0.0"/>
-		<property clockZone="2"/>
-		<property magnetization="0.99,0.141,0.0"/>
-	</item>
-	<item name="mag9">
-		<property component="magIn"/>
-		<property myType="regular"/>
-		<property fixedMagnetization="false"/>
-		<property position="540.0,0.0"/>
-		<property clockZone="2"/>
-		<property magnetization="0.99,0.141,0.0"/>
-	</item>
-	<item name="o0">
-		<property component="magOut"/>
-		<property myType="output"/>
-		<property fixedMagnetization="false"/>
-		<property position="600.0,0.0"/>
-		<property clockZone="3"/>
-		<property magnetization="0.1411,-0.99,0.0"/>
+		<property mimic="mag1"/>
 	</item>
 </design>

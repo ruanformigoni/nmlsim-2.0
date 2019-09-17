@@ -352,6 +352,11 @@ void Simulation::buildMagnets(){
 			for(int i=0; i<magnetsIds.size(); i++){
 				//Build the new magnet
 				Magnet * magnet = (Magnet *) new LLGMagnet(magnetsIds[i], fReader);
+				//Check if there is a mimic and add it
+				string mimicId = fReader->getItemProperty(DESIGN, magnetsIds[i], "mimic");
+				if(mimicId != ""){
+					(static_cast<LLGMagnet *> (magnet))->setMimic(circuit->getMagnet(mimicId));
+				}
 				//Check if the type is input, output or regular
 				string magType = fReader->getItemProperty(DESIGN, magnetsIds[i], "myType");
 				if(magType == "input"){

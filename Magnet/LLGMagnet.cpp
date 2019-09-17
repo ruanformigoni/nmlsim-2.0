@@ -115,7 +115,10 @@ void LLGMagnet::crossProduct(double *vect_A, double *vect_B, double *cross_P){
 }
  
 //Compute the magnetization for the next time step
-void LLGMagnet::calculateMagnetization(ClockPhase * phase){	
+void LLGMagnet::calculateMagnetization(ClockPhase * phase){
+	if(isMimicing)
+		return;
+
 	double hd[3], hc[3] = {0.0,0.0,0.0}, heff[3];	//Demag, dipolar and effective fields
 	double a[3], b[3];	//a and b terms
 	double i_s[3];	//spin hall effect
@@ -331,7 +334,22 @@ double * LLGMagnet::getMagnetization(){
 	return this->magnetization;
 }
 
+void LLGMagnet::setMimic(Magnet * mimic){
+	if(mimic == NULL)
+		return;
+	this->mimic = mimic;
+	this->isMimicing = true;
+}
+
 void LLGMagnet::updateMagnetization(){
+	if(isMimicing){
+	cout << "HERE" << endl;
+		this->mimic->updateMagnetization();
+		this->magnetization[0] = this->mimic->getMagnetization()[0];
+		this->magnetization[1] = this->mimic->getMagnetization()[1];
+		this->magnetization[2] = this->mimic->getMagnetization()[2];
+		return;
+	}
 	//Normalize and update the magnetization value
 	double module = sqrt(pow(this->newMagnetization[0], 2.0) + pow(this->newMagnetization[1], 2.0) + pow(this->newMagnetization[2], 2.0));
 	this->magnetization[0] = this->newMagnetization[0]/module;

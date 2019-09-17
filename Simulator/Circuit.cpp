@@ -136,6 +136,30 @@ vector <Magnet *> Circuit::getAllMagnets(){
 	return magnets;
 }
 
+Magnet * Circuit::getMagnet(string id){
+	//Magnets from zones
+	vector <Magnet *> magnets;
+	magnets = clockCtrl->getMagnetsFromAllZones();
+	for(Magnet * mag : magnets){
+		if(mag->getId() == id)
+			return mag;
+	}
+
+	//Input magnets
+	for(Magnet * mag : inputMagnets){
+		if(mag->getId() == id)
+			return mag;
+	}
+	
+	//Output magnets
+	for(Magnet * mag : outputMagnets){
+		if(mag->getId() == id)
+			return mag;
+	}
+
+	return NULL;
+}
+
 void Circuit::restartAllMagnets(){
 	vector <Magnet *> magnets = getAllMagnets();
 	for(int i=0; i<magnets.size(); i++)
