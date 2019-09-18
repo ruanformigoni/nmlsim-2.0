@@ -71,7 +71,7 @@ int main(int argc, char const *argv[]){
 	Simulation::volumeBib.clear();
 	
 	//Finds the log file and load it
-	string logPath = argv[2];
+	string logPath = argv[1];
 	logPath = logPath.substr(0, logPath.length() - 4);
 	logPath += ".log";
 	Simulation::verifyTensorsMap(logPath);
