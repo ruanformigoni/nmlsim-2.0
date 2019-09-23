@@ -160,8 +160,10 @@ class SubstrateGrid{
             unselectMagnets();
             return;
         }
+        Magnet original = selectedMagnets.get(0);
         for(int i=1; i<selectedMagnets.size(); i++){
-            selectedMagnets.get(i).addMimic(selectedMagnets.get(0).name);
+            if(!original.getMimic().equals(selectedMagnets.get(i).name) && !original.name.equals(selectedMagnets.get(i).name))
+                selectedMagnets.get(i).addMimic(selectedMagnets.get(0).name);
         }
         unselectMagnets();
     }
@@ -548,16 +550,7 @@ class SubstrateGrid{
             for(Magnet mag : magnets.values()){
                 if(mag.collision(hit)){
                     mag.isSelected = true;
-                    if(!mag.getGroup().equals("")){
-                        for(Magnet otherMag : magnets.values()){
-                            if(otherMag.getGroup().equals(mag.getGroup())){
-                                otherMag.isSelected = true;
-                                selectedMagnets.add(otherMag);
-                            }
-                        }
-                    } else{
-                        selectedMagnets.add(mag);
-                    }
+                    selectedMagnets.add(mag);
                 }
             }
         }

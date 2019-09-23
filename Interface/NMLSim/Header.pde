@@ -304,13 +304,18 @@ class Header{
             substrateGrid.reset();
             fileSys.setBaseName("");
         }
-        if(ctrlPressed && int(key) == 19){ //Save
+        if(ctrlPressed && !shiftPressed && int(key) == 19){ //Save
             if(fileSys.fileBaseName.equals("")){
                 File start = new File(sketchPath(""));
                 selectFolder("Select a folder to save the project", "saveAs", start);
             } else{
                 saveProject();
             }
+            return true;
+        }
+        if(ctrlPressed && shiftPressed && int(key) == 19){ //Save As
+            File start = new File(sketchPath(""));
+            selectFolder("Select a folder to save the project", "saveAs", start);
             return true;
         }
         
@@ -370,6 +375,18 @@ class Header{
             else
                 magnet.activeteButton("Zone View");
             return true;
+        }
+        if(altPressed && int(key) == 108){ //Link
+            substrateGrid.linkSelectedMagnets();
+        }
+        if(altPressed && int(key) == 117){ //unlink
+            substrateGrid.unlinkSelectedMagnets();
+        }
+        if(ctrlPressed && !shiftPressed && int(key) == 6){ //H. flip
+            substrateGrid.flipSelectedMagnets(false);
+        }
+        if(ctrlPressed && shiftPressed  && int(key) == 6){ //V. flip
+            substrateGrid.flipSelectedMagnets(true);
         }
         
         //Substrate
