@@ -24,4 +24,8 @@ class HitBox{
     public boolean collision(float px, float py){
         return (px > x && px < (x + w) && py > y && py < (y+h));
     }
+    
+    public boolean collision(HitBox other){
+        return (other.x+other.w > x && other.x < (x + w) && other.y+other.h > y && other.y < (y+h));
+    }
 }

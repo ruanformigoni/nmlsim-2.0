@@ -113,6 +113,7 @@ void saveAs(File selectedPath){
     p.activate();
     p.setAsTimer(20);
     popCenter.setPopUp(p);
+    ctrlPressed = altPressed = shiftPressed = false;
 }
 
 void saveProject(){
@@ -123,6 +124,7 @@ void saveProject(){
     p.activate();
     p.setAsTimer(20);
     popCenter.setPopUp(p);
+    ctrlPressed = altPressed = shiftPressed = false;
 }
 
 void openProject(File selectedPath){
@@ -140,6 +142,7 @@ void openProject(File selectedPath){
     fileSys.setBaseName(fileBaseName);
     fileSys.readStructureFile();
     fileSys.readConfigFile();
+    ctrlPressed = altPressed = shiftPressed = false;
 }
 
 void importStructures(File selectedPath){
@@ -150,6 +153,7 @@ void importStructures(File selectedPath){
         return;
     }
     fileSys.importStructureFile(selectedPath.getAbsolutePath() + "/structures.str");
+    ctrlPressed = altPressed = shiftPressed = false;
 }
 
 void exportXML(File selectedPath){
@@ -157,4 +161,5 @@ void exportXML(File selectedPath){
         return;
     String filename = selectedPath.getAbsolutePath();
     fileSys.writeXmlFile(filename);
+    ctrlPressed = altPressed = shiftPressed = false;
 }

@@ -394,6 +394,12 @@ class SubstrateGrid{
         
         vScroll.drawSelf();
         hScroll.drawSelf();
+
+        if(ctrlPressed && mousePressed){
+            fill(255,255,255,125);
+            stroke(0, 0, 0, 125);
+            rect(initMouseX, initMouseY, (mouseX-initMouseX), (mouseY-initMouseY));
+        }
     }
     
     void toggleMoving(){
@@ -442,7 +448,7 @@ class SubstrateGrid{
     }
     
     void mousePressedMethod(){
-        if(isMoving){
+        if(isMoving || ctrlPressed){
             initMouseX = mouseX;
             initMouseY = mouseY;
             return;
@@ -534,6 +540,26 @@ class SubstrateGrid{
                 vScroll.decreaseIndex();
             }
             return;
+        }
+        if(ctrlPressed && mousePressed){
+            if(!shiftPressed)
+                unselectMagnets();
+            HitBox hit = new HitBox(((mouseX-initMouseX > 0)?initMouseX:mouseX), ((mouseY-initMouseY > 0)?initMouseY:mouseY), ((mouseX-initMouseX>0)?(mouseX-initMouseX):(-mouseX+initMouseX)), ((mouseY-initMouseY>0)?(mouseY-initMouseY):(-mouseY+initMouseY)));
+            for(Magnet mag : magnets.values()){
+                if(mag.collision(hit)){
+                    mag.isSelected = true;
+                    if(!mag.getGroup().equals("")){
+                        for(Magnet otherMag : magnets.values()){
+                            if(otherMag.getGroup().equals(mag.getGroup())){
+                                otherMag.isSelected = true;
+                                selectedMagnets.add(otherMag);
+                            }
+                        }
+                    } else{
+                        selectedMagnets.add(mag);
+                    }
+                }
+            }
         }
     }
     
@@ -800,6 +826,10 @@ class Magnet{
         return hitbox.collision(px, py);
     }
     
+    boolean collision(HitBox hit){
+        return hitbox.collision(hit);
+    }
+        
     void drawArrow(float x0, float y0, float x1, float y1, float beginHeadSize, float endHeadSize){
         PVector d = new PVector(x1 - x0, y1 - y0);
         d.normalize();
