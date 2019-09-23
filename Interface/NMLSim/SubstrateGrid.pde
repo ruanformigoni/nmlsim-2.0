@@ -155,6 +155,24 @@ class SubstrateGrid{
         randomGroup++;
     }
     
+    void linkSelectedMagnets(){
+        if(selectedMagnets.size() < 2){
+            unselectMagnets();
+            return;
+        }
+        for(int i=1; i<selectedMagnets.size(); i++){
+            selectedMagnets.get(i).addMimic(selectedMagnets.get(0).name);
+        }
+        unselectMagnets();
+    }
+    
+    void unlinkSelectedMagnets(){
+        for(Magnet mag : selectedMagnets){
+            mag.removeMimic();
+        }
+        unselectMagnets();
+    }
+    
     void setMagnetMagnetization(String label, float magX, float magY){
         if(magnets.get(label) == null)
             return;
@@ -255,6 +273,16 @@ class SubstrateGrid{
         }
     }
     
+    void flipSelectedMagnets(boolean isVerticalFlip){
+        for(Magnet mag : selectedMagnets){
+            if(isVerticalFlip){
+                mag.verticalFlip();
+            } else{
+                mag.horizontalFlip();
+            }
+        }
+    }
+    
     void toggleZoneViewMode(){
         zoneViewMode = !zoneViewMode;
         for(Magnet mag : magnets.values()){
@@ -339,6 +367,25 @@ class SubstrateGrid{
         try{
             for(Magnet mag : magnets.values()){
                 mag.drawSelf(xOrigin, yOrigin, normalization, zoomFactor, x, y, w, h, cellW, cellH);
+            }
+            for(Magnet mag : magnets.values()){
+                if(!mag.getMimic().equals("")){
+                    Magnet mimicMag = magnets.get(mag.getMimic());
+                    if(mimicMag == null){
+                        mag.removeMimic();
+                    } else{
+                        float c1x = mag.getPixelCenterX(xOrigin, cellW, normalization, zoomFactor, x);
+                        float c1y = mag.getPixelCenterY(yOrigin, cellH, normalization, zoomFactor, y, h);
+                        float c2x = mimicMag.getPixelCenterX(xOrigin, cellW, normalization, zoomFactor, x);
+                        float c2y = mimicMag.getPixelCenterY(yOrigin, cellH, normalization, zoomFactor, y, h);
+                        fill(0,0,0,125);
+                        stroke(0,0,0,125);
+                        strokeWeight(5);
+                        ellipse(c2x-5, c2y-5, 10, 10);
+                        line(c2x, c2y, c1x, c1y);
+                        strokeWeight(1);
+                    }
+                }
             }
         } catch(Exception e){
         }
@@ -444,7 +491,7 @@ class SubstrateGrid{
             randomName++;
             return;
         }
-        if(keyPressed == false || keyCode != SHIFT){
+        if(!shiftPressed){
             for(Magnet mag : selectedMagnets)
                 mag.isSelected = false;
             selectedMagnets.clear();
@@ -543,12 +590,12 @@ class SubstrateGrid{
 
 class Magnet{
     float w, h, bottomCut, topCut, xMag, yMag, x, y;
-    String magStr, name, groupName, zone;
+    String magStr, name, groupName, zone, mimic = "";
     color clockZone;
     boolean isTransparent = false, isSelected = false, zoneViewMode = true;
     HitBox hitbox;
     
-    /*MagStr = type;clockZone;magnetization;fixed;w;h;tk;tc;bc;position;zoneColor*/
+    /*MagStr = type;clockZone;magnetization;fixed;w;h;tk;tc;bc;position;zoneColor;mimic*/
     
     Magnet(String magStr, String name, boolean viewMode){
         this.magStr = magStr;
@@ -556,6 +603,9 @@ class Magnet{
         this.groupName = "";
         this.name = name;
         String parts[] = magStr.split(";");
+        if(parts.length > 11){
+            this.mimic = parts[11];
+        }
         if(parts[2].contains(",")){
             String [] aux = parts[2].split(",");
             xMag = Float.parseFloat(aux[0]);
@@ -577,7 +627,7 @@ class Magnet{
     }
     
     void editStructure(String newStructure){
-        this.magStr = newStructure;
+        this.magStr = newStructure + ";" + mimic + ";";
         String parts[] = magStr.split(";");
         if(parts[2].contains(",")){
             String [] aux = parts[2].split(",");
@@ -596,6 +646,66 @@ class Magnet{
         x = Float.parseFloat(aux[0]);
         y = Float.parseFloat(aux[1]);
         clockZone = Integer.parseInt(parts[10]);
+    }
+    
+    void horizontalFlip(){
+        if(topCut != 0 || bottomCut != 0){
+            topCut *= -1;
+            bottomCut *= -1;
+            String [] parts = magStr.split(";");
+            parts[7] = "" + topCut;
+            parts[8] = "" + bottomCut;
+            magStr = "";
+            for(String part : parts){
+                magStr += part + ";";
+            }
+        }
+    }
+    
+    void verticalFlip(){
+        if(topCut != bottomCut){
+            float aux = topCut;
+            topCut = bottomCut;
+            bottomCut = aux;
+            String [] parts = magStr.split(";");
+            parts[7] = "" + topCut;
+            parts[8] = "" + bottomCut;
+            magStr = "";
+            for(String part : parts){
+                magStr += part + ";";
+            }
+        }
+    }
+    
+    void addMimic(String mimicId){
+        this.mimic = mimicId;
+        String [] parts = magStr.split(";");
+        if(parts.length > 11){
+            parts[11] = mimic;
+        }
+        magStr = "";
+        for(int i=0; i<parts.length; i++){
+            magStr += parts[i] + ";";
+        }
+        if(parts.length <= 11){
+            magStr += mimic + ";";
+        }
+    }
+    
+    void removeMimic(){
+        this.mimic = "";
+        String [] parts = magStr.split(";");
+        if(parts.length > 11){
+            parts[11] = "";
+        }
+        magStr = "";
+        for(int i=0; i<parts.length; i++){
+            magStr += parts[i] + ";";
+        }
+    }
+    
+    String getMimic(){
+        return mimic;
     }
     
     String getZoneName(){
@@ -724,7 +834,14 @@ class Magnet{
          0, 0);
         popMatrix();
     }
+
+    float getPixelCenterX(float xOrigin, float cellW, float normalization, float zoomFactor, float gx){
+        return (((x-xOrigin)/cellW)*normalization)*zoomFactor/10 + gx;
+    }
     
+    float getPixelCenterY(float yOrigin, float cellH, float normalization, float zoomFactor, float gy, float gh){
+        return (((yOrigin-y)/cellH)*normalization)*zoomFactor/10 + gy + gh;
+    }
     void drawSelf(float xOrigin,  float yOrigin, float normalization, float zoomFactor, float gx, float gy, float gw, float gh, float cellW, float cellH){
         float auxX = (((x-xOrigin)/cellW)*normalization)*zoomFactor/10 + gx;
         float auxY = (((yOrigin-y)/cellH)*normalization)*zoomFactor/10 + gy + gh;
@@ -769,7 +886,8 @@ class Magnet{
         } else{
             vertex(auxX-auxW/2, auxY-auxH/2-((topCut/cellH*normalization)*zoomFactor/10));
         }
-        endShape();
+        endShape();        
+        
         drawArrow(
             auxX-(auxW/2)*xMag,
             auxY+(auxH/2-abs((yMag>0)?auxBC:auxTC))*yMag,

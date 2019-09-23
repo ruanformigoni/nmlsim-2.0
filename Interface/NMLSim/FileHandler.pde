@@ -215,7 +215,7 @@ public class FileHandler{
         }
         xmlFileOut.println("</clockZone>");
        
-        /*name;type;clockZone;magnetization;fixed;w;h;tk;tc;bc;position;zoneColor*/
+        /*name;type;clockZone;magnetization;fixed;w;h;tk;tc;bc;position;zoneColor;mimic*/
         ArrayList<String> magnets = sg.getMagnetsProperties();
         magnets.sort(String.CASE_INSENSITIVE_ORDER);
         HashMap<String,String> components = new HashMap<String,String>();
@@ -246,7 +246,7 @@ public class FileHandler{
             xmlFileOut.println("\t<item name=\"" + parts[0] + "\">\n\t\t<property component=\"" + components.get(component) + "\"/>\n" +
                                "\t\t<property myType=\"" + parts[1] + "\"/>\n\t\t<property fixedMagnetization=\"" + parts[4] + "\"/>\n" +
                                "\t\t<property position=\"" + parts[10] + "\"/>\n\t\t<property clockZone=\"" + zoneIndex.get(parts[2]) + "\"/>\n" +
-                               "\t\t<property magnetization=\"" + parts[3] + "\"/>\n\t</item>");
+                               "\t\t<property magnetization=\"" + parts[3] + "\"/>\n" + ((parts.length > 12)?("\t\t<property mimic=\"" + parts[12] + "\"/>\n"):("")) + "\t</item>");
         }
         xmlFileOut.println("</design>");
         xmlFileOut.flush();

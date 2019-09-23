@@ -5,7 +5,8 @@ class SpriteCenter{
     public PImage nanoDeleteIconWhite, nanoEditIconWhite, nanoZoneUpIconWhite, nanoZoneDownIconWhite, smallDeleteIconWhite, nanoArrowUpIconWhite,smallSaveTemplateIconWhite;
     public PImage smallDefaultIconWhite, smallEditIconWhite, orangeArrowLeftIcon, orangeArrowRightIcon, cutIconWhite, forwardIconWhite, backwardIconWhite, playIconWhite;
     public PImage pauseIconWhite, stopIconWhite, chartIconWhite, simulationIconWhite, arrowUpIconWhite, arrowDownIconWhite, medSaveAsIconWhite, timelineIconWhite;
-    public PImage cancelIconWhite, exportGifIconWhite, magnetIconWhite, zoneViewIconWhite, smallOpenIconWhite;
+    public PImage cancelIconWhite, exportGifIconWhite, magnetIconWhite, zoneViewIconWhite, smallOpenIconWhite, linkIconWhite, unlinkIconWhite, horizontalFlipIcon;
+    public PImage verticalFlipIcon;
     
     public SpriteCenter(){
         nanoArrowUpIconWhite = loadImage("Sprites/arrowUpIconWhite.png");
@@ -20,8 +21,16 @@ class SpriteCenter{
         copyIconWhite.resize(35,35);
         cancelIconWhite = loadImage("Sprites/cancelIconWhite.png");
         cancelIconWhite.resize(20,20);
+        horizontalFlipIcon = loadImage("Sprites/horizontalFlipIcon.png");
+        horizontalFlipIcon.resize(35,35);
+        verticalFlipIcon = loadImage("Sprites/verticalFlipIcon.png");
+        verticalFlipIcon.resize(35,35);
         cutIconWhite = loadImage("Sprites/cutIconWhite.png");
         cutIconWhite.resize(35,35);
+        linkIconWhite = loadImage("Sprites/linkIconWhite.png");
+        linkIconWhite.resize(35,35);
+        unlinkIconWhite = loadImage("Sprites/unlinkIconWhite.png");
+        unlinkIconWhite.resize(35,35);
         openIconWhite = loadImage("Sprites/openIconWhite.png");
         openIconWhite.resize(35,35);
         smallOpenIconWhite = loadImage("Sprites/openIconWhite.png");

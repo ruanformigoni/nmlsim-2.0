@@ -14,7 +14,7 @@ PopUpCenter popCenter;
 float fontSz = 15;
 float scaleFactor;
 
-boolean ctrlPressed = false, altPressed = false;
+boolean ctrlPressed = false, altPressed = false, shiftPressed = false;
 
 void setup(){
     size(1280, 720);
@@ -66,17 +66,24 @@ void keyPressed(){
     if(key == ESC) key=0;
     if(popCenter.isActive())
         return;
-    if(keyCode == CONTROL)
+    if(key == CODED && keyCode == CONTROL)
         ctrlPressed = true;
-    if(keyCode == ALT)
+    if(key == CODED && keyCode == ALT)
         altPressed = true;
+    if(key == CODED && keyCode == SHIFT)
+        shiftPressed = true;
     h.keyPressedMethod();
     pm.keyPressedMethod();
     sb.keyPressedMethod();
 }
 
 void keyReleased(){
-    ctrlPressed = altPressed = false;
+    if(key == CODED && keyCode == CONTROL)
+        ctrlPressed = false;
+    if(key == CODED && keyCode == ALT)
+        altPressed = false;
+    if(key == CODED && keyCode == SHIFT)
+        shiftPressed = false;
 }
 
 void mouseWheel(MouseEvent e){
