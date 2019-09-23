@@ -343,7 +343,6 @@ void LLGMagnet::setMimic(Magnet * mimic){
 
 void LLGMagnet::updateMagnetization(){
 	if(isMimicing){
-	cout << "HERE" << endl;
 		this->mimic->updateMagnetization();
 		this->magnetization[0] = this->mimic->getMagnetization()[0];
 		this->magnetization[1] = this->mimic->getMagnetization()[1];
