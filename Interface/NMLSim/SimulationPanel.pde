@@ -237,7 +237,7 @@ class SimulationPanel{
         noStroke();
         auxY += 8;
         
-        text("Substract Configurations", x+10, auxY+fontSz);
+        text("Substrate Configurations", x+10, auxY+fontSz);
         auxY += aux+5;
         
         subSize.updatePosition(x+10, auxY);

@@ -435,7 +435,7 @@ class PhasePanel{
                     behaPhaseValues.put(name.getText(), value);
                 }
             }
-            PopUp pop = new PopUp((width-150)/2,(height-50)/2, 150, 50, "Phase saved!");
+            PopUp pop = new PopUp(((width-150)/2)*scaleFactor, ((height-50)/2)*scaleFactor, 150, 50, "Phase saved!");
             pop.activate();
             pop.setAsTimer(50);
             popCenter.setPopUp(pop);

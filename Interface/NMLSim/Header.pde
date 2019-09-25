@@ -192,6 +192,9 @@ class Header{
         fill(45, 80, 22);
         stroke(45, 80, 22);
         rect(x, y, myW, h);
+        
+        image(sprites.nanocompLogo, x+myW-105, y+5);
+        
         if(file.isExpanded){
             fill(83, 108, 83);
             stroke(83, 108, 83);

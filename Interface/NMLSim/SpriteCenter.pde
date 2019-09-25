@@ -6,11 +6,13 @@ class SpriteCenter{
     public PImage smallDefaultIconWhite, smallEditIconWhite, orangeArrowLeftIcon, orangeArrowRightIcon, cutIconWhite, forwardIconWhite, backwardIconWhite, playIconWhite;
     public PImage pauseIconWhite, stopIconWhite, chartIconWhite, simulationIconWhite, arrowUpIconWhite, arrowDownIconWhite, medSaveAsIconWhite, timelineIconWhite;
     public PImage cancelIconWhite, exportGifIconWhite, magnetIconWhite, zoneViewIconWhite, smallOpenIconWhite, linkIconWhite, unlinkIconWhite, horizontalFlipIcon;
-    public PImage verticalFlipIcon;
+    public PImage verticalFlipIcon, nanocompLogo;
     
     public SpriteCenter(){
         nanoArrowUpIconWhite = loadImage("Sprites/arrowUpIconWhite.png");
         nanoArrowUpIconWhite.resize(15,15);
+        nanocompLogo = loadImage("Sprites/nanocompLogo.png");
+        nanocompLogo.resize(100,0);
         nanoArrowDownIconWhite = loadImage("Sprites/arrowDownIconWhite.png");
         nanoArrowDownIconWhite.resize(15,15);
         arrowUpIconWhite = loadImage("Sprites/arrowUpIconWhite.png");

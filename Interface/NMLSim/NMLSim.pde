@@ -44,6 +44,8 @@ void setup(){
 }
 
 void draw(){
+    if(!focused)
+        ctrlPressed = altPressed = shiftPressed = false;
     scale(scaleFactor);
     background(255, 153, 85);
     sg.drawSelf();
@@ -109,7 +111,7 @@ void saveAs(File selectedPath){
     fileSys.writeXmlFile(null);
     fileSys.writeStructureFile();
     fileSys.writeConfigFile(null);
-    PopUp p = new PopUp((width-200)/2, (height-100)/2,200,100,"Chages saved!");
+    PopUp p = new PopUp(((width-200)/2)*scaleFactor, ((height-100)/2)*scaleFactor, 200, 100, "Chages saved!");
     p.activate();
     p.setAsTimer(20);
     popCenter.setPopUp(p);
@@ -120,7 +122,7 @@ void saveProject(){
     fileSys.writeXmlFile(null);
     fileSys.writeConfigFile(null);
     fileSys.writeStructureFile();
-    PopUp p = new PopUp((width-200)/2, (height-100)/2,200,100,"Chages saved!");
+    PopUp p = new PopUp(((width-200)/2)*scaleFactor, ((height-100)/2)*scaleFactor, 200, 100, "Chages saved!");
     p.activate();
     p.setAsTimer(20);
     popCenter.setPopUp(p);

@@ -360,7 +360,7 @@ class SimulationBar{
                     e.printStackTrace();
                 }
             } else{
-                PopUp pop = new PopUp((width-250)/2, (height-100)/2, 250, 100, "Select at least one magnet!");
+                PopUp pop = new PopUp(((width-250)/2)*scaleFactor, ((height-100)/2)*scaleFactor, 250, 100, "Select at least one magnet!");
                 pop.activate();
                 pop.setAsTimer(60);
                 popCenter.setPopUp(pop);
@@ -370,7 +370,7 @@ class SimulationBar{
             Path p = Paths.get(fileSys.fileBaseName + "/simulation.csv");
             if(!Files.exists(p)){
                 timeline.deactivate();
-                PopUp pop = new PopUp((width-400)/2, (height-100)/2, 400, 100, "Please perform a verbose simulation first!");
+                PopUp pop = new PopUp(((width-400)/2)*scaleFactor, ((height-100)/2)*scaleFactor, 400, 100, "Please perform a verbose simulation first!");
                 pop.activate();
                 pop.setAsTimer(80);
                 popCenter.setPopUp(pop);
@@ -389,7 +389,7 @@ class SimulationBar{
             timelineRunning = false;
         }
         if(!panelMenu.getSimulationMode().equals("verbose") && timeline.mousePressedMethod()){
-            PopUp pop = new PopUp((width-400)/2, (height-100)/2, 400, 100, "Please perform a verbose simulation first!");
+            PopUp pop = new PopUp(((width-400)/2)*scaleFactor, ((height-100)/2)*scaleFactor, 400, 100, "Please perform a verbose simulation first!");
             pop.activate();
             pop.setAsTimer(80);
             popCenter.setPopUp(pop);

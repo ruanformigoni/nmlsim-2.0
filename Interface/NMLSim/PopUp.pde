@@ -40,7 +40,7 @@ public class PopUp{
             if(fadeBackground){
                 stroke(255, 255, 255, 125);
                 fill(255, 255, 255, 125);
-                rect(0, 0, width, height);
+                rect(0, 0, width*scaleFactor, height*scaleFactor);
             }
             
             stroke(orange);
