@@ -420,8 +420,8 @@ bool LLGMagnet::isNeighbor(LLGMagnet * magnet, double ratio){
 	double * mpy = magnet->getPy();
 	//X and Y deltas
 	double xDiff, yDiff;
-	xDiff = abs(this->xPosition - magnet->getXPosition()) - (mpx[1]-mpx[0]) - (getPx()[1] - getPx()[0]);
-	yDiff = abs(this->yPosition - magnet->getYPosition()) - (mpy[0]-mpy[3]) - (getPy()[0] - getPy()[3]);
+	xDiff = abs(this->xPosition - magnet->getXPosition());
+	yDiff = abs(this->yPosition - magnet->getYPosition());
 	//Compute the distance
 	double dist = sqrt(pow(xDiff, 2.0) + pow(yDiff, 2.0));
 	//Compare to the RADIUS (misspelled here)
