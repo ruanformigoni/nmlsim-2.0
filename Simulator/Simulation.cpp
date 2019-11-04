@@ -352,11 +352,6 @@ void Simulation::buildMagnets(){
 			for(int i=0; i<magnetsIds.size(); i++){
 				//Build the new magnet
 				Magnet * magnet = (Magnet *) new LLGMagnet(magnetsIds[i], fReader);
-				//Check if there is a mimic and add it
-				string mimicId = fReader->getItemProperty(DESIGN, magnetsIds[i], "mimic");
-				if(mimicId != ""){
-					(static_cast<LLGMagnet *> (magnet))->setMimic(circuit->getMagnet(mimicId));
-				}
 				//Check if the type is input, output or regular
 				string magType = fReader->getItemProperty(DESIGN, magnetsIds[i], "myType");
 				if(magType == "input"){
@@ -370,6 +365,15 @@ void Simulation::buildMagnets(){
 				string clkZoneStr = fReader->getItemProperty(DESIGN, magnetsIds[i], "clockZone");
 				if(clkZoneStr != "none"){
 					this->circuit->addMagnetToZone(magnet, stoi(clkZoneStr));
+				}
+			}
+			//Only check for mimics after all magnets are instanciated
+			for(int i=0; i<magnetsIds.size(); i++){
+				//Check if there is a mimic and add it
+				string mimicId = fReader->getItemProperty(DESIGN, magnetsIds[i], "mimic");
+				if(mimicId != ""){
+					Magnet * magnet = circuit->getMagnet(magnetsIds[i]);
+					(static_cast<LLGMagnet *> (magnet))->setMimic(circuit->getMagnet(mimicId));
 				}
 			}
 		}
