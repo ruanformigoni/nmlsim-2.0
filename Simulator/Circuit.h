@@ -33,8 +33,6 @@ public:
 	Magnet* getMagnet(int zoneId, string id);
 	//Returns a magnet with only the id -- slow method...
 	Magnet * getMagnet(string id);
-	//Dump zone values in the file
-	void dumpZonesValues(ofstream * outFile);
 	//Dump magnets values in the file
 	void dumpMagnetsValues(ofstream * outFile);
 	//Set the inputs with a bit mask
@@ -45,8 +43,6 @@ public:
 	void dumpInOutValues(ofstream * outFile);
 	//Return all magnets
 	vector <Magnet *> getAllMagnets();
-	//Restart all phases
-	void restartAllPhases();
 	//Restart all zones phase
 	void resetZonesPhases();
 	//Restart all magnets initial magnetization

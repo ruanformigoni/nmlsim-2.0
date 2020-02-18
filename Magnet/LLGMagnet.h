@@ -65,7 +65,7 @@ public:
 	//Constructor
 	LLGMagnet(string id, FileReader * fReader);
 	//Compute the magnetization
-	void calculateMagnetization(ClockPhase * phase);
+	void calculateMagnetization(ClockZone * zone);
 	//Build the magnet from a description vector
 	void buildMagnet(vector <string> descParts);
 	//Returns the magnetization

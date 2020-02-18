@@ -68,7 +68,7 @@ double * ThiagoMagnet::getMagnetization(){
 	return &this->magnetization;
 }
 
-void ThiagoMagnet::calculateMagnetization(ClockPhase * phase){
+void ThiagoMagnet::calculateMagnetization(ClockZone * zone){
 	// The variable gaussian_value is the Gaussian-distributed random variable
 	default_random_engine generator(chrono::system_clock::now().time_since_epoch().count());
 	normal_distribution<double> distribution (0.0,1.0);
@@ -83,7 +83,9 @@ void ThiagoMagnet::calculateMagnetization(ClockPhase * phase){
 		}
 
 		//Adds the influence of the clock signal and the current magnetization
-		aux = (aux + this->magnetization) * (1.0 - phase->getSignal()[0]);
+		double * signal = zone->getSignal();
+		aux = (aux + this->magnetization) * (1.0 - signal[0]);
+		free(signal);
 
 		//Check the limits
 		if(aux > 1.0){

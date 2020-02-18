@@ -77,19 +77,17 @@ void Simulation::exaustiveSimulation(){
 	//Compute the number of combinations for exaustive simulation
 	int inputSize = circuit->getInputsSize();
 	int limit = (int) pow(2.0, (double) inputSize);
+	//Build Header
+	outFile << "Combination,";
+	this->circuit->makeHeader(&outFile);
 	//Print progress
 	cout << "Progress: 0%\n";
 	for(int i=0; i<limit; i++){
-		//Dump in the output file
-		outFile << "COMBINATION " << i << endl << "Initial Value\n";
 		//Set the input with the index as a bitmask
 		circuit->setInputs(i, this->mySimType);
-		//Dump input and output values at time 0
-		this->circuit->dumpInOutValues(&outFile);
-		outFile << endl;
 		//Reset the circuit
 		this->currentTime = 0;
-		circuit->restartAllPhases();
+		// circuit->restartAllPhases();
 		circuit->resetZonesPhases();
 		circuit->restartAllMagnets();
 		//Simulate
@@ -97,10 +95,10 @@ void Simulation::exaustiveSimulation(){
 			this->circuit->nextTimeStep();
 			this->currentTime += this->deltaTime;
 		}
-		//Dump input and output values at time MAX
-		outFile << "End Value\n";
-		this->circuit->dumpInOutValues(&outFile);
-		outFile << endl << endl;
+		//Dump in the output file
+		outFile << i << ",";
+		this->circuit->dumpMagnetsValues(&outFile);
+		outFile << endl;
 		circuit->resetZonesPhases();
 		//Erase progress line and print the new progress
 		cout << "\033[1A" << "\033[K";
@@ -116,8 +114,9 @@ void Simulation::directSimulation(){
 		this->currentTime += this->deltaTime;
 	}
 	//Dump result
+	outFile << "Result,";
 	this->circuit->makeHeader(&outFile);
-	outFile << endl;
+	outFile << endl << ",";
 	this->circuit->dumpMagnetsValues(&outFile);
 	outFile << endl;
 }
@@ -126,7 +125,7 @@ void Simulation::repetitiveSimulation(){
 	//Get number of repetitions
 	int repetitions = stod(fReader->getProperty(CIRCUIT, "repetitions"));
 	//Build header
-	outFile << "Repetition,";
+	outFile << "Iteration,";
 	this->circuit->makeHeader(&outFile);
 	outFile << endl;
 	//Print prorgess
@@ -143,7 +142,7 @@ void Simulation::repetitiveSimulation(){
 		outFile << endl;
 		//Reset simulation
 		this->currentTime = 0;
-		circuit->restartAllPhases();
+		// circuit->restartAllPhases();
 		circuit->resetZonesPhases();
 		circuit->restartAllMagnets();
 		//Erase progress line and print the new progress
@@ -246,6 +245,7 @@ void Simulation::buildClkCtrl(){
 				initial = (double*)malloc(6*sizeof(double));
 				end = (double*)malloc(6*sizeof(double));
 				variation = (double*)malloc(6*sizeof(double));
+
 				parts = splitString(fReader->getItemProperty(PHASE, aux[i], "initialSignal"), ',');
 				//Get initial, end and variation signals
 				for(int j=0; j<6; j++){

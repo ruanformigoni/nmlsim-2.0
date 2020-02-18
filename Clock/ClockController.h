@@ -1,6 +1,7 @@
 #include "../Others/Includes.h"
 #include "ClockZone.h"
 #include "ClockPhase.h"
+#include "../Magnet/Magnet.h"
 
 #ifndef CLOCKCONTROLLER_H
 #define CLOCKCONTROLLER_H
@@ -19,16 +20,12 @@ public:
 	void nextTimeStep();
 	//Add a magnet to a clock zone
 	void addMagnetToZone(Magnet * magnet, int zoneIndex);
-	//Dump all zone values in the file
-	void dumpZonesValues(ofstream * outFile);
 	//Dump all magnets values in the file
 	void dumpMagnetsValues(ofstream * outFile);
 	//Return the clock zone by the ID
 	ClockZone* getClockZone(int zoneId);
 	//Return all magnets
 	vector <Magnet *> getMagnetsFromAllZones();
-	//Restart all phases
-	void restartAllPhases();
 	//Reset the zone's phase to the initial one
 	void resetZonesPhases();
 	//Write the header in the file

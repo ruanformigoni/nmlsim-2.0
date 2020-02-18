@@ -9,10 +9,10 @@ Objs/Neighbor.o: Magnet/Neighbor.cpp Magnet/Neighbor.h Others/Includes.h
 Objs/ClockPhase.o: Clock/ClockPhase.cpp Clock/ClockPhase.h Others/Includes.h
 	@g++ -std=gnu++11 -c Clock/ClockPhase.cpp -o Objs/ClockPhase.o
 
-Objs/ThiagoMagnet.o: Magnet/ThiagoMagnet.cpp Magnet/ThiagoMagnet.h Magnet/Magnet.h Magnet/Neighbor.h Clock/ClockPhase.h Magnet/LLGMagnetMagnetization.h Others/Includes.h Simulator/FileReader.h
+Objs/ThiagoMagnet.o: Magnet/ThiagoMagnet.cpp Magnet/ThiagoMagnet.h Magnet/Magnet.h Magnet/Neighbor.h Clock/ClockZone.h Magnet/LLGMagnetMagnetization.h Others/Includes.h Simulator/FileReader.h
 	@g++ -std=gnu++11 -c Magnet/ThiagoMagnet.cpp -o Objs/ThiagoMagnet.o
 
-Objs/LLGMagnet.o: Magnet/LLGMagnet.cpp Magnet/LLGMagnet.h Magnet/Magnet.h Magnet/Neighbor.h Clock/ClockPhase.h Others/Includes.h Simulator/FileReader.h
+Objs/LLGMagnet.o: Magnet/LLGMagnet.cpp Magnet/LLGMagnet.h Magnet/Magnet.h Magnet/Neighbor.h Clock/ClockZone.h Others/Includes.h Simulator/FileReader.h
 	@g++ -std=gnu++11 -c Magnet/LLGMagnet.cpp -o Objs/LLGMagnet.o
 
 Objs/LLGMagnetMagnetization.o: Magnet/LLGMagnetMagnetization.cpp Magnet/LLGMagnetMagnetization.h Magnet/Magnet.h Magnet/Neighbor.h Clock/ClockPhase.h Others/Includes.h
@@ -24,7 +24,7 @@ Objs/dipolar3D3_modificado.o: Magnet/dipolar3D3_modificado.f90
 Objs/ClockZone.o: Clock/ClockZone.cpp Clock/ClockZone.h Magnet/Magnet.h Clock/ClockPhase.h Others/Includes.h
 	@g++ -std=gnu++11 -c Clock/ClockZone.cpp -o Objs/ClockZone.o
 
-Objs/ClockController.o: Clock/ClockController.cpp Clock/ClockController.h Clock/ClockZone.h Clock/ClockPhase.h Others/Includes.h
+Objs/ClockController.o: Clock/ClockController.cpp Clock/ClockController.h Clock/ClockZone.h Clock/ClockPhase.h Magnet/Magnet.h Others/Includes.h
 	@g++ -std=gnu++11 -c Clock/ClockController.cpp -o Objs/ClockController.o
 
 Objs/FileReader.o: Simulator/FileReader.cpp Simulator/FileReader.h Others/Includes.h

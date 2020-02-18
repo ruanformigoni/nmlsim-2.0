@@ -1,9 +1,11 @@
 #include "../Others/Includes.h"
-#include "../Clock/ClockPhase.h"
+#include "../Clock/ClockZone.h"
 #include "Neighbor.h"
 
 #ifndef MAGNET_H
 #define MAGNET_H
+
+// class ClockZone;
 
 //Interface for the Magnet
 class Magnet{
@@ -16,7 +18,7 @@ public:
 	//Returns the current magnetization value
 	virtual double * getMagnetization() = 0;
 	//Compute the magnetization for the next step of time
-	virtual void calculateMagnetization(ClockPhase * phase) = 0;
+	virtual void calculateMagnetization(ClockZone * zone) = 0;
 	//Update the magnetization
 	virtual void updateMagnetization() = 0;
 	//Add a magnet as a neighbor

@@ -14,12 +14,20 @@ ClockController::ClockController(vector <ClockZone *> zones, vector <ClockPhase 
 void ClockController::nextTimeStep(){
 	//For every clock zone...
 	for(int i=0; i<this->zones.size(); i++){
+		vector<Magnet *> magnets = zones[i]->getAllMagnets();
 		//Update their magnets magnetization
-		this->zones[i]->updateMagnets();
+		for(int j=0; j<magnets.size(); j++){
+			magnets[j]->calculateMagnetization(zones[i]);
+		}
+		//Update the values
+		for(int j=0; j<magnets.size(); j++){
+			magnets[j]->updateMagnetization();
+		}
+		// this->zones[i]->updateMagnets();
 		//Update the time in the phase
-		this->zones[i]->updateTimeInPhase(this->deltaTime);
+		this->zones[i]->incrementStepsInPhase();
 		//Check if the phase has ended
-		if(this->zones[i]->isPhaseEnded()){
+		if(this->zones[i]->isPhaseEnded(this->deltaTime)){
 			string nextPhase;
 			vector <string> phasesOrder = this->zones[i]->getPhases();
 			//Finds the index of the current phase in the order
@@ -41,21 +49,11 @@ void ClockController::nextTimeStep(){
 			this->zones[i]->updatePhase(nextPhaseAux);
 		}
 	}
-	//Update all phases time
-	for(int i=0; i<this->phases.size(); i++){
-		phases[i]->nextTimeStep(this->deltaTime);
-	}
 }
 
 void ClockController::addMagnetToZone(Magnet * magnet, int zoneIndex){
 	if(zoneIndex >= 0 && zoneIndex < this->zones.size())
 		this->zones[zoneIndex]->addMagnet(magnet);
-}
-
-void ClockController::dumpZonesValues(ofstream * outFile){
-	for(int i=0; i<zones.size(); i++){
-		zones[i]->dumpPhaseValues(outFile);
-	}
 }
 
 ClockZone * ClockController::getClockZone(int zoneId){
@@ -64,14 +62,20 @@ ClockZone * ClockController::getClockZone(int zoneId){
 
 void ClockController::dumpMagnetsValues(ofstream * outFile){
 	for(int i=0; i<zones.size(); i++){
-		zones[i]->dumpMagnetsValues(outFile);
+		vector <Magnet *> magnets = zones[i]->getAllMagnets();
+		for(int j=0; j<magnets.size(); j++){
+			magnets[j]->dumpValues(outFile);
+		}
 	}
 }
 
 void ClockController::makeHeader(ofstream * outFile){
-	for(int i=0; i<zones.size(); i++){
-		zones[i]->makeHeader(outFile);
-	}	
+	for(int i=0; i<zones.size(); i++){	
+		vector <Magnet *> magnets = zones[i]->getAllMagnets();
+		for(int j=0; j<magnets.size(); j++){
+			magnets[j]->makeHeader(outFile);
+		}
+	}
 }
 
 vector <Magnet *> ClockController::getMagnetsFromAllZones(){
@@ -81,11 +85,6 @@ vector <Magnet *> ClockController::getMagnetsFromAllZones(){
 		magnets.insert(magnets.end(),  aux.begin(), aux.end());
 	}
 	return magnets;
-}
-
-void ClockController::restartAllPhases(){
-	for(int i=0; i<phases.size(); i++)
-		phases[i]->restartPhase();
 }
 
 void ClockController::resetZonesPhases(){

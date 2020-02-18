@@ -7,53 +7,23 @@ ClockPhase::ClockPhase(string phaseName, double phaseDuration, double * initialP
 	this->endPhaseSignal = endPhaseSignal;
 	this->variation = variation;
 	this->initialSignal = initialPhaseSignal;
-	this->currentSignal = (double*)malloc(vLenght*sizeof(double));
-	this->myTimer = 0.0;
+}
+
+double * ClockPhase::getSignal(int numberOfSteps){
+	//DANGER! This method allocs memory and c++ does not have garbage collector. Therefore, coders MUST free the signal vector after using it
+	double * currentSignal = (double*)malloc(vLenght*sizeof(double));
 	for(int i=0; i<vLenght; i++){
-		this->currentSignal[i] = initialSignal[i];
+		//Current signal equals initial + variation
+		currentSignal[i] = this->initialSignal[i]+this->variation[i]*numberOfSteps;
+		//Check superior and inferior boundries
+		if((currentSignal[i] > this->endPhaseSignal[i] && variation[i] > 0) || (currentSignal[i] < this->endPhaseSignal[i] && variation[i] < 0))
+			currentSignal[i] = endPhaseSignal[i];
 	}
-}
-
-double * ClockPhase::getSignal(){
-	return this->currentSignal;
-}
-
-void ClockPhase::restartPhase(){
-	this->myTimer = 0.0;
-	for(int i=0; i<vLenght; i++){
-		this->currentSignal[i] = this->initialSignal[i];
-	}
-}
-
-void ClockPhase::nextTimeStep(double deltaTime){
-	//updates the timer
-	this->myTimer += deltaTime;
-	//If phase ended, restart it
-	if(myTimer > duration){
-		restartPhase();
-	}
-	else{
-		for(int i=0; i<vLenght; i++){
-			//Update the signal value
-			this->currentSignal[i] += this->variation[i];
-			//Check if it is above the max value for positive phase
-			if(this->variation[i] > 0 && this->currentSignal[i] > endPhaseSignal[i])
-				this->currentSignal[i] = endPhaseSignal[i];
-			//Check if it is above the max value for negative phase
-			if(this->variation[i] < 0 && this->currentSignal[i] < endPhaseSignal[i])
-				this->currentSignal[i] = endPhaseSignal[i];
-		}
-	}
+	return currentSignal;
 }
 
 double ClockPhase::getPhaseDuration(){
 	return this->duration;
-}
-
-void ClockPhase::dumpValues(ofstream * out){
-	for(int i=0; i<vLenght; i++){
-		(*out) << this->currentSignal[i] << ",";
-	}
 }
 
 double * ClockPhase::getVariation(){

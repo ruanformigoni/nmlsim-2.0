@@ -115,7 +115,7 @@ void LLGMagnet::crossProduct(double *vect_A, double *vect_B, double *cross_P){
 }
  
 //Compute the magnetization for the next time step
-void LLGMagnet::calculateMagnetization(ClockPhase * phase){
+void LLGMagnet::calculateMagnetization(ClockZone * zone){
 	if(isMimicing)
 		return;
 
@@ -142,6 +142,9 @@ void LLGMagnet::calculateMagnetization(ClockPhase * phase){
 		}
 	}
 
+	//Get the clock signal
+	double * signal = zone->getSignal();
+
 	//Check for the method
 	if(LLGMagnet::rk4Method){
 		double k1[3], k2[3], k3[3], k4[3], auxSig[3], auxVar[3], auxMag[3], i_s[3], half_is[3], next_is[3];	//Auxiliar variables
@@ -156,11 +159,11 @@ void LLGMagnet::calculateMagnetization(ClockPhase * phase){
 				auxVar[i] = 0;
 			} else{
 				//Otherwise, split the external signal into Zeeman field and spin hall field
-				auxVar[i] = phase->getVariation()[i];	//The variation of the phase
-				auxSig[i] = phase->getSignal()[i];	//The signal value
-				i_s[i] = ((-1)*hbar*this->theta_she*(phase->getSignal()[i+3]*pow(10,12)))/(2*q*this->getThickness()*pow(10,(-9))*Ms);
-				half_is[i] = ((-1)*hbar*this->theta_she*((phase->getSignal()[i+3] + auxVar[i]/2)*pow(10,12)))/(2*q*this->getThickness()*pow(10,(-9))*Ms);
-				next_is[i] = ((-1)*hbar*this->theta_she*((phase->getSignal()[i+3] + auxVar[i])*pow(10,12)))/(2*q*this->getThickness()*pow(10,(-9))*Ms);
+				auxVar[i] = zone->getZoneSignalVariation()[i];	//The variation of the phase
+				auxSig[i] = signal[i];	//The signal value
+				i_s[i] = ((-1)*hbar*this->theta_she*(signal[i+3]*pow(10,12)))/(2*q*this->getThickness()*pow(10,(-9))*Ms);
+				half_is[i] = ((-1)*hbar*this->theta_she*((signal[i+3] + auxVar[i]/2)*pow(10,12)))/(2*q*this->getThickness()*pow(10,(-9))*Ms);
+				next_is[i] = ((-1)*hbar*this->theta_she*((signal[i+3] + auxVar[i])*pow(10,12)))/(2*q*this->getThickness()*pow(10,(-9))*Ms);
 			}
 		}
 
@@ -221,7 +224,7 @@ void LLGMagnet::calculateMagnetization(ClockPhase * phase){
 				heff[i] = hd[i] + hc[i];
 			else{
 				//If not, use the signal to compute effective field
-				heff[i] = phase->getSignal()[i] / (mu0 * 1000.0 * this->Ms) + hd[i] + hc[i];
+				heff[i] = signal[i] / (mu0 * 1000.0 * this->Ms) + hd[i] + hc[i];
 			}
 		}
 
@@ -237,7 +240,7 @@ void LLGMagnet::calculateMagnetization(ClockPhase * phase){
 			if(this->fixedMagnetization)
 				i_s[i] = 0;
 			else
-				i_s[i] = ((-1)*hbar*this->theta_she*(phase->getSignal()[i+3]*pow(10,12)))/(2*q*this->getThickness()*pow(10,(-9))*Ms);
+				i_s[i] = ((-1)*hbar*this->theta_she*(signal[i+3]*pow(10,12)))/(2*q*this->getThickness()*pow(10,(-9))*Ms);
 		}
 
 		//Compute a and b terms
@@ -268,6 +271,9 @@ void LLGMagnet::calculateMagnetization(ClockPhase * phase){
 										0.25*(b_uplus[i] - b_uminus[i]) * (this->dW[i]*this->dW[i] - dt)/sqrt(dt);
 		}
 	}
+
+	//Free memory for this local variable
+	free(signal);
 }
 
 //Some dark magics to compute f term, used in the RK4 method

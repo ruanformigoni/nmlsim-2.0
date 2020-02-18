@@ -131,6 +131,7 @@ class PanelMenu{
                 noStroke();
             }
             text(labels.get(i), auxX, y+fontSz);
+            hitboxes.get(i).updateBox(auxX, y, textWidth(labels.get(i)), h);
 
             stroke(lineColor);
             strokeWeight(2);
@@ -157,6 +158,7 @@ class PanelMenu{
         noStroke();
         fill(textColor);
         text("Structures", width/scaleFactor-textWidth("Structures")-28, y+fontSz);
+        structureLabelHitbox.updateBox(width/scaleFactor-textWidth("Structures")-28, y,textWidth("Structures"), h);
         stroke(lineColor);
         strokeWeight(2);
         line(width/scaleFactor-textWidth("Structures")-33, y+1, width/scaleFactor-textWidth("Structures")-33, y+h-2);

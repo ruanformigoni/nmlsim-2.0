@@ -45,14 +45,6 @@ Magnet* Circuit::getMagnet(string inOrOut, string id){
 	return NULL;
 }
 
-Magnet * Circuit::getMagnet(int zoneId, string id){
-	return this->clockCtrl->getClockZone(zoneId)->getMagnet(id);
-}
-
-void Circuit::dumpZonesValues(ofstream * outFile){
-	this->clockCtrl->dumpZonesValues(outFile);
-}
-
 void Circuit::dumpMagnetsValues(ofstream * outFile){
 	this->clockCtrl->dumpMagnetsValues(outFile);
 }
@@ -164,10 +156,6 @@ void Circuit::restartAllMagnets(){
 	vector <Magnet *> magnets = getAllMagnets();
 	for(int i=0; i<magnets.size(); i++)
 		magnets[i]->resetMagnetization();
-}
-
-void Circuit::restartAllPhases(){
-	clockCtrl->restartAllPhases();
 }
 
 void Circuit::resetZonesPhases(){

@@ -35,7 +35,7 @@ public:
     //Returns the current magnetization
 	double * getMagnetization();
 	//Compute the future magnetization depending on the clock phase
-	void calculateMagnetization(ClockPhase * phase);
+	void calculateMagnetization(ClockZone * zone);
 	//Update the current magnetization to the future magnetization
 	void updateMagnetization();
 	//Print values into file
