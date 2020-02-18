@@ -1,7 +1,7 @@
 #include "../Others/Includes.h"
 #include "../Simulator/FileReader.h"
 #include "Magnet.h"
-#include "LLGMagnetMagnetization.h"
+#include "LLGTensors.h"
 #include <chrono>
 #include <random>
 
@@ -21,7 +21,7 @@ private:
 	double tempMagnetization;	//Auxiliar variable
 	bool fixedMagnetization;	//No field effect from xml file
 	vector <Neighbor *> neighbors;	//List of neighbors magnets
-	LLGMagnetMagnetization * magnetizationCalculator;	//Class to compute the tensors
+	LLGTensors * tensorsCalculator;	//Class to compute the tensors
 	double xPosition;	//Position in plane
 	double yPosition;	//Position in plane
 

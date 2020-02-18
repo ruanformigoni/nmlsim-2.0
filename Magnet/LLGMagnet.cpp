@@ -74,7 +74,7 @@ LLGMagnet::LLGMagnet(string id, FileReader * fReader){
 	thickness = stod(fReader->getItemProperty(COMPONENTS, compName, "thickness"));
 	topCut = stod(fReader->getItemProperty(COMPONENTS, compName, "topCut"));
 	bottomCut = stod(fReader->getItemProperty(COMPONENTS, compName, "bottomCut"));
-	this->magnetizationCalculator = new LLGMagnetMagnetization(width, height, thickness, topCut, bottomCut);
+	this->tensorsCalculator = new LLGTensors(width, height, thickness, topCut, bottomCut);
 
 	//Position
 	parts = splitString(fReader->getItemProperty(DESIGN, id, "position"), ',');
@@ -83,15 +83,15 @@ LLGMagnet::LLGMagnet(string id, FileReader * fReader){
 
 	//Calculate the demag energy
 	this->demagTensor = (double **) malloc(3*sizeof(double *));
-	this->demagTensor = this->magnetizationCalculator->computeDemag();
-	double ** auxND = this->magnetizationCalculator->computeDemag();
+	this->demagTensor = this->tensorsCalculator->computeDemag();
+	double ** auxND = this->tensorsCalculator->computeDemag();
 	for(int i=0; i<3; i++){
 		for(int j=0; j<3; j++){
 			nd[i][j] = auxND[i][j];
 		}
 	}
 
-	this->volume = this->magnetizationCalculator->getVolume();
+	this->volume = this->tensorsCalculator->getVolume();
 	
 	//Initialize some constants
 	initializeConstants();
@@ -373,7 +373,7 @@ void LLGMagnet::addNeighbor(Magnet * neighbor, double * ratio){
 		double * npy = (static_cast<LLGMagnet *> (neighbor))->getPy();
 		double nt = (static_cast<LLGMagnet *> (neighbor))->getThickness();
 		//Dipolar tensor
-		double * tensor = this->magnetizationCalculator->computeDipolar(npx, npy, nt, vDist, hDist);
+		double * tensor = this->tensorsCalculator->computeDipolar(npx, npy, nt, vDist, hDist);
 		this->neighbors.push_back(new Neighbor(neighbor, tensor));
 	}
 }
@@ -401,15 +401,15 @@ void LLGMagnet::resetMagnetization(){
 }
 
 double * LLGMagnet::getPx(){
-	return this->magnetizationCalculator->getPx();
+	return this->tensorsCalculator->getPx();
 }
 
 double * LLGMagnet::getPy(){
-	return this->magnetizationCalculator->getPy();
+	return this->tensorsCalculator->getPy();
 }
 
 double LLGMagnet::getThickness(){
-	return this->magnetizationCalculator->getThickness();
+	return this->tensorsCalculator->getThickness();
 }
 
 double LLGMagnet::getXPosition(){

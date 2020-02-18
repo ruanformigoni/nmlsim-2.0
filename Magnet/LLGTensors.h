@@ -2,13 +2,13 @@
 #include <cmath>
 #include <map>
 
-#ifndef LLGMAGNETMAGNETIZATION_H
-#define LLGMAGNETMAGNETIZATION_H
+#ifndef LLGTENSORS_H
+#define LLGTENSORS_H
 
 #define PI 3.1415926535897
 
 //This class is used to compute the demag and dipolar tensors
-class LLGMagnetMagnetization{
+class LLGTensors{
 private:
 	const int NMC = 1000000;	//Number of samplings for the Monte Carlo method
 	double w, t;	//Width and thickness of the magnet
@@ -25,9 +25,9 @@ private:
 
 public:
 	//Constructor with the points
-	LLGMagnetMagnetization(double * px, double * py, double thickness);
+	LLGTensors(double * px, double * py, double thickness);
 	//Constructor without the points
-	LLGMagnetMagnetization(double widht, double height, double thickness, double topCut, double bottomCut);
+	LLGTensors(double widht, double height, double thickness, double topCut, double bottomCut);
 	//Method to compute the demag tensor
 	double ** computeDemag();
 	//Method to compute the dipolar tensor

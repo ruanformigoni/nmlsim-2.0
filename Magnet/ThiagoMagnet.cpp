@@ -58,10 +58,10 @@ ThiagoMagnet::ThiagoMagnet(string id, FileReader * fReader){
 	thickness = stod(fReader->getItemProperty(COMPONENTS, compId, "thickness"));
 	topCut = stod(fReader->getItemProperty(COMPONENTS, compId, "topCut"));
 	bottomCut = stod(fReader->getItemProperty(COMPONENTS, compId, "bottomCut"));
-	this->magnetizationCalculator = new LLGMagnetMagnetization(widht, height, thickness, topCut, bottomCut);
+	this->tensorsCalculator = new LLGTensors(widht, height, thickness, topCut, bottomCut);
 
-	//Has to compute demag tensor to proper initialize the LLGMagnetMagnetization class variables, which are needed in the future
-	this->magnetizationCalculator->computeDemag();
+	//Has to compute demag tensor to proper initialize the LLGTensors class variables, which are needed in the future
+	this->tensorsCalculator->computeDemag();
 }
 
 double * ThiagoMagnet::getMagnetization(){
@@ -151,7 +151,7 @@ void ThiagoMagnet::addNeighbor(Magnet * neighbor, double * neighborhoodRatio){
 		//Neighbor thickness
 		double nt = (static_cast<ThiagoMagnet *> (neighbor))->getThickness();
 		//Get the coupling tensor
-		double * tensor = this->magnetizationCalculator->computeDipolar(npx, npy, nt, vDist, hDist);
+		double * tensor = this->tensorsCalculator->computeDipolar(npx, npy, nt, vDist, hDist);
 		//Alloc memory for the weight and set to the component yy of the tensor
 		double * aux = (double*)malloc(sizeof(double));
 		*aux = tensor[4];
@@ -180,15 +180,15 @@ void ThiagoMagnet::normalizeWeights(){
 }
 
 double * ThiagoMagnet::getPx(){
-	return this->magnetizationCalculator->getPx();
+	return this->tensorsCalculator->getPx();
 }
 
 double * ThiagoMagnet::getPy(){
-	return this->magnetizationCalculator->getPy();
+	return this->tensorsCalculator->getPy();
 }
 
 double ThiagoMagnet::getThickness(){
-	return this->magnetizationCalculator->getThickness();
+	return this->tensorsCalculator->getThickness();
 }
 
 double ThiagoMagnet::getXPosition(){

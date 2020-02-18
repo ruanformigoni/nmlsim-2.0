@@ -1,7 +1,7 @@
 #include "../Others/Includes.h"
 #include "../Simulator/FileReader.h"
 #include "Magnet.h"
-#include "LLGMagnetMagnetization.h"
+#include "LLGTensors.h"
 #include <chrono>
 #include <random>
 
@@ -24,7 +24,7 @@ private:
 	double newMagnetization[3];	//Temporary magnetization value (the magnetization in the next time step)
 	vector <Neighbor *> neighbors;	//List of neighbors
 	bool fixedMagnetization;	//Fixed magnetization flag
-	LLGMagnetMagnetization * magnetizationCalculator;	//Object that compute the dipolar and demag tensors
+	LLGTensors * tensorsCalculator;	//Object that compute the dipolar and demag tensors
 	double volume;	//Volume of the magnet
 	double nd[3][3];	//Demag tensor
 	double dW [3];	//Thermal noise vector

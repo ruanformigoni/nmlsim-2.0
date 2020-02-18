@@ -41,7 +41,7 @@
 	JtoeV = 6.242_lg*ten**(18)
 */
 
-#include "LLGMagnetMagnetization.h"
+#include "LLGTensors.h"
 #include "../Simulator/Simulation.h"
 
 //Forward declaration of the tensor libraries
@@ -52,7 +52,7 @@ map<string, double> Simulation::volumeBib;
 //Forward declaration of the log file
 ofstream Simulation::demagLog;
 
-LLGMagnetMagnetization::LLGMagnetMagnetization(double *px, double *py, double thickness){
+LLGTensors::LLGTensors(double *px, double *py, double thickness){
     //Alloc the memory and sets the values for the points
     this->px = (double *)malloc(4 * sizeof(double));
     this->py = (double *)malloc(4 * sizeof(double));
@@ -63,7 +63,7 @@ LLGMagnetMagnetization::LLGMagnetMagnetization(double *px, double *py, double th
     this->t = thickness;
 }
 
-LLGMagnetMagnetization::LLGMagnetMagnetization(double widht, double height, double thickness, double topCut, double bottomCut){
+LLGTensors::LLGTensors(double widht, double height, double thickness, double topCut, double bottomCut){
     //Alloc the memory
     this->px = (double *)malloc(4 * sizeof(double));
     this->py = (double *)malloc(4 * sizeof(double));
@@ -84,11 +84,11 @@ LLGMagnetMagnetization::LLGMagnetMagnetization(double widht, double height, doub
 }
 
 //Here some dark magic starts
-double LLGMagnetMagnetization::frand(double xmin, double xmax){
+double LLGTensors::frand(double xmin, double xmax){
     return ((double)rand() / RAND_MAX) * (xmax - xmin) + xmin;
 }
 
-double *LLGMagnetMagnetization::frand_xz(){
+double *LLGTensors::frand_xz(){
     // input vector is in={xmin,xmax,ymin,ymax,zmin,zmax,xpmin,xpmax,ypmin,ypmax,zmin,zmax}
     static double out[4];
     double in[8] = {-0.5 * w, 0.5 * w, -0.5 * t, 0.5 * t, -0.5 * w, 0.5 * w, -0.5 * t, 0.5 * t};
@@ -97,7 +97,7 @@ double *LLGMagnetMagnetization::frand_xz(){
     return out;
 }
 
-double *LLGMagnetMagnetization::fu(double in[6]){
+double *LLGTensors::fu(double in[6]){
     // input vector is  in={x(0),y(1),z(2),xp(3),yp(4),zp(5)}
     static double out[3];
     double den;
@@ -107,11 +107,11 @@ double *LLGMagnetMagnetization::fu(double in[6]){
     return out;
 }
 
-double LLGMagnetMagnetization::fy(double x, const double ab[2]){
+double LLGTensors::fy(double x, const double ab[2]){
     return ab[0] * x + ab[1];
 }
 
-double *LLGMagnetMagnetization::demag(double *py){
+double *LLGTensors::demag(double *py){
     static double abc_out[18];
     double *abc, a[6] = {0}, b[6] = {0}, c[6] = {0};
     double *xz, x[6], yi[4];
@@ -214,7 +214,7 @@ bool sortbysec(const pair<int,int> &a, const pair<int,int> &b){
     return (a.second < b.second); 
 }
 
-double **LLGMagnetMagnetization::computeBestTensor(double **tensors[10], int repetitions, int size){
+double **LLGTensors::computeBestTensor(double **tensors[10], int repetitions, int size){
     vector<pair<int, double>> x0;
     vector<pair<int, double>> x1;
     vector<pair<int, double>> y0;
@@ -247,7 +247,7 @@ double **LLGMagnetMagnetization::computeBestTensor(double **tensors[10], int rep
     return tensors[ind];
 }
 
-double **LLGMagnetMagnetization::computeDemag(){
+double **LLGTensors::computeDemag(){
     string key; //Key for the demag library
     int repetitions = 10;   //Number of evaluations
     double **tensors[repetitions];  //All the generated tensors
@@ -339,19 +339,19 @@ double **LLGMagnetMagnetization::computeDemag(){
     return returnValue;
 }
 
-double LLGMagnetMagnetization::getVolume(){
+double LLGTensors::getVolume(){
     return this->volume;
 }
 
-double *LLGMagnetMagnetization::getPx(){
+double *LLGTensors::getPx(){
     return this->px;
 }
 
-double *LLGMagnetMagnetization::getPy(){
+double *LLGTensors::getPy(){
     return this->py;
 }
 
-double LLGMagnetMagnetization::getThickness(){
+double LLGTensors::getThickness(){
     return this->t;
 }
 
@@ -371,7 +371,7 @@ extern "C"
 }
 
 
-double *LLGMagnetMagnetization::computeDipolar(double *p2x, double *p2y, double thickness, double verticalDistance, double horizontalDistance){
+double *LLGTensors::computeDipolar(double *p2x, double *p2y, double thickness, double verticalDistance, double horizontalDistance){
     //Build the key for the dipolar tensor
     string key = "vd" + to_string(verticalDistance) + "hd" + to_string(horizontalDistance);
     for (int i = 0; i < 4; i++)

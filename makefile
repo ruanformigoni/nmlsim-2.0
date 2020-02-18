@@ -1,7 +1,7 @@
 all: nmlsim
 
-nmlsim: Objs/Main.o Objs/Neighbor.o Objs/ThiagoMagnet.o Objs/LLGMagnet.o Objs/LLGMagnetMagnetization.o Objs/dipolar3D3_modificado.o Objs/ClockZone.o Objs/ClockPhase.o Objs/ClockController.o Objs/Circuit.o Objs/Simulation.o Objs/FileReader.o
-	@g++ Objs/Main.o Objs/Neighbor.o Objs/ThiagoMagnet.o Objs/LLGMagnet.o Objs/LLGMagnetMagnetization.o Objs/dipolar3D3_modificado.o Objs/ClockZone.o Objs/ClockPhase.o Objs/ClockController.o Objs/Circuit.o Objs/Simulation.o Objs/FileReader.o -o nmlsim -lgfortran
+nmlsim: Objs/Main.o Objs/Neighbor.o Objs/ThiagoMagnet.o Objs/LLGMagnet.o Objs/LLGTensors.o Objs/dipolar3D3_modificado.o Objs/ClockZone.o Objs/ClockPhase.o Objs/ClockController.o Objs/Circuit.o Objs/Simulation.o Objs/FileReader.o
+	@g++ Objs/Main.o Objs/Neighbor.o Objs/ThiagoMagnet.o Objs/LLGMagnet.o Objs/LLGTensors.o Objs/dipolar3D3_modificado.o Objs/ClockZone.o Objs/ClockPhase.o Objs/ClockController.o Objs/Circuit.o Objs/Simulation.o Objs/FileReader.o -o nmlsim -lgfortran
 
 Objs/Neighbor.o: Magnet/Neighbor.cpp Magnet/Neighbor.h Others/Includes.h
 	@g++ -std=gnu++11 -c Magnet/Neighbor.cpp -o Objs/Neighbor.o
@@ -9,14 +9,14 @@ Objs/Neighbor.o: Magnet/Neighbor.cpp Magnet/Neighbor.h Others/Includes.h
 Objs/ClockPhase.o: Clock/ClockPhase.cpp Clock/ClockPhase.h Others/Includes.h
 	@g++ -std=gnu++11 -c Clock/ClockPhase.cpp -o Objs/ClockPhase.o
 
-Objs/ThiagoMagnet.o: Magnet/ThiagoMagnet.cpp Magnet/ThiagoMagnet.h Magnet/Magnet.h Magnet/Neighbor.h Clock/ClockZone.h Magnet/LLGMagnetMagnetization.h Others/Includes.h Simulator/FileReader.h
+Objs/ThiagoMagnet.o: Magnet/ThiagoMagnet.cpp Magnet/ThiagoMagnet.h Magnet/Magnet.h Magnet/Neighbor.h Clock/ClockZone.h Magnet/LLGTensors.h Others/Includes.h Simulator/FileReader.h
 	@g++ -std=gnu++11 -c Magnet/ThiagoMagnet.cpp -o Objs/ThiagoMagnet.o
 
 Objs/LLGMagnet.o: Magnet/LLGMagnet.cpp Magnet/LLGMagnet.h Magnet/Magnet.h Magnet/Neighbor.h Clock/ClockZone.h Others/Includes.h Simulator/FileReader.h
 	@g++ -std=gnu++11 -c Magnet/LLGMagnet.cpp -o Objs/LLGMagnet.o
 
-Objs/LLGMagnetMagnetization.o: Magnet/LLGMagnetMagnetization.cpp Magnet/LLGMagnetMagnetization.h Magnet/Magnet.h Magnet/Neighbor.h Clock/ClockPhase.h Others/Includes.h
-	@g++ -std=gnu++11 -c Magnet/LLGMagnetMagnetization.cpp -o Objs/LLGMagnetMagnetization.o
+Objs/LLGTensors.o: Magnet/LLGTensors.cpp Magnet/LLGTensors.h Magnet/Magnet.h Magnet/Neighbor.h Clock/ClockPhase.h Others/Includes.h
+	@g++ -std=gnu++11 -c Magnet/LLGTensors.cpp -o Objs/LLGTensors.o
 
 Objs/dipolar3D3_modificado.o: Magnet/dipolar3D3_modificado.f90
 	@gfortran -c Magnet/dipolar3D3_modificado.f90 -o Objs/dipolar3D3_modificado.o -J ModFiles
