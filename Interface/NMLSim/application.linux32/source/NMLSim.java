@@ -1324,7 +1324,7 @@ class Header{
         substrate.addButton(new Button("Zoom Out", "Zooms out of the substract", sprites.zoomOutIconWhite, 0, 0));
         substrate.addButton(new Button("Light", "Toggles the light scheme on the substract", sprites.lightIconWhite, 0, 0));
         substrate.addButton(new Button("Move", "Enables cursor to move the substract", sprites.moveIconWhite, 0, 0));
-        substrate.addButton(new Button("Display", "Toggles the display size", sprites.displaySizeIcon, 0, 0));
+        //substrate.addButton(new Button("Display", "Toggles the display size", sprites.displaySizeIcon, 0, 0));
     }
     
     public void drawSelf(){
