@@ -5,6 +5,7 @@ class PanelMenu{
     ZonePanel zonePanel;
     MagnetPanel magnetPanel;
     StructurePanel structurePanel;
+    ResultsPanel resultsPanel;
     ArrayList<String> labels;
     ArrayList<HitBox> hitboxes;
     int selectedPanel;
@@ -41,6 +42,10 @@ class PanelMenu{
         auxW = textWidth("Magnet");
         hitboxes.add(new HitBox(auxX, y, auxW, h));
         auxX += auxW+10;
+        labels.add("Results");
+        auxW = textWidth("Results");
+        hitboxes.add(new HitBox(auxX, y, auxW, h));
+        auxX += auxW+10;
         
         textColor = color(255,255,255);
         lineColor = color(255,255,255);
@@ -62,6 +67,8 @@ class PanelMenu{
         substrateGrid.setZonePanel(zonePanel);
         magnetPanel = new MagnetPanel(x, y-ph, pw, ph, zonePanel, structurePanel);
         magnetPanel.setSubstrateGrid(substrateGrid);
+        resultsPanel = new ResultsPanel(x, y-ph, pw, ph);
+        resultsPanel.setSubstrateGrid(substrateGrid);
         
         structureLabelHitbox = new HitBox(width/scaleFactor-textWidth("Structures")-33, y, textWidth("Structures")+10, textAscent()+textDescent());
     }
@@ -181,6 +188,9 @@ class PanelMenu{
             case 3:
                 magnetPanel.drawSelf();
             break;
+            case 4:
+                resultsPanel.drawSelf();
+            break;
             default:{}
         }
         
@@ -232,6 +242,8 @@ class PanelMenu{
             case 3:
                 magnetPanel.mousePressedMethod();
             break;
+            case 4:
+                resultsPanel.mousePressedMethod();
             default:{}
         }
     }
@@ -276,6 +288,9 @@ class PanelMenu{
             break;
             case 3:
                 magnetPanel.keyPressedMethod();
+            break;
+            case 4:
+                resultsPanel.keyPressedMethod();
             break;
             default:{}
         }
