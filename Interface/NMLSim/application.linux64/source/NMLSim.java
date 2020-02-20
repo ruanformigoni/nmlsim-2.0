@@ -1758,7 +1758,7 @@ class HitBox{
     }
     
     public void drawSelf(){
-        stroke(0, 255, 0);
+        stroke(255, 0, 0);
         noFill();
         rect(x/scaleFactor, y/scaleFactor, w/scaleFactor, h/scaleFactor);
     }
@@ -2617,6 +2617,7 @@ class PanelMenu{
                 noStroke();
             }
             text(labels.get(i), auxX, y+fontSz);
+            hitboxes.get(i).updateBox(auxX, y, textWidth(labels.get(i)), h);
 
             stroke(lineColor);
             strokeWeight(2);
@@ -2643,6 +2644,7 @@ class PanelMenu{
         noStroke();
         fill(textColor);
         text("Structures", width/scaleFactor-textWidth("Structures")-28, y+fontSz);
+        structureLabelHitbox.updateBox(width/scaleFactor-textWidth("Structures")-28, y,textWidth("Structures"), h);
         stroke(lineColor);
         strokeWeight(2);
         line(width/scaleFactor-textWidth("Structures")-33, y+1, width/scaleFactor-textWidth("Structures")-33, y+h-2);
@@ -3821,7 +3823,8 @@ class SimulationBar{
             String call = substrateGrid.getSelectedMagnetsNames();
             if(!call.equals("")){
                 try{
-                    exec("gnome-terminal", "-e", "python3 " + sketchPath() + "/../../chart.py " + fileSys.fileBaseName + "/simulation.csv " + call);
+                    call = call.replaceAll(" ", ";");
+                    exec("gnome-terminal", "-e", "python3 " + sketchPath() + "/../../chart.py --input=" + fileSys.fileBaseName + "/simulation.csv --magnets=\"" + call + "\"");
                 } catch(Exception e){
                     e.printStackTrace();
                 }
@@ -3925,7 +3928,8 @@ class SimulationBar{
             String call = substrateGrid.getSelectedMagnetsNames();
             if(!call.equals("")){
                 try{
-                    exec("gnome-terminal", "-e", "python3 " + sketchPath() + "/../../chart.py " + fileSys.fileBaseName + "/simulation.csv " + call);
+                    call = call.replaceAll(" ", ";");
+                    exec("gnome-terminal", "-e", "python3 " + sketchPath() + "/../../chart.py --input=" + fileSys.fileBaseName + "/simulation.csv --magnets=\"" + call + "\"");
                 } catch(Exception e){
                     e.printStackTrace();
                 }

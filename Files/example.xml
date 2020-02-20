@@ -22,7 +22,7 @@
 	<!-- Discretization of time in nanoseconds. It's highly recommended using very low timeStep -->
 	<property timeStep="0.0001"/>
 	<!-- Simulation Duration in nanoseconds -->
-	<property simTime="35.0"/>
+	<property simTime="25.0"/>
 	<!-- Properties for the heavy material for spin hall effect -->
 	<property spinAngle="0.4"/>
 	<property spinDifusionLenght="3.5"/>
@@ -161,9 +161,8 @@
 		<property component="magIn"/>
 		<property myType="regular"/>
 		<property fixedMagnetization="false"/>
-		<property position="500.0,500.0"/>
-		<property clockZone="0"/>
+		<property position="120.0,0.0"/>
+		<property clockZone="1"/>
 		<property magnetization="0.99,0.141,0.0"/>
-		<property mimic="mag1"/>
 	</item>
 </design>
