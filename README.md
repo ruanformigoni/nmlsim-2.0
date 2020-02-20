@@ -17,9 +17,11 @@ Belo Horizonte, Brazil
 
 ## How to RUN the code:
 
-<code>make clean</code>  
-<code>make</code>  
-<code>make run input=inFilePath output=outFilePath</code>  
+Erase obj files and exe:        <code>make clean</code>  
+Erase csv files in File folder: <code>make eraseCSV</code>  
+Compile:                        <code>make</code>  
+Run engine:                     <code>make run input=inFilePath output=outFilePath</code>  
+Run chart script:               <code>python3 chart.py -h</code>  
 
 ## Input File Example:
 Check /Files/example.xml for more info.
