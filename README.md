@@ -22,8 +22,8 @@ Erase csv files in File folder: <code>make eraseCSV</code>
 Compile:                        <code>make</code>  
 Run engine:                     <code>make run input=inFilePath output=outFilePath</code>  
 Run chart script:               <code>python3 chart.py -h</code>  
-Run user interface 32 bits system: <code>make interface32</code>
-Run user interface 64 bits system: <code>make interface64</code>
+Run user interface 32 bits system: <code>make interface32</code>  
+Run user interface 64 bits system: <code>make interface64</code>  
 
 ## Input File Example:
 Check /Files/example.xml for more info.
