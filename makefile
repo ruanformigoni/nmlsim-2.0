@@ -52,3 +52,9 @@ output:="SingleFileMode"
 
 run:
 	@./nmlsim $(input) $(output)
+
+interface32:
+	@./Interface/application.linux32/NMLSim
+
+interface64:
+	@./Interface/application.linux64/NMLSim

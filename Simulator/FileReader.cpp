@@ -82,6 +82,7 @@ simulationType FileReader::getEngine (){
 		return LLG;
 	if(aux == "Behaviour")
 		return THIAGO;
+	return INVALIDTYPE;
 }
 
 simulationExecution FileReader::getSimMode (){
@@ -100,6 +101,7 @@ simulationExecution FileReader::getSimMode (){
 		return VERBOSE;
 	if(aux == "repetitive")
 		return REPETITIVE;
+	return INVALIDSIMULATION;
 }
 
 string FileReader::getProperty(propertyType pType, string propertyName){

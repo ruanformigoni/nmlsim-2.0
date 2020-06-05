@@ -20,11 +20,13 @@ enum magnetType{
 };
 
 enum simulationType{
+	INVALIDTYPE,
 	THIAGO,
 	LLG
 };
 
 enum simulationExecution{
+	INVALIDSIMULATION,
 	DIRECT,
 	EXAUSTIVE,
 	VERBOSE,
