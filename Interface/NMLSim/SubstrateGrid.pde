@@ -911,12 +911,12 @@ class Magnet{
         }
         endShape();        
         
-        //drawArrow(
-        //    auxX-(auxW/2)*xMag,
-        //    auxY+(auxH/2-abs((yMag>0)?auxBC:auxTC))*yMag,
-        //    auxX+(auxW/2)*xMag,
-        //    auxY-(auxH/2-abs((yMag>0)?auxTC:auxBC))*yMag,
-        //    0,((abs(xMag) > abs(yMag))?auxH/10:auxW/10));
+        drawArrow(
+            auxX-(auxW/2)*xMag,
+            auxY+(auxH/2-abs((yMag>0)?auxBC:auxTC))*yMag,
+            auxX+(auxW/2)*xMag,
+            auxY-(auxH/2-abs((yMag>0)?auxTC:auxBC))*yMag,
+            0,((abs(xMag) > abs(yMag))?auxH/10:auxW/10));
         strokeWeight(1);
     }
 }

@@ -152,7 +152,7 @@ class ResultsPanel{
                     call = call.replaceAll(" ", ";");
                     exec("gnome-terminal", "-e",
                         "python3 " + sketchPath() + "/../../chart.py" +
-                        " --input=" + fileSys.fileBaseName + "/simulation.csv" +
+                        " --input=\"" + fileSys.fileBaseName + "/simulation.csv\"" +
                         " --magnets=\"" + call + "\"" +
                         " --fontsz=" + fontSize.getText() +
                         " --range=" + ((customSeriesStart.isChecked)?startRange.getText():"begin") + ";" + ((customSeriesEnd.isChecked)?endRange.getText():"end") +

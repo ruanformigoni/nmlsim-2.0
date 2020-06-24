@@ -229,7 +229,7 @@ class SimulationBar{
         if(altPressed && int(key) == 115 && !fileSys.fileBaseName.equals("")){ //Simulate
             saveProject();
             try{
-                exec("gnome-terminal", "-e", sketchPath() + "/../../nmlsim " + fileSys.fileBaseName + "/simulation.xml " +  fileSys.fileBaseName + "/simulation.csv");
+                exec("gnome-terminal", "-e", sketchPath() + "/../../nmlsim \"" + fileSys.fileBaseName + "/simulation.xml\" \"" +  fileSys.fileBaseName + "/simulation.csv\"");
             } catch(Exception e){
                 e.printStackTrace();
             }
@@ -252,7 +252,7 @@ class SimulationBar{
             if(!call.equals("")){
                 try{
                     call = call.replaceAll(" ", ";");
-                    exec("gnome-terminal", "-e", "python3 " + sketchPath() + "/../../chart.py --input=" + fileSys.fileBaseName + "/simulation.csv --magnets=\"" + call + "\"");
+                    exec("gnome-terminal", "-e", "python3 " + sketchPath() + "/../../chart.py --input=\"" + fileSys.fileBaseName + "/simulation.csv\" --magnets=\"" + call + "\"");
                 } catch(Exception e){
                     e.printStackTrace();
                 }
@@ -333,7 +333,7 @@ class SimulationBar{
         if(simulate.mousePressedMethod() && !fileSys.fileBaseName.equals("")){
             saveProject();
             try{
-                exec("gnome-terminal", "-e", sketchPath() + "/../../nmlsim " + fileSys.fileBaseName + "/simulation.xml " +  fileSys.fileBaseName + "/simulation.csv");
+                exec("gnome-terminal", "-e", sketchPath() + "/../../nmlsim \"" + fileSys.fileBaseName + "/simulation.xml\" \"" +  fileSys.fileBaseName + "/simulation.csv\"");
             } catch(Exception e){
                 e.printStackTrace();
             }
@@ -357,7 +357,7 @@ class SimulationBar{
             if(!call.equals("")){
                 try{
                     call = call.replaceAll(" ", ";");
-                    exec("gnome-terminal", "-e", "python3 " + sketchPath() + "/../../chart.py --input=" + fileSys.fileBaseName + "/simulation.csv --magnets=\"" + call + "\"");
+                    exec("gnome-terminal", "-e", "python3 " + sketchPath() + "/../../chart.py --input=\"" + fileSys.fileBaseName + "/simulation.csv\" --magnets=\"" + call + "\"");
                 } catch(Exception e){
                     e.printStackTrace();
                 }
